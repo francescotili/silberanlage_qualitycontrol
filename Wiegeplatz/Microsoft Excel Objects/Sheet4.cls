@@ -13,6 +13,13 @@ Public sheet As Worksheet
 Private silberBedarfCell, silberSchichtCell, anlageCell, barCodeCell, bezeichnungCell, kupferSchichtCell, alterungCell, grundMaterialCell, nettoGewichtCell As Range
 
 Private Sub Worksheet_Activate()
+  FormReset
+End Sub
+
+Private Sub FormReset()
+' Resets the form, deleting all the custom data and moving the selection
+' to the barcode cell
+  
   Set sheet = Sheet4
   
   ' Define cell ranges
