@@ -10,10 +10,22 @@ Attribute VB_Exposed = True
 Option Explicit
 
 Public sheet As Worksheet
-Private silberBedarfCell, silberSchichtCell, anlageCell, barCodeCell, bezeichnungCell, kupferSchichtCell, alterungCell, grundMaterialCell, nettoGewichtCell As Range
+Private silberBedarfCell, silberSchichtCell, anlageCell, barCodeCell, bezeichnungCell, kupferSchichtCell, alterungCell, grundMaterialCell, nettoGewichtCell, barCodeValueCell, isTeileInDBCell, isFormValidCell, isBarcodeValidCell, isBarcodeEmptyCell As Range
 
 Private Sub Worksheet_Activate()
   FormReset
+End Sub
+
+Private Sub Worksheet_Change(ByVal Target As Range)
+' Is triggered everytime a cell content changes in the Worksheet
+
+  ' Define cell ranges
+  Set barCodeValueCell = Range("NeueTeile_BarcodeValue")
+  Set isTeileInDBCell = Range("NeueTeile_IsTeileInDatabase")
+  Set isFormValidCell = Range("NeueTeile_IsFormValid")
+  Set isBarcodeValidCell = Range("NeueTeile_IsBarcodeValid")
+  Set isBarcodeEmptyCell = Range("NeueTeile_IsBarcodeEmpty")
+  
 End Sub
 
 Private Sub FormReset()
