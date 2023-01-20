@@ -44,6 +44,14 @@ Private Sub Worksheet_Change(ByVal Target As Range)
       End If
     End If
   End If
+  
+  ' Enable or disable the save button
+  NeueTeile_SpeichernBtn.Enabled = False
+  NeueTeile_SpeichernBtn.BackColor = vbButtonFace
+  If isFormValidCell.Value Then
+    NeueTeile_SpeichernBtn.Enabled = True
+    NeueTeile_SpeichernBtn.BackColor = RGB(0, 192, 0)
+  End If
 End Sub
 
 Private Sub FormReset()
