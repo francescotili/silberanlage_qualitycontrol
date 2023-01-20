@@ -23,7 +23,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)
 ' barcode cell
 
   ' Define cell ranges
-  Set barCodeValueCell = Range("NeueCharge_Barcode")
+  Set barCodeCell = Range("NeueCharge_Barcode")
   Set isTeileInDBCell = Range("NeueCharge_IsTeileInDatabase")
   Set isFormValidCell = Range("NeueCharge_IsFormValid")
   Set isBarcodeValidCell = Range("NeueCharge_IsBarcodeValid")
@@ -34,14 +34,14 @@ Private Sub Worksheet_Change(ByVal Target As Range)
     If Not isBarcodeEmptyCell.Value Then
       If isBarcodeValidCell.Value Then
         If Not isTeileInDBCell Then
-          If MsgBox("Teilenummer nicht vorhanden!" & vbNewLine & "Jetzt hinzufügen?", vbInformation + vbYesNo + vbDefaultButton1, "ACHTUNG") = vbYes Then
+          If MsgBox("Teilenummer nicht vorhanden!" & vbNewLine & "Jetzt hinzufÃ¼gen?", vbInformation + vbYesNo + vbDefaultButton1, "ACHTUNG") = vbYes Then
             Sheet4.Activate
             Exit Sub
           End If
           FormReset
         End If
       Else
-        MsgBox "Ungültiger barcode!"
+        MsgBox "UngÃ¼ltiger barcode!"
         FormReset
       End If
     End If
