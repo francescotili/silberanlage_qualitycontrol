@@ -20,12 +20,30 @@ Private Sub Worksheet_Change(ByVal Target As Range)
 ' Is triggered everytime a cell content changes in the Worksheet
 
   ' Define cell ranges
-  Set barCodeValueCell = Range("NeueTeile_BarcodeValue")
+  Set barCodeCell = Range("NeueTeile_Barcode")
   Set isTeileInDBCell = Range("NeueTeile_IsTeileInDatabase")
   Set isFormValidCell = Range("NeueTeile_IsFormValid")
   Set isBarcodeValidCell = Range("NeueTeile_IsBarcodeValid")
   Set isBarcodeEmptyCell = Range("NeueTeile_IsBarcodeEmpty")
   
+  ' Control if barcode cell was changed and act accordingly
+  If Not Intersect(Target, barCodeCell) Is Nothing Then
+    Debug.Print "Trigger"
+    If Not isBarcodeEmptyCell.Value Then
+      If isBarcodeValidCell.Value Then
+        If isTeileInDBCell Then
+          ' Edit Mode
+          MsgBox "Edit mode"
+        Else
+          ' Creation Mode
+          MsgBox "Creation mode"
+        End If
+      Else
+        MsgBox "Ungültiger barcode!"
+        FormReset
+      End If
+    End If
+  End If
 End Sub
 
 Private Sub FormReset()
@@ -64,4 +82,3 @@ Private Sub FormReset()
   sheet.Protect Password:=GAdminPassword
   sheet.EnableSelection = xlUnlockedCells
 End Sub
-
