@@ -52,6 +52,14 @@ Private Sub Worksheet_Change(ByVal Target As Range)
     NeueTeile_SpeichernBtn.Enabled = True
     NeueTeile_SpeichernBtn.BackColor = RGB(0, 192, 0)
   End If
+  
+  ' Enable or disable the delete button
+  NeueTeile_LoeschenBtn.Enabled = False
+  NeueTeile_LoeschenBtn.BackColor = vbButtonFace
+  If isTeileInDBCell.Value Then
+    NeueTeile_LoeschenBtn.Enabled = True
+    NeueTeile_LoeschenBtn.BackColor = RGB(192, 0, 0)
+  End If
 End Sub
 
 Private Sub FormReset()
