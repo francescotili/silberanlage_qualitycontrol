@@ -38,9 +38,8 @@ Private Sub Worksheet_Change(ByVal Target As Range)
           FormReset False
           EditMode_Fill
         Else
-          ' Creation Mode
-          MsgBox "Creation mode"
           FormReset False
+          CreateMode_Fill
         End If
       Else
         MsgBox "Ungültiger barcode!"
@@ -120,9 +119,9 @@ Private Sub FormReset(ByVal BarcodeReset As Boolean)
   
   barCodeCell.Select
   
-'  ' Enable protection
-'  sheet.Protect Password:=GAdminPassword
-'  sheet.EnableSelection = xlUnlockedCells
+  ' Enable protection
+  sheet.Protect Password:=GAdminPassword
+  sheet.EnableSelection = xlUnlockedCells
 End Sub
 
 Private Sub NeueTeile_SpeichernBtn_Click()
@@ -212,5 +211,29 @@ Private Sub EditMode_Fill()
   Set AgGlockeStromCell = Range("NeueTeile_AgStromGlocke")
   If CLng(Range("I27").Value) > 0 Then
     AgGlockeStromCell.Value = Range("I27").Value
+  End If
+End Sub
+
+Private Sub CreateMode_Fill()
+' Compile the form in creation mode. Copies only EZ values from the old EZ database
+' so that the workers can fill the rest and everything will be saved in the DB.
+' Warning: values from EZ database are retrieved by formulas in the Excel sheet and
+' not by the macro. They are referenced as normal range pointing to the cells.
+  
+  ' Copy Cu Data from EZ DB
+  Set CuEZCell = Range("NeueTeile_CuEZ")
+  If CLng(Range("K21").Value) > 0 Then
+    CuEZCell.Value = Range("K21").Value
+  End If
+  
+  ' Copy Ag Data from DB
+  Set AgStrasseEZCell = Range("NeueTeile_AgEZStraße")
+  If CLng(Range("K24").Value) > 0 Then
+    AgStrasseEZCell.Value = Range("K24").Value
+  End If
+  
+  Set AgGlockeEZCell = Range("NeueTeile_AgEZGlocke")
+  If CLng(Range("K26").Value) > 0 Then
+    AgGlockeEZCell.Value = Range("K26").Value
   End If
 End Sub
