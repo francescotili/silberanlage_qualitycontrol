@@ -37,6 +37,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)
         If isTeileInDBCell Then
           ' Edit Mode
           MsgBox "Edit mode"
+          EditMode_Fill
         Else
           ' Creation Mode
           MsgBox "Creation mode"
@@ -98,9 +99,9 @@ Private Sub FormReset()
   
   barCodeCell.Select
   
-  ' Enable protection
-  sheet.Protect Password:=GAdminPassword
-  sheet.EnableSelection = xlUnlockedCells
+'  ' Enable protection
+'  sheet.Protect Password:=GAdminPassword
+'  sheet.EnableSelection = xlUnlockedCells
 End Sub
 
 Private Sub NeueTeile_SpeichernBtn_Click()
@@ -111,5 +112,79 @@ End Sub
 Private Sub NeueTeile_LoeschenBtn_Click()
   If MsgBox("Möchten Sie dieses Material wirklich dauerhaft löschen?", vbCritical + vbYesNo, "Achtung") = vbYes Then
     MsgBox "Gelöscht"
+  End If
+End Sub
+
+Private Sub EditMode_Fill()
+' Compile the form in edit mode. Copies the values from the database
+' to be modified by the Worker and then saved.
+' Warning: values from database are retrieved by formulas in the Excel sheet and
+' not by the macro. They are referenced as normal range pointing to the cells.
+  
+  ' Copy "Bezeichnung"
+  Set bezeichnungCell = Range("NeueTeile_Bezeichnung")
+  bezeichnungCell.Value = Range("I8").Value
+  
+  ' Copy "Grundmaterial"
+  Set grundMaterialCell = Range("NeueTeile_Material")
+  grundMaterialCell.Value = Range("I9").Value
+  
+  ' Copy "Standardanlage"
+  Set anlageCell = Range("NeueTeile_Anlage")
+  anlageCell.Value = Range("I11").Value
+  
+  ' Copy "Kupferschicht"
+  Set kupferSchichtCell = Range("NeueTeile_CuSchicht")
+  If CLng(Range("I13").Value) <> 0 Then
+    kupferSchichtCell.Value = Range("I13").Value
+  End If
+  
+  ' Copy "Silberschicht"
+  Set silberSchichtCell = Range("NeueTeile_AgSchicht")
+  If CLng(Range("I14").Value) <> 0 Then
+    silberSchichtCell.Value = Range("I14").Value
+  End If
+  
+  ' Copy "Silberbedarf"
+  Set silberBedarfCell = Range("NeueTeile_AgBedarf")
+  silberBedarfCell.Value = Range("I15").Value
+  
+  ' Copy "Gewicht/1000"
+  Set nettoGewichtCell = Range("NeueTeile_NettoGewicht")
+  nettoGewichtCell.Value = Range("I17").Value
+  
+  ' Copy "Alterung & Löttest"
+  Set alterungCell = Range("NeueTeile_Loettest")
+  If Range("I19").Value <> "" Then
+    If Range("I19").Value Then
+      alterungCell.Value = "JA"
+    Else
+      alterungCell.Value = "NEIN"
+    End If
+  End If
+  
+  ' Copy Cu Data from DB
+  Set CuEZCell = Range("NeueTeile_CuEZ")
+  If CLng(Range("I21").Value) > 0 Then
+    CuEZCell.Value = Range("I21").Value
+  End If
+  
+  ' Copy Ag Data from DB
+  Set AgStrasseEZCell = Range("NeueTeile_AgEZStraße")
+  If CLng(Range("I24").Value) > 0 Then
+    AgStrasseEZCell.Value = Range("I24").Value
+  End If
+  Set AgStrasseStromCell = Range("NeueTeile_AgStromStraße")
+  If CLng(Range("I25").Value) > 0 Then
+    AgStrasseStromCell.Value = Range("I25").Value
+  End If
+  
+  Set AgGlockeEZCell = Range("NeueTeile_AgEZGlocke")
+  If CLng(Range("I26").Value) > 0 Then
+    AgGlockeEZCell.Value = Range("I26").Value
+  End If
+  Set AgGlockeStromCell = Range("NeueTeile_AgStromGlocke")
+  If CLng(Range("I27").Value) > 0 Then
+    AgGlockeStromCell.Value = Range("I27").Value
   End If
 End Sub
