@@ -35,8 +35,6 @@ Private Sub Worksheet_Change(ByVal Target As Range)
     If Not isBarcodeEmptyCell.Value Then
       If isBarcodeValidCell.Value Then
         If isTeileInDBCell Then
-          ' Edit Mode
-          MsgBox "Edit mode"
           EditMode_Fill
         Else
           ' Creation Mode
@@ -72,30 +70,49 @@ Private Sub FormReset()
   
   Set sheet = Sheet4
   
-  ' Define cell ranges
-  Set silberBedarfCell = Range("NeueTeile_AgBedarf")
-  Set silberSchichtCell = Range("NeueTeile_AgSchicht")
-  Set anlageCell = Range("NeueTeile_Anlage")
-  Set barCodeCell = Range("NeueTeile_Barcode")
-  Set bezeichnungCell = Range("NeueTeile_Bezeichnung")
-  Set kupferSchichtCell = Range("NeueTeile_CuSchicht")
-  Set alterungCell = Range("NeueTeile_Loettest")
-  Set grundMaterialCell = Range("NeueTeile_Material")
-  Set nettoGewichtCell = Range("NeueTeile_NettoGewicht")
-  
   ' Disable protection
   sheet.Unprotect Password:=GAdminPassword
   
   ' Reset form
-  silberBedarfCell.ClearContents
-  silberSchichtCell.ClearContents
-  anlageCell.ClearContents
+  Set barCodeCell = Range("NeueTeile_Barcode")
   barCodeCell.ClearContents
+  
+  Set bezeichnungCell = Range("NeueTeile_Bezeichnung")
   bezeichnungCell.ClearContents
-  kupferSchichtCell.ClearContents
-  alterungCell.ClearContents
+  
+  Set grundMaterialCell = Range("NeueTeile_Material")
   grundMaterialCell.ClearContents
+  
+  Set anlageCell = Range("NeueTeile_Anlage")
+  anlageCell.ClearContents
+  
+  Set kupferSchichtCell = Range("NeueTeile_CuSchicht")
+  kupferSchichtCell.ClearContents
+  
+  Set silberSchichtCell = Range("NeueTeile_AgSchicht")
+  silberSchichtCell.ClearContents
+  
+  Set silberBedarfCell = Range("NeueTeile_AgBedarf")
+  silberBedarfCell.ClearContents
+  
+  Set nettoGewichtCell = Range("NeueTeile_NettoGewicht")
   nettoGewichtCell.ClearContents
+  
+  Set alterungCell = Range("NeueTeile_Loettest")
+  alterungCell.ClearContents
+  
+  Set CuEZCell = Range("NeueTeile_CuEZ")
+  CuEZCell.ClearContents
+  
+  Set AgStrasseEZCell = Range("NeueTeile_AgEZStraße")
+  AgStrasseEZCell.ClearContents
+  Set AgStrasseStromCell = Range("NeueTeile_AgStromStraße")
+  AgStrasseStromCell.ClearContents
+  
+  Set AgGlockeEZCell = Range("NeueTeile_AgEZGlocke")
+  AgGlockeEZCell.ClearContents
+  Set AgGlockeStromCell = Range("NeueTeile_AgStromGlocke")
+  AgGlockeStromCell.ClearContents
   
   barCodeCell.Select
   
