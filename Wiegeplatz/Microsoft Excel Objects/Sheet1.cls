@@ -35,7 +35,10 @@ Private Sub Worksheet_Change(ByVal Target As Range)
       If isBarcodeValidCell.Value Then
         If Not isTeileInDBCell Then
           If MsgBox("Teilenummer nicht vorhanden!" & vbNewLine & "Jetzt hinzufügen?", vbInformation + vbYesNo + vbDefaultButton1, "ACHTUNG") = vbYes Then
+            Dim barcode
+            barcode = barCodeCell.Value
             Sheet4.Activate
+            Sheet4.Range("NeueTeile_Barcode").Value = barcode
             Exit Sub
           End If
           FormReset
