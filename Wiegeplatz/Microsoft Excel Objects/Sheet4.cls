@@ -17,7 +17,7 @@ Private CuEZCell, AgEZCell, AgStrom, isBarcodeEmptyCell As Range
 Private AgStrasseEZCell, AgGlockeEZCell, AgStrasseStromCell, AgGlockeStromCell As Range
 
 Private Sub Worksheet_Activate()
-  FormReset
+  FormReset True
 End Sub
 
 Private Sub Worksheet_Change(ByVal Target As Range)
@@ -35,14 +35,16 @@ Private Sub Worksheet_Change(ByVal Target As Range)
     If Not isBarcodeEmptyCell.Value Then
       If isBarcodeValidCell.Value Then
         If isTeileInDBCell Then
+          FormReset False
           EditMode_Fill
         Else
           ' Creation Mode
           MsgBox "Creation mode"
+          FormReset False
         End If
       Else
         MsgBox "Ungültiger barcode!"
-        FormReset
+        FormReset True
       End If
     End If
   End If
@@ -64,7 +66,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)
   End If
 End Sub
 
-Private Sub FormReset()
+Private Sub FormReset(ByVal BarcodeReset As Boolean)
 ' Resets the form, deleting all the custom data and moving the selection
 ' to the barcode cell
   
@@ -74,8 +76,10 @@ Private Sub FormReset()
   sheet.Unprotect Password:=GAdminPassword
   
   ' Reset form
-  Set barCodeCell = Range("NeueTeile_Barcode")
-  barCodeCell.ClearContents
+  If BarcodeReset Then
+    Set barCodeCell = Range("NeueTeile_Barcode")
+    barCodeCell.ClearContents
+  End If
   
   Set bezeichnungCell = Range("NeueTeile_Bezeichnung")
   bezeichnungCell.ClearContents
@@ -123,13 +127,18 @@ End Sub
 
 Private Sub NeueTeile_SpeichernBtn_Click()
   MsgBox "It works!"
-  FormReset
+  FormReset True
 End Sub
 
 Private Sub NeueTeile_LoeschenBtn_Click()
   If MsgBox("Möchten Sie dieses Material wirklich dauerhaft löschen?", vbCritical + vbYesNo, "Achtung") = vbYes Then
     MsgBox "Gelöscht"
+    FormReset True
   End If
+End Sub
+
+Private Sub NeueTeile_ResetBtn_Click()
+  FormReset True
 End Sub
 
 Private Sub EditMode_Fill()
