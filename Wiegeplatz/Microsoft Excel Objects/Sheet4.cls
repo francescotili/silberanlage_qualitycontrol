@@ -10,7 +10,11 @@ Attribute VB_Exposed = True
 Option Explicit
 
 Public sheet As Worksheet
-Private silberBedarfCell, silberSchichtCell, anlageCell, barCodeCell, bezeichnungCell, kupferSchichtCell, alterungCell, grundMaterialCell, nettoGewichtCell, barCodeValueCell, isTeileInDBCell, isFormValidCell, isBarcodeValidCell, isBarcodeEmptyCell As Range
+Private silberBedarfCell, silberSchichtCell, anlageCell, barCodeCell, bezeichnungCell As Range
+Private kupferSchichtCell, alterungCell, grundMaterialCell, nettoGewichtCell As Range
+Private barCodeValueCell, isTeileInDBCell, isFormValidCell, isBarcodeValidCell As Range
+Private CuEZCell, AgEZCell, AgStrom, isBarcodeEmptyCell As Range
+Private AgStrasseEZCell, AgGlockeEZCell, AgStrasseStromCell, AgGlockeStromCell As Range
 
 Private Sub Worksheet_Activate()
   FormReset
@@ -28,7 +32,6 @@ Private Sub Worksheet_Change(ByVal Target As Range)
   
   ' Control if barcode cell was changed and act accordingly
   If Not Intersect(Target, barCodeCell) Is Nothing Then
-    Debug.Print "Trigger"
     If Not isBarcodeEmptyCell.Value Then
       If isBarcodeValidCell.Value Then
         If isTeileInDBCell Then
@@ -92,9 +95,21 @@ Private Sub FormReset()
   alterungCell.ClearContents
   grundMaterialCell.ClearContents
   nettoGewichtCell.ClearContents
+  
   barCodeCell.Select
   
   ' Enable protection
   sheet.Protect Password:=GAdminPassword
   sheet.EnableSelection = xlUnlockedCells
+End Sub
+
+Private Sub NeueTeile_SpeichernBtn_Click()
+  MsgBox "It works!"
+  FormReset
+End Sub
+
+Private Sub NeueTeile_LoeschenBtn_Click()
+  If MsgBox("Möchten Sie dieses Material wirklich dauerhaft löschen?", vbCritical + vbYesNo, "Achtung") = vbYes Then
+    MsgBox "Gelöscht"
+  End If
 End Sub
