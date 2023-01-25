@@ -66,48 +66,48 @@ Private Sub Init( _
   If copperBedarf = "" Then
     Me.copperBedarf = 0
   Else
-    Me.copperBedarf = CLng(copperLayer)
+    Me.copperBedarf = CLng(copperBedarf)
   End If
   If copperEZ = "" Then
     Me.copperEZ = 0
   Else
-    Me.copperEZ = CLng(copperLayer)
+    Me.copperEZ = CLng(copperEZ)
   End If
   If copperCurrent = "" Then
     Me.copperCurrent = 0
   Else
-    Me.copperCurrent = CLng(copperLayer)
+    Me.copperCurrent = CLng(copperCurrent)
   End If
   Me.silver = silver
   If silverLayer = "" Then
     Me.silverLayer = 0
   Else
-    Me.silverLayer = CLng(copperLayer)
+    Me.silverLayer = CLng(silverLayer)
   End If
   If silverBedarf = "" Then
     Me.silverBedarf = 0
   Else
-    Me.silverBedarf = CLng(copperLayer)
+    Me.silverBedarf = CLng(silverBedarf)
   End If
   If silverEZStr = "" Then
     Me.silverEZStr = 0
   Else
-    Me.silverEZStr = CLng(copperLayer)
+    Me.silverEZStr = CLng(silverEZStr)
   End If
   If silverCurrentStr = "" Then
     Me.silverCurrentStr = 0
   Else
-    Me.silverCurrentStr = CLng(copperLayer)
+    Me.silverCurrentStr = CLng(silverCurrentStr)
   End If
   If silverEZGlo = "" Then
     Me.silverEZGlo = 0
   Else
-    Me.silverEZGlo = CLng(copperLayer)
+    Me.silverEZGlo = CLng(silverEZGlo)
   End If
   If silverCurrentGlo = "" Then
     Me.silverCurrentGlo = 0
   Else
-    Me.silverCurrentGlo = CLng(copperLayer)
+    Me.silverCurrentGlo = CLng(silverCurrentGlo)
   End If
   Me.xRayMethode = xRayMethode
   Me.alterung = alterung
