@@ -115,22 +115,6 @@ Private Sub FormReset(ByVal BarcodeReset As Boolean)
   sheet.EnableSelection = xlUnlockedCells
 End Sub
 
-Private Sub NeueTeile_SpeichernBtn_Click()
-  MsgBox "It works!"
-  FormReset True
-End Sub
-
-Private Sub NeueTeile_LoeschenBtn_Click()
-  If MsgBox("Möchten Sie dieses Material wirklich dauerhaft löschen?", vbCritical + vbYesNo, "Achtung") = vbYes Then
-    MsgBox "Gelöscht"
-    FormReset True
-  End If
-End Sub
-
-Private Sub NeueTeile_ResetBtn_Click()
-  FormReset True
-End Sub
-
 Private Sub EditMode_Fill()
 ' Compile the form in edit mode. Copies the values from the database
 ' to be modified by the Worker and then saved.
@@ -227,4 +211,20 @@ Private Sub CreateMode_Fill()
   If CLng(Range("K26").Value) > 0 Then
     AgGlockeEZCell.Value = Range("K26").Value
   End If
+End Sub
+
+Private Sub NeueTeile_SpeichernBtn_Click()
+  MsgBox "It works!"
+  FormReset True
+End Sub
+
+Private Sub NeueTeile_LoeschenBtn_Click()
+  If MsgBox("Möchten Sie dieses Material wirklich dauerhaft löschen?", vbCritical + vbYesNo, "Achtung") = vbYes Then
+    MsgBox "Gelöscht"
+    FormReset True
+  End If
+End Sub
+
+Private Sub NeueTeile_ResetBtn_Click()
+  FormReset True
 End Sub
