@@ -225,7 +225,7 @@ Private Sub NeueTeile_SpeichernBtn_Click()
 ' [x] Show saving message
 ' [x] Show better saved message
 ' [x] Split workflow between edit and save
-' [ ] Implement edit mode
+' [x] Implement edit mode
 ' [ ] Fuse save and edit together, workflow has to split only on the saving part!
 
   Dim isEditMode As Boolean
@@ -331,28 +331,96 @@ Private Sub EditMaterial()
   MsgBox "Editing..."
   
   ' Show saving message
+  Application.StatusBar = "Datenbank wird geöffnet, bitte warten ..."
   
   ' Definition of variables
+  Dim app As New excel.Application
+  Dim wbook As excel.Workbook
+  Dim sheet As Worksheet
+  Dim table As ListObject
+  Dim materials As Variant
+  Dim teileData As Variant
+  Dim i, j As Long
+  Dim newRow As ListRow
+  Dim teileRow As Integer
+  Dim alterungDB As Boolean
   
   ' Preparing data for write
+  alterungDB = False
+  If Range("NeueTeile_Loettest") = "JA" Then
+    alterungDB = True
+  End If
+  
+  teileData = Array( _
+    Range("I7").Value, _
+    Range("NeueTeile_Bezeichnung").Value, _
+    Range("NeueTeile_Material").Value, _
+    Range("NeueTeile_NettoGewicht").Value, _
+    Range("NeueTeile_Anlage").Value, _
+    Range("NeueTeile_CuSchicht").Value, _
+    "", _
+    Range("NeueTeile_CuEZ").Value, _
+    "", _
+    Range("NeueTeile_AgSchicht").Value, _
+    Range("NeueTeile_AgBedarf").Value, _
+    Range("NeueTeile_AgEZStraße").Value, _
+    Range("NeueTeile_AgStromStraße").Value, _
+    Range("NeueTeile_AgEZGlocke").Value, _
+    Range("NeueTeile_AgStromGlocke").Value, _
+    alterungDB _
+  )
+  ' I7 is Materialnummer
+  ' Position 7 is Cu-Bedarf, leaved empty for future implementations
+  ' Position 9 is Cu-Strom, leaved empty for future implementations
+  ' Position 16 is for Löttest, we validate in the code
   
   ' Check if database is open
+  Do While IsDatabaseOpen = True
+    Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
+    Application.Wait (Now + TimeValue("0:00:02"))
+  Loop
   
   ' Opening of database file
+  app.Visible = False ' Visible is False by default, so this should not be necessary
+  app.DisplayAlerts = False
+  Set wbook = app.Workbooks.Add(GDatabasePath)
+  Application.StatusBar = "Wird gespeichert ..."
   
   ' Setting of targets
+  Set sheet = wbook.Worksheets(2) ' Teil_DB
+  Set table = sheet.ListObjects.Item(GTeilDB_TableName)
   
   ' Searching the row to overwrite
+  ' Note: it is much faster to read a range of values into an array, then do calculations
+  ' on that array, instead of doing the same calculation of the range of values itself.
+  ' Aka, we make a single read operation and then operate of the array of values
+  materials = table.DataBodyRange
+  For i = LBound(materials) To UBound(materials)
+    If CStr(materials(i, 1)) = CStr(Range("I7").Value) Then
+      teileRow = i
+      Exit For
+    End If
+  Next i
   
   ' Write data in database
+  For j = LBound(teileData) To UBound(teileData)
+    table.DataBodyRange(teileRow, (j + 1)).Value = teileData(j)
+  Next j
   
   ' Save and close the database
+  wbook.SaveAs GDatabasePath
+  app.Quit
+  Set app = Nothing
   
   ' Refresh all data connections & queries
+  ThisWorkbook.RefreshAll
   
   ' Show confirmation message
+  Application.StatusBar = "Material-Nr. " & Range("E7").Value & " wurde gespeichert"
+  Notify Range("E7").Value, "Teile erfolghreich aktualisiert", "Info", 10
   
   ' Reset the form
+  'FormReset True
 End Sub
 
 Private Sub NeueTeile_LoeschenBtn_Click()
