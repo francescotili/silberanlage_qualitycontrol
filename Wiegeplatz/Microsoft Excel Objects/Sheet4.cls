@@ -234,8 +234,14 @@ Private Sub NeueTeile_SpeichernBtn_Click()
   Dim teileData As Variant
   Dim j As Long
   Dim newRow As ListRow
+  Dim alterungDB As Boolean
 
   ' Preparing data for write
+  alterungDB = False
+  If Range("NeueTeile_Loettest") = "JA" Then
+    alterungDB = True
+  End If
+  
   teileData = Array( _
     Range("I7").Value, _
     Range("NeueTeile_Bezeichnung").Value, _
@@ -252,11 +258,12 @@ Private Sub NeueTeile_SpeichernBtn_Click()
     Range("NeueTeile_AgStromStraße").Value, _
     Range("NeueTeile_AgEZGlocke").Value, _
     Range("NeueTeile_AgStromGlocke").Value, _
-    Range("NeueTeile_Loettest").Value _
+    alterungDB _
   )
   ' I7 is Materialnummer
   ' Position 7 is Cu-Bedarf, leaved empty for future implementations
   ' Position 9 is Cu-Strom, leaved empty for future implementations
+  ' Position 16 is for Löttest, we validate in the code
 
   ' Opening of database file
   app.Visible = False ' Visible is False by default, so this should not be necessary
