@@ -221,7 +221,7 @@ Private Sub NeueTeile_SpeichernBtn_Click()
 ' TASKS
 ' [ ] Check if the Database file is already open
 ' [ ] Wait for the Database file to close before saving
-' [ ] Update all the linked Query in the file after saving
+' [x] Update all the linked Query in the file after saving
 ' [ ] Show saving message
 
   ' Show saving message and block user interaction
@@ -275,6 +275,9 @@ Private Sub NeueTeile_SpeichernBtn_Click()
   wbook.SaveAs GDatabasePath
   app.Quit
   Set app = Nothing
+
+  ' Refresh all data connections & queries
+  ThisWorkbook.RefreshAll
 
   ' Show confirmation message
   MsgBox "Done"
