@@ -223,7 +223,9 @@ Private Sub NeueTeile_SpeichernBtn_Click()
 ' [x] Wait for the Database file to close before saving
 ' [x] Update all the linked Query in the file after saving
 ' [x] Show saving message
-' [ ] Show better saved message
+' [x] Show better saved message
+' [ ] Split workflow between edit and save
+' [ ] Implement edit mode
 
   ' Show saving message and block user interaction
   Application.StatusBar = "Datenbank wird geöffnet, bitte warten ..."
