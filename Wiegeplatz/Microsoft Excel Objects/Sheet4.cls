@@ -214,8 +214,64 @@ Private Sub CreateMode_Fill()
 End Sub
 
 Private Sub NeueTeile_SpeichernBtn_Click()
-  MsgBox "It works!"
-  FormReset True
+' Read the form data and compile an array to write. Then opens the database file
+' in hidden mode and write this data in the main parts database.
+' Be sure to validate the data at the sheet level before calling this function!
+
+  ' Definition of variables
+  Dim app As New excel.Application
+  Dim wbook As excel.Workbook
+  Dim sheet As Worksheet
+  Dim table As ListObject
+  Dim teileData As Variant
+  Dim j As Long
+  Dim newRow As ListRow
+
+  ' Preparing data for write
+  teileData = Array( _
+    Range("I7").Value, _
+    Range("NeueTeile_Bezeichnung").Value, _
+    Range("NeueTeile_Material").Value, _
+    Range("NeueTeile_NettoGewicht").Value, _
+    Range("NeueTeile_Anlage").Value, _
+    Range("NeueTeile_CuSchicht").Value, _
+    "", _
+    Range("NeueTeile_CuEZ").Value, _
+    "", _
+    Range("NeueTeile_AgSchicht").Value, _
+    Range("NeueTeile_AgBedarf").Value, _
+    Range("NeueTeile_AgEZStraße").Value, _
+    Range("NeueTeile_AgStromStraße").Value, _
+    Range("NeueTeile_AgEZGlocke").Value, _
+    Range("NeueTeile_AgStromGlocke").Value, _
+    Range("NeueTeile_Loettest").Value _
+  )
+  ' I7 is Materialnummer
+  ' Position 7 is Cu-Bedarf, leaved empty for future implementations
+  ' Position 9 is Cu-Strom, leaved empty for future implementations
+
+  ' Opening of database file
+  app.Visible = False ' Visible is False by default, so this should not be necessary
+  app.DisplayAlerts = False
+  Set wbook = app.Workbooks.Add(GDatabasePath)
+  Set sheet = wbook.Worksheets(2) ' Teil_DB
+  Set table = sheet.ListObjects.Item(GTeilDB_TableName)
+
+  ' Write data in database
+  table.ListRows.Add Position:=1
+  For j = LBound(teileData) To UBound(teileData)
+    table.DataBodyRange(1, (j + 1)).Value = teileData(j)
+  Next j
+
+  ' Save and close database
+  wbook.SaveAs GDatabasePath
+  app.Quit
+  Set app = Nothing
+
+  MsgBox "Done"
+  
+  ' Reset the form
+  'FormReset True
 End Sub
 
 Private Sub NeueTeile_LoeschenBtn_Click()
