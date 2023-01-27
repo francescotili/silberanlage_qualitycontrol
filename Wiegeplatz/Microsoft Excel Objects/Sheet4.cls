@@ -299,8 +299,7 @@ Private Sub NeueTeile_SpeichernBtn_Click()
 
   ' Show confirmation message
   Application.StatusBar = "Material-Nr. " & Range("E7").Value & " wurde gespeichert"
-  Beep
-  MsgBox "Done"
+  Notify Range("E7").Value, "Teile erfolghreich hinzugefügt", "Info", 10
   
   ' Reset the form
   'FormReset True
