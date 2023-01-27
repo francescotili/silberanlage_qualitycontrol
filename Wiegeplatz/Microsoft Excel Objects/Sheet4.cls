@@ -217,6 +217,14 @@ Private Sub NeueTeile_SpeichernBtn_Click()
 ' Read the form data and compile an array to write. Then opens the database file
 ' in hidden mode and write this data in the main parts database.
 ' Be sure to validate the data at the sheet level before calling this function!
+'
+' TASKS
+' [ ] Check if the Database file is already open
+' [ ] Wait for the Database file to close before saving
+' [ ] Update all the linked Query in the file after saving
+' [ ] Show saving message
+
+  ' Show saving message and block user interaction
 
   ' Definition of variables
   Dim app As New excel.Application
@@ -268,6 +276,7 @@ Private Sub NeueTeile_SpeichernBtn_Click()
   app.Quit
   Set app = Nothing
 
+  ' Show confirmation message
   MsgBox "Done"
   
   ' Reset the form
