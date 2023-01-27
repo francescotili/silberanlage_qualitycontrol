@@ -222,10 +222,12 @@ Private Sub NeueTeile_SpeichernBtn_Click()
 ' [x] Check if the Database file is already open
 ' [x] Wait for the Database file to close before saving
 ' [x] Update all the linked Query in the file after saving
-' [ ] Show saving message
+' [x] Show saving message
+' [ ] Show better saved message
 
   ' Show saving message and block user interaction
-
+  Application.StatusBar = "Datenbank wird geöffnet, bitte warten ..."
+  
   ' Definition of variables
   Dim app As New excel.Application
   Dim wbook As excel.Workbook
@@ -267,6 +269,7 @@ Private Sub NeueTeile_SpeichernBtn_Click()
   
   ' Check if database is open
   Do While IsDatabaseOpen = True
+    Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
     Application.Wait (Now + TimeValue("0:00:02"))
   Loop
 
@@ -274,6 +277,9 @@ Private Sub NeueTeile_SpeichernBtn_Click()
   app.Visible = False ' Visible is False by default, so this should not be necessary
   app.DisplayAlerts = False
   Set wbook = app.Workbooks.Add(GDatabasePath)
+  Application.StatusBar = "Wird gespeichert ..."
+  
+  ' Setting of targets
   Set sheet = wbook.Worksheets(2) ' Teil_DB
   Set table = sheet.ListObjects.Item(GTeilDB_TableName)
 
@@ -292,6 +298,7 @@ Private Sub NeueTeile_SpeichernBtn_Click()
   ThisWorkbook.RefreshAll
 
   ' Show confirmation message
+  Application.StatusBar = "Material-Nr. " & Range("E7").Value & " wurde gespeichert"
   MsgBox "Done"
   
   ' Reset the form
