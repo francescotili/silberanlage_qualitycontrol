@@ -219,8 +219,8 @@ Private Sub NeueTeile_SpeichernBtn_Click()
 ' Be sure to validate the data at the sheet level before calling this function!
 '
 ' TASKS
-' [ ] Check if the Database file is already open
-' [ ] Wait for the Database file to close before saving
+' [x] Check if the Database file is already open
+' [x] Wait for the Database file to close before saving
 ' [x] Update all the linked Query in the file after saving
 ' [ ] Show saving message
 
@@ -264,6 +264,11 @@ Private Sub NeueTeile_SpeichernBtn_Click()
   ' Position 7 is Cu-Bedarf, leaved empty for future implementations
   ' Position 9 is Cu-Strom, leaved empty for future implementations
   ' Position 16 is for Löttest, we validate in the code
+  
+  ' Check if database is open
+  Do While IsDatabaseOpen = True
+    Application.Wait (Now + TimeValue("0:00:02"))
+  Loop
 
   ' Opening of database file
   app.Visible = False ' Visible is False by default, so this should not be necessary
@@ -303,3 +308,20 @@ End Sub
 Private Sub NeueTeile_ResetBtn_Click()
   FormReset True
 End Sub
+
+Function IsDatabaseOpen()
+  Dim ff As Long, ErrNo As Long
+  
+  On Error Resume Next
+  ff = FreeFile()
+  Open GDatabasePath For Input Lock Read As #ff
+  Close ff
+  ErrNo = Err
+  On Error GoTo 0
+  
+  Select Case ErrNo
+    Case 0:    IsDatabaseOpen = False
+    Case 70:   IsDatabaseOpen = True
+    Case Else: Error ErrNo
+  End Select
+End Function
