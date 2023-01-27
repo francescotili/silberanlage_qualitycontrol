@@ -224,8 +224,9 @@ Private Sub NeueTeile_SpeichernBtn_Click()
 ' [x] Update all the linked Query in the file after saving
 ' [x] Show saving message
 ' [x] Show better saved message
-' [ ] Split workflow between edit and save
+' [x] Split workflow between edit and save
 ' [ ] Implement edit mode
+' [ ] Fuse save and edit together, workflow has to split only on the saving part!
 
   Dim isEditMode As Boolean
   isEditMode = Range("NeueTeile_IsTeileInDatabase").Value
@@ -242,7 +243,7 @@ Private Sub CreateMaterial()
 ' in hidden mode and write this data in the main parts database.
 ' Be sure to validate the data at the sheet level before calling this function!
 
-  ' Show saving message and block user interaction
+  ' Show saving message
   Application.StatusBar = "Datenbank wird geöffnet, bitte warten ..."
   
   ' Definition of variables
@@ -324,10 +325,34 @@ End Sub
 
 Private Sub EditMaterial()
 ' Read the form data and compile an array to write. Then opens the database file
-' in hidden mode and write this data in the main parts database.
+' in hidden mode, search the material and write this data in the main parts database.
 ' Be sure to validate the data at the sheet level before calling this function!
 
   MsgBox "Editing..."
+  
+  ' Show saving message
+  
+  ' Definition of variables
+  
+  ' Preparing data for write
+  
+  ' Check if database is open
+  
+  ' Opening of database file
+  
+  ' Setting of targets
+  
+  ' Searching the row to overwrite
+  
+  ' Write data in database
+  
+  ' Save and close the database
+  
+  ' Refresh all data connections & queries
+  
+  ' Show confirmation message
+  
+  ' Reset the form
 End Sub
 
 Private Sub NeueTeile_LoeschenBtn_Click()
