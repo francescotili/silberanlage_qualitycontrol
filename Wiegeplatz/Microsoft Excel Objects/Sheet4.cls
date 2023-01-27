@@ -226,110 +226,16 @@ Private Sub NeueTeile_SpeichernBtn_Click()
 ' [x] Show better saved message
 ' [x] Split workflow between edit and save
 ' [x] Implement edit mode
-' [ ] Fuse save and edit together, workflow has to split only on the saving part!
+' [x] Fuse save and edit together, workflow has to split only on the saving part!
 
-  Dim isEditMode As Boolean
-  isEditMode = Range("NeueTeile_IsTeileInDatabase").Value
-  
-  If isEditMode Then
-    EditMaterial
-  Else
-    CreateMaterial
-  End If
+  SaveMaterial
 End Sub
 
-Private Sub CreateMaterial()
+Private Sub SaveMaterial()
 ' Read the form data and compile an array to write. Then opens the database file
-' in hidden mode and write this data in the main parts database.
-' Be sure to validate the data at the sheet level before calling this function!
+' in hidden mode and write the data in the database. If the material is already there
+' it will overwritten
 
-  ' Show saving message
-  Application.StatusBar = "Datenbank wird geöffnet, bitte warten ..."
-  
-  ' Definition of variables
-  Dim app As New excel.Application
-  Dim wbook As excel.Workbook
-  Dim sheet As Worksheet
-  Dim table As ListObject
-  Dim teileData As Variant
-  Dim j As Long
-  Dim newRow As ListRow
-  Dim alterungDB As Boolean
-
-  ' Preparing data for write
-  alterungDB = False
-  If Range("NeueTeile_Loettest") = "JA" Then
-    alterungDB = True
-  End If
-  
-  teileData = Array( _
-    Range("I7").Value, _
-    Range("NeueTeile_Bezeichnung").Value, _
-    Range("NeueTeile_Material").Value, _
-    Range("NeueTeile_NettoGewicht").Value, _
-    Range("NeueTeile_Anlage").Value, _
-    Range("NeueTeile_CuSchicht").Value, _
-    "", _
-    Range("NeueTeile_CuEZ").Value, _
-    "", _
-    Range("NeueTeile_AgSchicht").Value, _
-    Range("NeueTeile_AgBedarf").Value, _
-    Range("NeueTeile_AgEZStraße").Value, _
-    Range("NeueTeile_AgStromStraße").Value, _
-    Range("NeueTeile_AgEZGlocke").Value, _
-    Range("NeueTeile_AgStromGlocke").Value, _
-    alterungDB _
-  )
-  ' I7 is Materialnummer
-  ' Position 7 is Cu-Bedarf, leaved empty for future implementations
-  ' Position 9 is Cu-Strom, leaved empty for future implementations
-  ' Position 16 is for Löttest, we validate in the code
-  
-  ' Check if database is open
-  Do While IsDatabaseOpen = True
-    Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
-    Application.Wait (Now + TimeValue("0:00:02"))
-  Loop
-
-  ' Opening of database file
-  app.Visible = False ' Visible is False by default, so this should not be necessary
-  app.DisplayAlerts = False
-  Set wbook = app.Workbooks.Add(GDatabasePath)
-  Application.StatusBar = "Wird gespeichert ..."
-  
-  ' Setting of targets
-  Set sheet = wbook.Worksheets(2) ' Teil_DB
-  Set table = sheet.ListObjects.Item(GTeilDB_TableName)
-
-  ' Write data in database
-  table.ListRows.Add Position:=1
-  For j = LBound(teileData) To UBound(teileData)
-    table.DataBodyRange(1, (j + 1)).Value = teileData(j)
-  Next j
-
-  ' Save and close database
-  wbook.SaveAs GDatabasePath
-  app.Quit
-  Set app = Nothing
-
-  ' Refresh all data connections & queries
-  ThisWorkbook.RefreshAll
-
-  ' Show confirmation message
-  Application.StatusBar = "Material-Nr. " & Range("E7").Value & " wurde gespeichert"
-  Notify Range("E7").Value, "Teile erfolghreich hinzugefügt", "Info", 10
-  
-  ' Reset the form
-  'FormReset True
-End Sub
-
-Private Sub EditMaterial()
-' Read the form data and compile an array to write. Then opens the database file
-' in hidden mode, search the material and write this data in the main parts database.
-' Be sure to validate the data at the sheet level before calling this function!
-
-  MsgBox "Editing..."
-  
   ' Show saving message
   Application.StatusBar = "Datenbank wird geöffnet, bitte warten ..."
   
@@ -344,6 +250,7 @@ Private Sub EditMaterial()
   Dim newRow As ListRow
   Dim teileRow As Integer
   Dim alterungDB As Boolean
+  Dim isEditMode As Boolean
   
   ' Preparing data for write
   alterungDB = False
@@ -390,22 +297,33 @@ Private Sub EditMaterial()
   Set sheet = wbook.Worksheets(2) ' Teil_DB
   Set table = sheet.ListObjects.Item(GTeilDB_TableName)
   
-  ' Searching the row to overwrite
-  ' Note: it is much faster to read a range of values into an array, then do calculations
-  ' on that array, instead of doing the same calculation of the range of values itself.
-  ' Aka, we make a single read operation and then operate of the array of values
-  materials = table.DataBodyRange
-  For i = LBound(materials) To UBound(materials)
-    If CStr(materials(i, 1)) = CStr(Range("I7").Value) Then
-      teileRow = i
-      Exit For
-    End If
-  Next i
+  ' Splitting workflow between Edit and Create
+  isEditMode = Range("NeueTeile_IsTeileInDatabase").Value
   
-  ' Write data in database
-  For j = LBound(teileData) To UBound(teileData)
-    table.DataBodyRange(teileRow, (j + 1)).Value = teileData(j)
-  Next j
+  If isEditMode Then ' EDIT MODE
+    ' Searching the row to overwrite
+    '   Note: it is much faster to read a range of values into an array, then do calculations
+    '   on that array, instead of doing the same calculation of the range of values itself
+    '   I have found no way to only read a column, we need to read all the table
+    materials = table.DataBodyRange
+    For i = LBound(materials) To UBound(materials)
+      If CStr(materials(i, 1)) = CStr(Range("I7").Value) Then
+        teileRow = i
+        Exit For
+      End If
+    Next i
+  
+    ' Write data in database
+    For j = LBound(teileData) To UBound(teileData)
+      table.DataBodyRange(teileRow, (j + 1)).Value = teileData(j)
+    Next j
+  Else ' CREATE MODE
+    ' Write data in database
+    table.ListRows.Add Position:=1
+    For j = LBound(teileData) To UBound(teileData)
+      table.DataBodyRange(1, (j + 1)).Value = teileData(j)
+    Next j
+  End If
   
   ' Save and close the database
   wbook.SaveAs GDatabasePath
@@ -416,8 +334,13 @@ Private Sub EditMaterial()
   ThisWorkbook.RefreshAll
   
   ' Show confirmation message
-  Application.StatusBar = "Material-Nr. " & Range("E7").Value & " wurde gespeichert"
-  Notify Range("E7").Value, "Teile erfolghreich aktualisiert", "Info", 10
+  If isEditMode Then ' EDIT MODE
+    Application.StatusBar = "Material-Nr. " & Range("E7").Value & " wurde aktualisiert"
+    Notify Range("E7").Value, "Teile erfolghreich aktualisiert", "Info", 10
+  Else ' CREATE MODE
+    Application.StatusBar = "Material-Nr. " & Range("E7").Value & " wurde erstellt"
+    Notify Range("E7").Value, "Teile erfolghreich hinzugefügt", "Info", 10
+  End If
   
   ' Reset the form
   'FormReset True
