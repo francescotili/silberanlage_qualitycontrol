@@ -214,9 +214,9 @@ Private Sub CreateMode_Fill()
 End Sub
 
 Private Sub NeueTeile_SpeichernBtn_Click()
-' Read the form data and compile an array to write. Then opens the database file
-' in hidden mode and write this data in the main parts database.
-' Be sure to validate the data at the sheet level before calling this function!
+' Save workflow triggered by Save button.
+' If the Material is already in the database, it will call the Edit function
+' If the Material is not in the database, it will call the Create function
 '
 ' TASKS
 ' [x] Check if the Database file is already open
@@ -226,6 +226,21 @@ Private Sub NeueTeile_SpeichernBtn_Click()
 ' [x] Show better saved message
 ' [ ] Split workflow between edit and save
 ' [ ] Implement edit mode
+
+  Dim isEditMode As Boolean
+  isEditMode = Range("NeueTeile_IsTeileInDatabase").Value
+  
+  If isEditMode Then
+    EditMaterial
+  Else
+    CreateMaterial
+  End If
+End Sub
+
+Private Sub CreateMaterial()
+' Read the form data and compile an array to write. Then opens the database file
+' in hidden mode and write this data in the main parts database.
+' Be sure to validate the data at the sheet level before calling this function!
 
   ' Show saving message and block user interaction
   Application.StatusBar = "Datenbank wird geöffnet, bitte warten ..."
@@ -305,6 +320,14 @@ Private Sub NeueTeile_SpeichernBtn_Click()
   
   ' Reset the form
   'FormReset True
+End Sub
+
+Private Sub EditMaterial()
+' Read the form data and compile an array to write. Then opens the database file
+' in hidden mode and write this data in the main parts database.
+' Be sure to validate the data at the sheet level before calling this function!
+
+  MsgBox "Editing..."
 End Sub
 
 Private Sub NeueTeile_LoeschenBtn_Click()
