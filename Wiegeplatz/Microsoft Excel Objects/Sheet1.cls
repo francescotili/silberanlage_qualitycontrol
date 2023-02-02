@@ -112,10 +112,20 @@ Private Sub Form_Fill()
   ' Copy "Standardanlage"
   Set anlageCell = Range("NeueCharge_Anlage")
   anlageCell.Value = Range("I16").Value
-  
 End Sub
 
 Private Sub NeueCharge_SpeichernBtn_Click()
+' Save workflow triggered by Save button.
+' This form will always create a new Chargenummer and add it to the
+' Production database
+'
+' TASKS
+' [ ] Check if the Database file is already open
+' [ ] Wait for the Database file to close before saving
+' [ ] Write data to the database
+' [ ] Update all the linked Query in the file after saving
+' [ ] Show saving message
+
   MsgBox "It works!"
   FormReset True
 End Sub
