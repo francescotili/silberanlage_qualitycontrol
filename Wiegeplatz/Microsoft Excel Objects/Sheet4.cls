@@ -232,7 +232,7 @@ Private Sub NeueTeile_SpeichernBtn_Click()
 End Sub
 
 Private Sub SaveMaterial()
-' Read the form data and compile an array to write. Then opens the database file
+' Reads the form data and compile an array to write. Then opens the database file
 ' in hidden mode and write the data in the database. If the material is already there
 ' it will overwritten
 
@@ -343,7 +343,7 @@ Private Sub SaveMaterial()
   End If
   
   ' Reset the form
-  'FormReset True
+  FormReset True
 End Sub
 
 Private Sub NeueTeile_LoeschenBtn_Click()
