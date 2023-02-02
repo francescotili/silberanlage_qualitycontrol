@@ -5,7 +5,7 @@ Private barCodeCell, barCodeValueCell, chargeWeightCell, anlageCell, isTeileInDB
 Private materialNummerInDB As Boolean
 
 Private Sub Worksheet_Activate()
-  FormReset
+  FormReset True
 End Sub
 
 Private Sub Worksheet_Change(ByVal Target As Range)
@@ -22,7 +22,9 @@ Private Sub Worksheet_Change(ByVal Target As Range)
   If Not Intersect(Target, barCodeCell) Is Nothing Then
     If Not isBarcodeEmptyCell.Value Then
       If isBarcodeValidCell.Value Then
-        If Not isTeileInDBCell Then
+        If isTeileInDBCell Then
+          FormReset False
+        Else
           If MsgBox("Teilenummer nicht vorhanden!" & vbNewLine & "Jetzt hinzufügen?", vbInformation + vbYesNo + vbDefaultButton1, "ACHTUNG") = vbYes Then
             Dim barcode
             barcode = barCodeCell.Value
@@ -30,11 +32,11 @@ Private Sub Worksheet_Change(ByVal Target As Range)
             Sheet4.Range("NeueTeile_Barcode").Value = barcode
             Exit Sub
           End If
-          FormReset
+          FormReset True
         End If
       Else
         MsgBox "Ungültiger barcode!"
-        FormReset
+        FormReset True
       End If
     End If
   End If
@@ -48,24 +50,33 @@ Private Sub Worksheet_Change(ByVal Target As Range)
   End If
 End Sub
 
-Private Sub FormReset()
+Private Sub FormReset(ByVal BarcodeReset As Boolean)
 ' Resets the form, deleting all the custom data and moving the selection
 ' to the barcode cell
 
   Set sheet = Sheet1
   
-  ' Define cell ranges
-  Set barCodeCell = Range("NeueCharge_Barcode")
-  Set chargeWeightCell = Range("NeueCharge_Gewicht")
-  Set anlageCell = Range("NeueCharge_Anlage")
-  
   ' Disable protection
   sheet.Unprotect Password:=GAdminPassword
   
   ' Reset form
-  barCodeCell.ClearContents
+  If BarcodeReset Then
+    Set barCodeCell = Range("NeueCharge_Barcode")
+    barCodeCell.ClearContents
+  End If
+  
+  Set chargeWeightCell = Range("NeueCharge_Gewicht")
   chargeWeightCell.ClearContents
-  anlageCell.Formula = "=I16"
+  
+  Set anlageCell = Range("NeueCharge_Anlage")
+  anlageCell.ClearContents
+  
+  Set kupferSchichtCell = Range("NeueCharge_CuSchicht")
+  kupferSchichtCell.ClearContents
+  
+  Set silberSchichtCell = Range("NeueCharge_AgSchicht")
+  silberSchichtCell.ClearContents
+  
   barCodeCell.Select
   
   ' Enable protection
@@ -75,9 +86,9 @@ End Sub
 
 Private Sub NeueCharge_SpeichernBtn_Click()
   MsgBox "It works!"
-  FormReset
+  FormReset True
 End Sub
 
 Private Sub NeueCharge_AbbrechenBtn_Click()
-  FormReset
+  FormReset True
 End Sub
