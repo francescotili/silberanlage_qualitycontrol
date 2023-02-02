@@ -134,6 +134,7 @@ Private Sub SaveCharge()
 ' row with a unique ChargeNummer.
 
   ' Show saving messaage
+  Application.StatusBar = "Datenbank wird geöffnet, bitte warten ..."
 
   ' Definition of variables
 
@@ -142,6 +143,7 @@ Private Sub SaveCharge()
   ' Check if database is open
 
   ' Opening of database file
+  Application.StatusBar = "Wird gespeichert ..."
 
   ' Setting of targets
 
@@ -152,6 +154,8 @@ Private Sub SaveCharge()
   ' Refresh all data connections & queries
 
   ' Show confirmation message
+  Application.StatusBar = "Neue Charge für Material " & Range("E7").Value & " erfolgreich gespeichert"
+  Notify Range("E7").Value, "Charge erfolgreich hinzugefügt", "Info", 10
 
   ' Reset the form
   'FormReset True
