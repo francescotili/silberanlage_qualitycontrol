@@ -10,8 +10,6 @@ End Sub
 
 Private Sub Worksheet_Change(ByVal Target As Range)
 ' Is triggered everytime a cell content changes in the Worksheet
-' but a filter watch, in the main logic, only for changes in the
-' barcode cell
 
   ' Define cell ranges
   Set barCodeCell = Range("NeueCharge_Barcode")
@@ -43,10 +41,11 @@ Private Sub Worksheet_Change(ByVal Target As Range)
   
   ' Enable or disable the save button
   NeueCharge_SpeichernBtn.Enabled = False
+  NeueCharge_SpeichernBtn.BackColor = vbButtonFace
   If isFormValidCell.Value Then
     NeueCharge_SpeichernBtn.Enabled = True
+    NeueCharge_SpeichernBtn.BackColor = RGB(0, 192, 0)
   End If
-  
 End Sub
 
 Private Sub FormReset()
