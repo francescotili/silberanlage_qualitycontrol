@@ -1,7 +1,9 @@
 Option Explicit
 
 Public sheet As Worksheet
-Private barCodeCell, barCodeValueCell, chargeWeightCell, anlageCell, isTeileInDBCell, saveBtnCell, resetBtnCell, isFormValidCell, isBarcodeValidCell, isBarcodeEmptyCell As Range
+Private barCodeCell, barCodeValueCell, chargeWeightCell, anlageCell, isTeileInDBCell As Range
+Private isFormValidCell, isBarcodeValidCell, isBarcodeEmptyCell, kupferSchichtCell As Range
+Private silberSchichtCell As Range
 Private materialNummerInDB As Boolean
 
 Private Sub Worksheet_Activate()
@@ -24,6 +26,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)
       If isBarcodeValidCell.Value Then
         If isTeileInDBCell Then
           FormReset False
+          Form_Fill
         Else
           If MsgBox("Teilenummer nicht vorhanden!" & vbNewLine & "Jetzt hinzufügen?", vbInformation + vbYesNo + vbDefaultButton1, "ACHTUNG") = vbYes Then
             Dim barcode
@@ -82,6 +85,34 @@ Private Sub FormReset(ByVal BarcodeReset As Boolean)
   ' Enable protection
   sheet.Protect Password:=GAdminPassword
   sheet.EnableSelection = xlUnlockedCells
+End Sub
+
+Private Sub Form_Fill()
+' Compile the form with the data scanned from the Kanban Karte and the data
+' retrieved from the database
+
+  ' Copy "Kupferschicht"
+  Set kupferSchichtCell = Range("NeueCharge_CuSchicht")
+  If Range("I13").Value <> "" Then
+    If CLng(Range("I13").Value) <> 0 Then
+      kupferSchichtCell.Value = Range("I13").Value
+    Else
+      kupferSchichtCell.Value = "NEIN"
+    End If
+  End If
+
+  ' Copy "Silberschicht"
+  Set silberSchichtCell = Range("NeueCharge_AgSchicht")
+  If Range("I14").Value <> "" Then
+    If CLng(Range("I14").Value) <> 0 Then
+      silberSchichtCell.Value = Range("I14").Value
+    End If
+  End If
+  
+  ' Copy "Standardanlage"
+  Set anlageCell = Range("NeueCharge_Anlage")
+  anlageCell.Value = Range("I16").Value
+  
 End Sub
 
 Private Sub NeueCharge_SpeichernBtn_Click()
