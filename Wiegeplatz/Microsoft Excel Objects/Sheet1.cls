@@ -125,9 +125,37 @@ Private Sub NeueCharge_SpeichernBtn_Click()
 ' [ ] Write data to the database
 ' [ ] Update all the linked Query in the file after saving
 ' [ ] Show saving message
+  SaveCharge
+End Sub
 
+Private Sub SaveCharge()
+' Reads the form data and compile an array to write. Then opens the database file
+' in hidden mode and write the data in the database. It will always produce a new
+' row with a unique ChargeNummer.
+
+  ' Show saving messaage
+
+  ' Definition of variables
+
+  ' Preparing data for write
+
+  ' Check if database is open
+
+  ' Opening of database file
+
+  ' Setting of targets
+
+  ' Write data in database
+
+  ' Save and close the database
+
+  ' Refresh all data connections & queries
+
+  ' Show confirmation message
+
+  ' Reset the form
+  'FormReset True
   MsgBox "It works!"
-  FormReset True
 End Sub
 
 Private Sub NeueCharge_AbbrechenBtn_Click()
