@@ -227,6 +227,7 @@ Private Sub NeueTeile_SpeichernBtn_Click()
 ' [x] Split workflow between edit and save
 ' [x] Implement edit mode
 ' [x] Fuse save and edit together, workflow has to split only on the saving part!
+' [ ] Add Kommentarfield
 
   SaveMaterial
 End Sub

@@ -120,7 +120,8 @@ Private Sub NeueCharge_SpeichernBtn_Click()
 ' Production database
 '
 ' TASKS
-' [ ] Define the charges database structure
+' [x] Define the charges database structure
+' [ ] Add Mitarbeiter- and Kommentarfield
 ' [ ] Check if the Database file is already open
 ' [ ] Wait for the Database file to close before saving
 ' [ ] Write data to the database
