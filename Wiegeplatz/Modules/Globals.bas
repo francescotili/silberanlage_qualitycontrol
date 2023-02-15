@@ -12,79 +12,81 @@ Global Const GTeilDB_TableName As String = "Teiledatenbank"
 '   KW
 '   Monat
 '   Schicht
-'   MitarbeiterAnnahme
-'   KommentarAnnahme
+'   Mitarbeiter Annahme
+'   Kommentar Annahme
 '   Materialnummer
-'   GewichtNetto
-'   Kupferschicht_soll
-'   Kupferschicht_min
-'   Kupferschicht_max
-'   Silberschicht_soll
-'   Silberschicht_min
-'   Silberschicht_max
+'   Gewicht (netto/Tsd) = 10
+'   Cu Schicht (soll)
+'   Cu Schicht (min)
+'   Cu Schicht (max)
+'   Ag Schicht (soll)
+'   Ag Schicht (min)
+'   Ag Schicht (max)
 '   Auftragsnummer
 '   Füllmenge
 '   Stückzahl
-'   SilberBedarf_soll
-'   KupferBedarf_soll
+'   Ag Bedarf (soll) = 20
+'   Cu Bedarf (soll)
 '   Anlage
 '   Trommel
-'   KupferLaufzeit_soll
-'   KupferLaufzeit_ist
-'   KupferStrom_soll
-'   KupferStrom_ist
-'   SilberLaufzeit_soll
-'   SilberLaufzeit_ist
-'   SilberStrom_soll
-'   SilberStrom_ist
+'   Cu Laufzeit (soll)
+'   Cu Laufzeit (ist)
+'   Cu Strom (soll)
+'   Cu Strom (ist)
+'   Ag Laufzeit (soll)
+'   Ag Laufzeit (ist)
+'   Ag Strom (soll) = 30
+'   Ag Strom (ist)
 '   Passivierungsbad
-'   KommentarProzess
-'   Nacharbeit
-'   Nacharbeit_Anlage
-'   Nacharbeit_Trommel
-'   Nacharbeit_Laufzeit_soll
-'   Kupferschicht_ist
-'   Silberschicht_ist
-'   Silberschicht_nacharbeit
-'   SilberBedarf_nacharbeit
-'   Biegetest_iO
-'   Biegetest_niO
-'   SilberEingespart
-'   Alterung_iO
-'   Alterung_niO
-'   Alterung_Mitarbeiter
-'   Alterung_Datum
-'   KommentarQualität
+'   Prozess Kommentar
+'   Nacharbeit Art
+'   Nacharbeit Kommentar
+'   Nacharbeit Anlage
+'   Nacharbeit Trommel
+'   Nacharbeit Laufzeit (soll)
+'   Cu Schicht (ist)
+'   Ag Schicht (ist) = 40
+'   Ag Bedarf (ist)
+'   Ag Schicht (nacharbeit)
+'   Ag Bedarf (+nacharbeit)
+'   Biegetest (iO)
+'   Biegetest (niO)
+'   Ag Eingespart
+'   Alterung (iO)
+'   Alterung (niO)
+'   Alterung Mitarbeiter
+'   Alterung Datum = 50
+'   Qualität Kommentar
 '   Entschied
 
 ' Teiledatenbank Database columns
 '   Materialnummer = 1
 '   Bezeichnung
 '   Grundmaterial
-'   GewichtNetto
-'   Anlage_soll
-'   Kupferschicht
-'   KupferBedarf
-'   Kupfer_EZ
-'   KupferStrom
-'   Silberschicht
-'   SilberBedarf
-'   Silber_EZ_Straße
-'   SilberStrom_Straße
-'   Silber_EZ_Glocke
-'   SilberStrom_Glocke
+'   Netto Gewicht
+'   Anlage (soll)
+'   Cu Schicht
+'   Cu Bedarf
+'   Cu EZ
+'   Cu Strom
+'   Ag Schicht = 10
+'   Ag Bedarf
+'   Ag EZ Straße
+'   Ag Strom Straße
+'   Ag EZ Glocke
+'   Ag Strom Glocke
 '   Löten
-'   XRayMethode
+'   Xray Methode
 '   Kommentar
 
 ' EZ Datenbank Database columns
 '   Materialnummer = 1
 '   Grundmaterial
-'   Silberschicht
-'   Silber_EZ_Straße
-'   Silber_EZ_Glocke
-'   Kupferschicht
-'   Kupfer_EZ
+'   Ag Schicht
+'   EZ Ag Straße
+'   EZ Ag Glocke
+'   Cu Schicht
+'   EZ Cu
 '   Kommentar
 
 Public Function Notify(ByVal title As String, ByVal msg As String, _
