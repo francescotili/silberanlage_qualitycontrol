@@ -121,12 +121,13 @@ Private Sub NeueCharge_SpeichernBtn_Click()
 '
 ' TASKS
 ' [x] Define the charges database structure
-' [ ] Add Mitarbeiter- and Kommentarfield
-' [ ] Check if the Database file is already open
-' [ ] Wait for the Database file to close before saving
-' [ ] Write data to the database
-' [ ] Update all the linked Query in the file after saving
-' [ ] Show saving message
+' [x] Add Mitarbeiter- and Kommentarfield
+' [x] Check if the Database file is already open
+' [x] Wait for the Database file to close before saving
+' [x] Use all named ranges for data preparation
+' [x] Write data to the database
+' [x] Update all the linked Query in the file after saving
+' [x] Show saving message
   SaveCharge
 End Sub
 
@@ -139,31 +140,85 @@ Private Sub SaveCharge()
   Application.StatusBar = "Datenbank wird geöffnet, bitte warten ..."
 
   ' Definition of variables
-
-  ' Preparing data for write
+  Dim app As New excel.Application
+  Dim wbook As excel.Workbook
+  Dim sheet As Worksheet
+  Dim table As ListObject
+  Dim chargeData As Variant
+  Dim newRow As ListRow
 
   ' Check if database is open
+  Do While IsDatabaseOpen = True
+    Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
+    Application.Wait (Now + TimeValue("0:00:02"))
+  Loop
 
   ' Opening of database file
+  app.Visible = False ' Visibile is False by default, so this should not be necessary
+  app.DisplayAlerts = False
+  Set wbook = app.Workbooks.Add(GDatabasePath)
   Application.StatusBar = "Wird gespeichert ..."
 
   ' Setting of targets
+  Set sheet = wbook.Worksheets(1) ' Main Database
+  Set table = sheet.ListObjects.Item(GQSilberDB_TableName)
 
   ' Write data in database
+  table.ListRows.Add Position:=1
+  With table
+    .DataBodyRange(1, 1).Value = Range("NeueCharge_Chargenummer").Value
+    .DataBodyRange(1, 2).Value = Range("NeueCharge_Datum").Value
+    .DataBodyRange(1, 6).Value = Range("NeueCharge_Schicht").Value
+    .DataBodyRange(1, 7).Value = Range("NeueCharge_Mitarbeiter").Value
+    .DataBodyRange(1, 8).Value = Range("NeueCharge_Kommentar").Value
+    ' I7 is Materialnummer for DB
+    .DataBodyRange(1, 9).Value = Range("I7").Value
+    .DataBodyRange(1, 10).Value = Range("NeueCharge_Nettogewicht").Value
+    .DataBodyRange(1, 11).Value = Range("NeueCharge_CuSchicht").Value
+    .DataBodyRange(1, 14).Value = Range("NeueCharge_AgSchicht").Value
+    .DataBodyRange(1, 17).Value = Range("NeueCharge_Auftrag").Value
+    .DataBodyRange(1, 18).Value = Range("NeueCharge_FullmengeAFO").Value
+    .DataBodyRange(1, 19).Value = Range("NeueCharge_Stuckzahl").Value
+    .DataBodyRange(1, 20).Value = Range("NeueCharge_SilberBedarfsoll").Value
+    .DataBodyRange(1, 22).Value = Range("NeueCharge_Anlage").Value
+    .DataBodyRange(1, 24).Value = Range("NeueCharge_CuZahlerwert").Value
+    .DataBodyRange(1, 27).Value = Range("NeueCharge_AgZahlerwert").Value
+    .DataBodyRange(1, 30).Value = Range("NeueCharge_AgSollstrom").Value
+  End With
 
   ' Save and close the database
+  wbook.SaveAs GDatabasePath
+  app.Quit
+  Set app = Nothing
 
   ' Refresh all data connections & queries
+  ThisWorkbook.RefreshAll
 
   ' Show confirmation message
   Application.StatusBar = "Neue Charge für Material " & Range("E7").Value & " erfolgreich gespeichert"
   Notify Range("E7").Value, "Charge erfolgreich hinzugefügt", "Info", 10
 
   ' Reset the form
-  'FormReset True
-  MsgBox "It works!"
+  FormReset True
 End Sub
 
 Private Sub NeueCharge_AbbrechenBtn_Click()
   FormReset True
 End Sub
+
+Function IsDatabaseOpen()
+  Dim ff As Long, ErrNo As Long
+
+  On Error Resume Next
+  ff = FreeFile()
+  Open GDatabasePath For Input Lock Read As #ff
+  Close ff
+  ErrNo = Err
+  On Error GoTo 0
+
+  Select Case ErrNo
+    Case 0:    IsDatabaseOpen = False
+    Case 70:   IsDatabaseOpen = True
+    Case Else: Error ErrNo
+  End Select
+End Function
