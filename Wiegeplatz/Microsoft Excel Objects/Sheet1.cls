@@ -1,7 +1,7 @@
 Option Explicit
 
 Public sheet As Worksheet
-Private barCodeCell, barCodeValueCell, chargeWeightCell, anlageCell, isTeileInDBCell As Range
+Private barCodeCell, barCodeValueCell, isTeileInDBCell As Range
 Private isFormValidCell, isBarcodeValidCell, isBarcodeEmptyCell, kupferSchichtCell As Range
 Private silberSchichtCell As Range
 Private materialNummerInDB As Boolean
@@ -68,17 +68,11 @@ Private Sub FormReset(ByVal BarcodeReset As Boolean)
     barCodeCell.ClearContents
   End If
   
-  Set chargeWeightCell = Range("NeueCharge_Gewicht")
-  chargeWeightCell.ClearContents
-  
-  Set anlageCell = Range("NeueCharge_Anlage")
-  anlageCell.ClearContents
-  
-  Set kupferSchichtCell = Range("NeueCharge_CuSchicht")
-  kupferSchichtCell.ClearContents
-  
-  Set silberSchichtCell = Range("NeueCharge_AgSchicht")
-  silberSchichtCell.ClearContents
+  Range("NeueCharge_Gewicht").ClearContents
+  Range("NeueCharge_Anlage").ClearContents
+  Range("NeueCharge_CuSchicht").ClearContents
+  Range("NeueCharge_AgSchicht").ClearContents
+  Range("NeueCharge_Kommentar").ClearContents
   
   barCodeCell.Select
   
@@ -90,6 +84,9 @@ End Sub
 Private Sub Form_Fill()
 ' Compile the form with the data scanned from the Kanban Karte and the data
 ' retrieved from the database
+  
+  ' Disable protection
+  sheet.Unprotect Password:=GAdminPassword
 
   ' Copy "Kupferschicht"
   Set kupferSchichtCell = Range("NeueCharge_CuSchicht")
@@ -110,8 +107,11 @@ Private Sub Form_Fill()
   End If
   
   ' Copy "Standardanlage"
-  Set anlageCell = Range("NeueCharge_Anlage")
-  anlageCell.Value = Range("I16").Value
+  Range("NeueCharge_Anlage").Value = Range("I16").Value
+  
+  ' Enable protection
+  sheet.Protect Password:=GAdminPassword
+  sheet.EnableSelection = xlUnlockedCells
 End Sub
 
 Private Sub NeueCharge_SpeichernBtn_Click()
