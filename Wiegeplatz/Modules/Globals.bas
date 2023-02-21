@@ -42,6 +42,7 @@ Global const GQSilberDB_TableName As String = "Qualitätsdatabase"
 '   Prozess Kommentar
 '   Nacharbeit Art
 '   Nacharbeit Kommentar
+'   Nacharbeit Mitarbeiter
 '   Nacharbeit Anlage
 '   Nacharbeit Trommel
 '   Nacharbeit Laufzeit (soll)
