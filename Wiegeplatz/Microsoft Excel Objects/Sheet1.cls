@@ -146,6 +146,10 @@ Private Sub SaveCharge()
   Dim table As ListObject
   Dim chargeData As Variant
   Dim newRow As ListRow
+  Dim chargeNummer As String
+  
+  ' Freeze the Chargenummer
+  chargeNummer = Range("NeueCharge_Chargenummer").Value
 
   ' Check if database is open
   Do While IsDatabaseOpen = True
@@ -166,7 +170,7 @@ Private Sub SaveCharge()
   ' Write data in database
   table.ListRows.Add Position:=1
   With table
-    .DataBodyRange(1, 1).Value = Range("NeueCharge_Chargenummer").Value
+    .DataBodyRange(1, 1).Value = chargeNummer
     .DataBodyRange(1, 2).Value = Range("NeueCharge_Datum").Value
     .DataBodyRange(1, 6).Value = Range("NeueCharge_Schicht").Value
     .DataBodyRange(1, 7).Value = Range("NeueCharge_Mitarbeiter").Value
@@ -185,6 +189,10 @@ Private Sub SaveCharge()
     .DataBodyRange(1, 27).Value = Range("NeueCharge_AgZahlerwert").Value
     .DataBodyRange(1, 30).Value = Range("NeueCharge_AgSollstrom").Value
   End With
+  
+  ' Print the Chargeschein
+  Sheet7.Range("Zettel_ChargeNummer").Value = chargeNummer
+  'PrintChargeschein
 
   ' Save and close the database
   wbook.SaveAs GDatabasePath
@@ -222,3 +230,30 @@ Function IsDatabaseOpen()
     Case Else: Error ErrNo
   End Select
 End Function
+
+Private Sub PrintChargeschein()
+  Dim chargePaper As Worksheet
+  Set chargePaper = Sheet7 ' Zettel
+
+  ' Set up the page
+  With chargePaper.PageSetup
+    .PaperSize = 70 ' Found with macro recorder, should be A6
+    .Orientation = xlPortrait
+    .FitToPagesWide = 1
+    .FitToPagesTall = False
+    .Zoom = False
+    .BlackAndWhite = False
+    .HeaderMargin = 0
+    .FooterMargin = 0
+    .TopMargin = 0.5
+    .BottomMargin = 0.5
+    .RightMargin = 0.5
+    .LeftMargin = 0.5
+    .CenterHorizontally = True
+    .CenterVertically = True
+  End With
+
+  ' Print the page
+  'chargePaper.PrintPreview
+  chargePaper.PrintOut
+End Sub
