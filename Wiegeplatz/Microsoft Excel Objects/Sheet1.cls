@@ -186,7 +186,7 @@ Private Sub SaveCharge()
     .DataBodyRange(1, 20).Value = Range("NeueCharge_SilberBedarfsoll").Value
     .DataBodyRange(1, 22).Value = Range("NeueCharge_Anlage").Value
     .DataBodyRange(1, 24).Value = Range("NeueCharge_CuZahlerwert").Value
-    .DataBodyRange(1, 27).Value = Range("NeueCharge_AgZahlerwert").Value
+    .DataBodyRange(1, 28).Value = Range("NeueCharge_AgZahlerwert").Value
     .DataBodyRange(1, 30).Value = Range("NeueCharge_AgSollstrom").Value
   End With
   
