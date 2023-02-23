@@ -170,24 +170,24 @@ Private Sub SaveCharge()
   ' Write data in database
   table.ListRows.Add Position:=1
   With table
-    .DataBodyRange(1, 1).Value = chargeNummer
-    .DataBodyRange(1, 2).Value = Range("NeueCharge_Datum").Value
-    .DataBodyRange(1, 6).Value = Range("NeueCharge_Schicht").Value
-    .DataBodyRange(1, 7).Value = Range("NeueCharge_Mitarbeiter").Value
-    .DataBodyRange(1, 8).Value = Range("NeueCharge_Kommentar").Value
+    .DataBodyRange(1, QSilberDB_Col.Chargenummer).Value = chargeNummer
+    .DataBodyRange(1, QSilberDB_Col.Datum).Value = Range("NeueCharge_Datum").Value
+    .DataBodyRange(1, QSilberDB_Col.Schicht).Value = Range("NeueCharge_Schicht").Value
+    .DataBodyRange(1, QSilberDB_Col.Annahme_Mitarbeiter).Value = Range("NeueCharge_Mitarbeiter").Value
+    .DataBodyRange(1, QSilberDB_Col.Annhame_Kommentar).Value = Range("NeueCharge_Kommentar").Value
     ' I7 is Materialnummer for DB
-    .DataBodyRange(1, 9).Value = Range("I7").Value
-    .DataBodyRange(1, 10).Value = Range("NeueCharge_Nettogewicht").Value
-    .DataBodyRange(1, 11).Value = Range("NeueCharge_CuSchicht").Value
-    .DataBodyRange(1, 14).Value = Range("NeueCharge_AgSchicht").Value
-    .DataBodyRange(1, 17).Value = Range("NeueCharge_Auftrag").Value
-    .DataBodyRange(1, 18).Value = Range("NeueCharge_FullmengeAFO").Value
-    .DataBodyRange(1, 19).Value = Range("NeueCharge_Stuckzahl").Value
-    .DataBodyRange(1, 20).Value = Range("NeueCharge_SilberBedarfsoll").Value
-    .DataBodyRange(1, 22).Value = Range("NeueCharge_Anlage").Value
-    .DataBodyRange(1, 24).Value = Range("NeueCharge_CuZahlerwert").Value
-    .DataBodyRange(1, 28).Value = Range("NeueCharge_AgZahlerwert").Value
-    .DataBodyRange(1, 30).Value = Range("NeueCharge_AgSollstrom").Value
+    .DataBodyRange(1, QSilberDB_Col.Materialnummer).Value = Range("I7").Value
+    .DataBodyRange(1, QSilberDB_Col.Gewicht_netto).Value = Range("NeueCharge_Nettogewicht").Value
+    .DataBodyRange(1, QSilberDB_Col.CuSchicht_soll).Value = Range("NeueCharge_CuSchicht").Value
+    .DataBodyRange(1, QSilberDB_Col.AgSchicht_soll).Value = Range("NeueCharge_AgSchicht").Value
+    .DataBodyRange(1, QSilberDB_Col.Auftragsnummer).Value = Range("NeueCharge_Auftrag").Value
+    .DataBodyRange(1, QSilberDB_Col.Füllmenge).Value = Range("NeueCharge_FullmengeAFO").Value
+    .DataBodyRange(1, QSilberDB_Col.Stückzahl).Value = Range("NeueCharge_Stuckzahl").Value
+    .DataBodyRange(1, QSilberDB_Col.AgBedarf_soll).Value = Range("NeueCharge_SilberBedarfsoll").Value
+    .DataBodyRange(1, QSilberDB_Col.Anlage).Value = Range("NeueCharge_Anlage").Value
+    .DataBodyRange(1, QSilberDB_Col.CuWert_soll).Value = Range("NeueCharge_CuZahlerwert").Value
+    .DataBodyRange(1, QSilberDB_Col.AgWert_soll).Value = Range("NeueCharge_AgZahlerwert").Value
+    .DataBodyRange(1, QSilberDB_Col.AgStrom_soll).Value = Range("NeueCharge_AgSollstrom").Value
   End With
   
   ' Print the Chargeschein

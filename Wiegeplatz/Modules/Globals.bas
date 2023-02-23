@@ -7,59 +7,61 @@ Global Const GTeilDB_TableName As String = "Teiledatenbank"
 Global Const GQSilberDB_TableName As String = "Qualitätsdatabase"
 
 ' Qualitätsaufzeichnung Database columns
-'   Chargenummer = 1
-'   Datum
-'   Wochentag
-'   KW
-'   Monat
-'   Schicht
-'   Mitarbeiter Annahme
-'   Kommentar Annahme
-'   Materialnummer
-'   Gewicht (netto/Tsd) = 10
-'   Cu Schicht (soll)
-'   Cu Schicht (min)
-'   Cu Schicht (max)
-'   Ag Schicht (soll)
-'   Ag Schicht (min)
-'   Ag Schicht (max)
-'   Auftragsnummer
-'   Füllmenge
-'   Stückzahl
-'   Ag Bedarf (soll) = 20
-'   Cu Bedarf (soll)
-'   Anlage
-'   Trommel
-'   Cu Laufzeit (soll)
-'   Cu Laufzeit (ist)
-'   Cu Strom (soll)
-'   Cu Strom (ist)
-'   Ag Laufzeit (soll)
-'   Ag Laufzeit (ist)
-'   Ag Strom (soll) = 30
-'   Ag Strom (ist)
-'   Passivierungsbad
-'   Prozess Kommentar
-'   Nacharbeit Art
-'   Nacharbeit Kommentar
-'   Nacharbeit Mitarbeiter
-'   Nacharbeit Anlage
-'   Nacharbeit Trommel
-'   Nacharbeit Laufzeit (soll)
-'   Cu Schicht (ist)
-'   Ag Schicht (ist) = 40
-'   Ag Bedarf (ist)
-'   Ag Schicht (nacharbeit)
-'   Ag Bedarf (+nacharbeit)
-'   Biegetest (iO)
-'   Biegetest (niO)
-'   Ag Eingespart
-'   Alterung (iO)
-'   Alterung (niO)
-'   Alterung Mitarbeiter
-'   Alterung Datum = 50
-'   Qualität Kommentar
-'   Entschied
+Public Enum QSilberDB_Col
+  Chargenummer = 1
+  Datum
+  Wochentag
+  KW
+  Monat
+  Schicht
+  Annahme_Mitarbeiter
+  Annhame_Kommentar
+  Materialnummer
+  Gewicht_netto
+  CuSchicht_soll
+  CuSchicht_min
+  CuSchicht_max
+  AgSchicht_soll
+  AgSchicht_min
+  AgSchicht_max
+  Auftragsnummer
+  Füllmenge
+  Stückzahl
+  AgBedarf_soll
+  CuBedarf_soll
+  Anlage
+  Trommel
+  CuWert_soll
+  CuWert_ist
+  CuStrom_soll
+  CuStrom_ist
+  AgWert_soll
+  AgWert_ist
+  AgStrom_soll
+  AgStrom_ist
+  Passivierungsbad
+  Prozess_Kommentar
+  Nacharbeit_Art
+  Nacharbeit_Kommentar
+  Nacharbeit_Mitarbeiter
+  Nacharbeit_Anlage
+  Nacharbeit_Trommel
+  Nacharbeit_AgWert_soll
+  CuSchicht_ist
+  AgSchicht_ist
+  AgBedarf_ist
+  AgSchicht_Nacharbeit
+  AgBedarf_total
+  Biegetest_iO
+  Biegetest_niO
+  AgEingespart
+  Alterung_iO
+  Alterung_niO
+  Alterung_Mitarbeiter
+  Alterung_Datum
+  Qualität_Kommentar
+  Entschied
+End Enum
 
 ' Teiledatenbank Database columns
 '   Materialnummer = 1
