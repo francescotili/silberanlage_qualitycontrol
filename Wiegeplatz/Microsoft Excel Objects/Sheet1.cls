@@ -188,6 +188,7 @@ Private Sub SaveCharge()
     .DataBodyRange(1, QSilberDB_Col.CuWert_soll).Value = Range("NeueCharge_CuZahlerwert").Value
     .DataBodyRange(1, QSilberDB_Col.AgWert_soll).Value = Range("NeueCharge_AgZahlerwert").Value
     .DataBodyRange(1, QSilberDB_Col.AgStrom_soll).Value = Range("NeueCharge_AgSollstrom").Value
+    .DataBodyRange(1, QSilberDB_Col.Phase).Value = ChargePhase.Processing
   End With
   
   ' Print the Chargeschein
