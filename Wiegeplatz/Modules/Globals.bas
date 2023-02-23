@@ -88,34 +88,38 @@ Public Enum QSilberDB_Col
 End Enum
 
 ' Teiledatenbank Database columns
-'   Materialnummer = 1
-'   Bezeichnung
-'   Grundmaterial
-'   Netto Gewicht
-'   Anlage (soll)
-'   Cu Schicht
-'   Cu Bedarf
-'   Cu EZ
-'   Cu Strom
-'   Ag Schicht = 10
-'   Ag Bedarf
-'   Ag EZ Straße
-'   Ag Strom Straße
-'   Ag EZ Glocke
-'   Ag Strom Glocke
-'   Löten
-'   Xray Methode
-'   Kommentar
+Public Enum TeilDB_Col
+  Materialnummer = 1
+  Bezeichnung
+  Grundmaterial
+  Netto Gewicht
+  Anlage_soll
+  CuSchicht
+  CuBedarf
+  CuEZ
+  CuStrom
+  AgSchicht
+  AgBedarf
+  AgEZ_Straße
+  AgStrom_Straße
+  AgEZ_Glocke
+  AgStrom_Glocke
+  Löten
+  XRay_Methode
+  Kommentar
+End Enum
 
 ' EZ Datenbank Database columns
-'   Materialnummer = 1
-'   Grundmaterial
-'   Ag Schicht
-'   EZ Ag Straße
-'   EZ Ag Glocke
-'   Cu Schicht
-'   EZ Cu
-'   Kommentar
+Public Enum EZDB_Col
+  Materialnummer = 1
+  Grundmaterial
+  AgSchicht
+  AgEZ_Straße
+  AgEZ_Glocke
+  CuSchicht
+  CuEZ
+  Kommentar
+End Enum
 
 Public Function Notify(ByVal title As String, ByVal msg As String, _
                     Optional ByVal notification_icon As String = "Info", _
