@@ -68,7 +68,7 @@ Public Enum TeilDB_Col
   Materialnummer = 1
   Bezeichnung
   Grundmaterial
-  Netto Gewicht
+  Gewicht_netto
   Anlage_soll
   CuSchicht
   CuBedarf
