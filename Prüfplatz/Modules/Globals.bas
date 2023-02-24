@@ -5,6 +5,29 @@ Global Const GAdminPassword As String = "galvanik2023"
 Global Const GDatabasePath As String = "W:\X-Ray Qualitätsprüfung\Qualitätsaufzeichnung 2023_NEU\Q_Silber_DATABASE.xlsx"
 Global Const GQSilberDB_TableName As String = "Qualitätsdatabase"
 
+' Charge phases
+Public Enum ChargePhase
+  ' WORFLOWS POSSIBLE
+  ' [Creation] > Processing > Testing > Done
+  ' [Creation] > Processing > Testing > Alterung > Done
+  ' [Creation] > Processing > Testing > Nacharbeit > Testing > Done
+  ' [Creation] > Processing > Testing > Nacharbeit > Testing > Alterung > Done
+  ' Scrapped can happen after each of the other phases
+
+  ' After the registration and creation of row
+  Processing
+  ' Done processing, process data added or rework data added
+  Testing
+  ' Done testing, testing data added (layers), charge needs rework
+  Nacharbeit
+  ' Done testing, needs to be welded
+  Alterung
+  ' Charge is done and booked
+  Done
+  ' Scrapped, not booked
+  Scrapped
+End Enum
+
 ' Qualitätsaufzeichnung Database columns
 Public Enum QSilberDB_Col
   Chargenummer = 1
