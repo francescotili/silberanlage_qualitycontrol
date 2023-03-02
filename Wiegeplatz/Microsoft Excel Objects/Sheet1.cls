@@ -91,7 +91,7 @@ Private Sub Form_Fill()
   ' Copy "Kupferschicht"
   Set kupferSchichtCell = Range("NeueCharge_CuSchicht")
   If Range("I13").Value <> "" Then
-    If CLng(Range("I13").Value) <> 0 Then
+    If CSng(Range("I13").Value) <> 0 Then
       kupferSchichtCell.Value = Range("I13").Value
     Else
       kupferSchichtCell.Value = "NEIN"
@@ -101,7 +101,7 @@ Private Sub Form_Fill()
   ' Copy "Silberschicht"
   Set silberSchichtCell = Range("NeueCharge_AgSchicht")
   If Range("I14").Value <> "" Then
-    If CLng(Range("I14").Value) <> 0 Then
+    If CSng(Range("I14").Value) <> 0 Then
       silberSchichtCell.Value = Range("I14").Value
     End If
   End If

@@ -135,13 +135,13 @@ Private Sub EditMode_Fill()
   
   ' Copy "Kupferschicht"
   Set kupferSchichtCell = Range("NeueTeile_CuSchicht")
-  If CLng(Range("I13").Value) <> 0 Then
+  If CSng(Range("I13").Value) <> 0 Then
     kupferSchichtCell.Value = Range("I13").Value
   End If
   
   ' Copy "Silberschicht"
   Set silberSchichtCell = Range("NeueTeile_AgSchicht")
-  If CLng(Range("I14").Value) <> 0 Then
+  If CSng(Range("I14").Value) <> 0 Then
     silberSchichtCell.Value = Range("I14").Value
   End If
   
@@ -165,26 +165,26 @@ Private Sub EditMode_Fill()
   
   ' Copy Cu Data from DB
   Set CuEZCell = Range("NeueTeile_CuEZ")
-  If CLng(Range("I21").Value) > 0 Then
+  If CSng(Range("I21").Value) > 0 Then
     CuEZCell.Value = Range("I21").Value
   End If
   
   ' Copy Ag Data from DB
   Set AgStrasseEZCell = Range("NeueTeile_AgEZStraße")
-  If CLng(Range("I24").Value) > 0 Then
+  If CSng(Range("I24").Value) > 0 Then
     AgStrasseEZCell.Value = Range("I24").Value
   End If
   Set AgStrasseStromCell = Range("NeueTeile_AgStromStraße")
-  If CLng(Range("I25").Value) > 0 Then
+  If CSng(Range("I25").Value) > 0 Then
     AgStrasseStromCell.Value = Range("I25").Value
   End If
   
   Set AgGlockeEZCell = Range("NeueTeile_AgEZGlocke")
-  If CLng(Range("I26").Value) > 0 Then
+  If CSng(Range("I26").Value) > 0 Then
     AgGlockeEZCell.Value = Range("I26").Value
   End If
   Set AgGlockeStromCell = Range("NeueTeile_AgStromGlocke")
-  If CLng(Range("I27").Value) > 0 Then
+  If CSng(Range("I27").Value) > 0 Then
     AgGlockeStromCell.Value = Range("I27").Value
   End If
 End Sub
@@ -197,18 +197,18 @@ Private Sub CreateMode_Fill()
   
   ' Copy Cu Data from EZ DB
   Set CuEZCell = Range("NeueTeile_CuEZ")
-  If CLng(Range("K21").Value) > 0 Then
+  If CSng(Range("K21").Value) > 0 Then
     CuEZCell.Value = Range("K21").Value
   End If
   
   ' Copy Ag Data from DB
   Set AgStrasseEZCell = Range("NeueTeile_AgEZStraße")
-  If CLng(Range("K24").Value) > 0 Then
+  If CSng(Range("K24").Value) > 0 Then
     AgStrasseEZCell.Value = Range("K24").Value
   End If
   
   Set AgGlockeEZCell = Range("NeueTeile_AgEZGlocke")
-  If CLng(Range("K26").Value) > 0 Then
+  If CSng(Range("K26").Value) > 0 Then
     AgGlockeEZCell.Value = Range("K26").Value
   End If
 End Sub
