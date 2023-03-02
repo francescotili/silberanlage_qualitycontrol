@@ -170,7 +170,7 @@ Private Sub SaveCharge()
   ' Write data in database
   table.ListRows.Add Position:=1
   With table
-    .DataBodyRange(1, QSilberDB_Col.Chargenummer).Value = chargeNummer
+    .DataBodyRange(1, QSilberDB_Col.chargeNummer).Value = chargeNummer
     .DataBodyRange(1, QSilberDB_Col.Datum).Value = Range("NeueCharge_Datum").Value
     .DataBodyRange(1, QSilberDB_Col.Schicht).Value = Range("NeueCharge_Schicht").Value
     .DataBodyRange(1, QSilberDB_Col.Annahme_Mitarbeiter).Value = Range("NeueCharge_Mitarbeiter").Value
@@ -193,7 +193,7 @@ Private Sub SaveCharge()
   
   ' Print the Chargeschein
   Sheet7.Range("Zettel_ChargeNummer").Value = chargeNummer
-  'PrintChargeschein
+  PrintChargeschein
 
   ' Save and close the database
   wbook.SaveAs GDatabasePath
@@ -255,6 +255,10 @@ Private Sub PrintChargeschein()
   End With
 
   ' Print the page
-  'chargePaper.PrintPreview
-  chargePaper.PrintOut
+  ThisWorkbook.Unprotect Password:=GAdminPassword
+  chargePaper.Visible = True ' Sheet needs to be visible to be printed
+  chargePaper.PrintPreview
+  'chargePaper.PrintOut
+  chargePaper.Visible = xlSheetHidden
+  ThisWorkbook.Protect Password:=GAdminPassword
 End Sub
