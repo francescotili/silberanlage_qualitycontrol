@@ -348,9 +348,65 @@ Private Sub SaveMaterial()
 End Sub
 
 Private Sub NeueTeile_LoeschenBtn_Click()
+' Open the database file in hidden mode and delete the specified Teilnummer.
+' It will delete a row only if it can find it
+
+  ' Definition of variables
+  Dim app As New excel.Application
+  Dim wbook As excel.Workbook
+  Dim sheet As Worksheet
+  Dim table As ListObject
+  Dim materials As Variant
+  Dim i As Long
+  Dim teileRow As Integer
+
   If MsgBox("Möchten Sie dieses Material wirklich dauerhaft löschen?", vbCritical + vbYesNo, "Achtung") = vbYes Then
-    MsgBox "Gelöscht"
+
+    ' Show saving message
+    Application.StatusBar = "Datenbank wird geöffnet, bitte warten ..."
+
+    ' Check if database is open
+    Do While IsDatabaseOpen = True
+      Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
+      Application.Wait (Now + TimeValue("0:00:02"))
+    Loop
+
+    ' Opening of database file
+    app.Visible = False ' Visible is False by default, so this should not be necessarz
+    app.DisplayAlerts = False
+    Set wbook = app.Workbooks.Add(GDatabasePath)
+    Application.StatusBar = "Wird gespeichert ..."
+    
+    ' Setting of targets
+    Set sheet = wbook.Worksheets(2) ' Teil_DB
+    Set table = sheet.ListObjects.Item(GTeilDB_TableName)
+
+    ' Searching the row to delete
+    materials = table.DataBodyRange
+    For i = LBound(materials) To UBound(materials)
+      If CStr(materials(i,1)) = CStr(Range("I7").Value) Then
+        teileRow = i
+        Exit For
+      End If
+    Next i
+
+    ' Delete the row
+    table.ListRows(teileRow).Delete
+
+    ' Save and close the database
+    wbook.SaveAs GDatabasePath
+    app.Quit
+    Set app = Nothing
+
+    ' Show confirmation message
+    Application.StatusBar = "Material-Nr. " & Range("E7").Value & " wurde gelöscht"
+    Notify Range("E7").Value, "Teile erfolgreich gelöscht", "Info", 10
+
+    ' Reset the form
     FormReset True
+
+    ' Refresh all data connections & queries
+    ThisWorkbook.RefreshAll
   End If
 End Sub
 
