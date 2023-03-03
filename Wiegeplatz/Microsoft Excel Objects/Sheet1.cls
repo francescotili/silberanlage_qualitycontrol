@@ -93,8 +93,6 @@ Private Sub Form_Fill()
   If Range("I13").Value <> "" Then
     If CSng(Range("I13").Value) <> 0 Then
       kupferSchichtCell.Value = Range("I13").Value
-    Else
-      kupferSchichtCell.Value = "NEIN"
     End If
   End If
 
