@@ -62,7 +62,14 @@ Private Sub FormReset(ByVal FullReset As Boolean)
 End Sub
 
 Private Sub CreateMode_Fill()
-  MsgBox "Create mode aktiv"
+' Compile the form in creation mode. Copies only MA number from
+' the Qualitätsdatabase, because normally the "Prüfer" is the same
+' of the process
+
+  ' Copy MA Number from Q_DB
+  If CSng(Range("I21").Value) <> 0 Then
+    Range("Prozess_Mitarbeiter").Value = CSng(Range("I21").Value)
+  End If
 End Sub
 
 Private Sub EditMode_Fill()
