@@ -113,3 +113,20 @@ Private Sub EditMode_Fill()
     Range("Prozess_Mitarbeiter").Value = CSng(Range("I21").Value)
   End If
 End Sub
+
+Function IsDatabaseOpen()
+  Dim ff As Long, ErrNo As Long
+
+  On Error Resume Next
+  ff = FreeFile()
+  Open GDatabasePath For Input Lock Read As #ff
+  Close ff
+  ErrNo = Err
+  On Error GoTo 0
+
+  Select Case ErrNo
+    Case 0:    IsDatabaseOpen = False
+    Case 70:   IsDatabaseOpen = True
+    Case Else: Error ErrNo
+  End Select
+End Function
