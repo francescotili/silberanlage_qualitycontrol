@@ -73,5 +73,43 @@ Private Sub CreateMode_Fill()
 End Sub
 
 Private Sub EditMode_Fill()
-  MsgBox "Edit mode aktiv"
+' Compile the form in edit mode. Copies the values from the Quality
+' Database to be modified by the Worker and then saved.
+' Warning: values from database are retrieved by formulas in the Excel
+' sheet and not by the macro. They are referenced as normal range
+' pointing to the cells.
+
+  ' Copy "Trommel"
+  If CStr(Range("I10").Value) <> "" Then
+    Range("Prozess_Trommel").Value = CStr(Range("I10").Value)
+  End If
+
+  ' Copy "Passivierungsbad"
+  If CStr(Range("I11").Value) <> "" Then
+    Range("Prozess_Passivierung").Value = CStr(Range("I11").Value)
+  End If
+
+  ' Copy "Kupferdaten"
+  If CSng(Range("I13").Value) > 0 Then
+    Range("Prozess_CuZahlerIst").Value = CSng(Range("I13").Value)
+  End If
+  If CSng(Range("I15").Value) > 0 Then
+    Range("Prozess_CuSchichtIst").Value = CSng(Range("I15").Value)
+  End If
+
+  ' Copy "Silberdaten"
+  If CSng(Range("I17").Value) > 0 Then
+    Range("Prozess_AgZahlerIst").Value = CSng(Range("I17").Value)
+  End If
+  If CSng(Range("I18").Value) > 0 Then
+    Range("Prozess_AgStromIst").Value = CSng(Range("I18").Value)
+  End If
+  If CSng(Range("I19").Value) > 0 Then
+    Range("Prozess_AgSchichtIst").Value = CSng(Range("I19").Value)
+  End If
+
+  ' Copy MA Number from Q_DB
+  If CSng(Range("I21").Value) <> 0 Then
+    Range("Prozess_Mitarbeiter").Value = CSng(Range("I21").Value)
+  End If
 End Sub
