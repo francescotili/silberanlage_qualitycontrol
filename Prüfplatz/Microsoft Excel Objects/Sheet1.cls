@@ -10,7 +10,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)
 ' Is triggered everytime a cell content changes in the Worksheet
 
   ' Control if barcode cell was changed and act accordingly
-  If Not Intersect(Target, Range("Prozess_Barcode")) Is Nothing Then
+  If Not Intersect(Target, Range("Prozess_Chargenummer")) Is Nothing Then
     If Not Range("Prozess_IsBarcodeEmpty").Value Then
       If Range("Prozess_IsBarcodeValid").Value Then
         If Range("Prozess_IsChargeInDB").Value Then
@@ -31,6 +31,14 @@ Private Sub Worksheet_Change(ByVal Target As Range)
       End If
     End If
   End If
+
+  ' Enable or disable the save button
+  Prozess_SaveBtn.Enabled = False
+  Prozess_SaveBtn.BackColor = vbButtonFace
+  If Range("Prozess_IsFormValid").Value Then
+    Prozess_SaveBtn.Enabled = True
+    Prozess_SaveBtn.BackColor = RGB(0, 192, 0)
+  End If
 End Sub
 
 Private Sub FormReset(ByVal FullReset As Boolean)
@@ -46,15 +54,17 @@ Private Sub FormReset(ByVal FullReset As Boolean)
   If FullReset Then
     Range("Prozess_Passivierung").ClearContents
     Range("Prozess_CuZahlerIst").ClearContents
+    Range("Prozess_CuSchichtIst").ClearContents
     Range("Prozess_AgZahlerIst").ClearContents
     Range("Prozess_AgStromIst").ClearContents
-    Range("Prozess_Barcode").ClearContents
+    Range("Prozess_AgSchichtIst").ClearContents
+    Range("Prozess_Chargenummer").ClearContents
   End If
   Range("Prozess_Trommel").ClearContents
   Range("Prozess_Kommentar").ClearContents
   Range("Prozess_Mitarbeiter").ClearContents
 
-  Range("Prozess_Barcode").Select
+  Range("Prozess_Chargenummer").Select
 
   ' Enable protection
   sheet.Protect Password:=GAdminPassword
@@ -66,10 +76,17 @@ Private Sub CreateMode_Fill()
 ' the Qualitätsdatabase, because normally the "Prüfer" is the same
 ' of the process
 
+  ' Disable protection
+  sheet.Unprotect Password:=GAdminPassword
+
   ' Copy MA Number from Q_DB
   If CSng(Range("I21").Value) <> 0 Then
     Range("Prozess_Mitarbeiter").Value = CSng(Range("I21").Value)
   End If
+
+  ' Enable protection
+  sheet.Protect Password:=GAdminPassword
+  sheet.EnableSelection = xlUnlockedCells
 End Sub
 
 Private Sub EditMode_Fill()
@@ -78,6 +95,9 @@ Private Sub EditMode_Fill()
 ' Warning: values from database are retrieved by formulas in the Excel
 ' sheet and not by the macro. They are referenced as normal range
 ' pointing to the cells.
+
+  ' Disable protection
+  sheet.Unprotect Password:=GAdminPassword
 
   ' Copy "Trommel"
   If CStr(Range("I10").Value) <> "" Then
@@ -112,6 +132,93 @@ Private Sub EditMode_Fill()
   If CSng(Range("I21").Value) <> 0 Then
     Range("Prozess_Mitarbeiter").Value = CSng(Range("I21").Value)
   End If
+
+  ' Enable protection
+  sheet.Protect Password:=GAdminPassword
+  sheet.EnableSelection = xlUnlockedCells
+End Sub
+
+Private Sub Prozess_SaveBtn_Click()
+' Save workflow triggered by Save button.
+' If the Charge is in creation mode, it has no data for process
+' and testing. That means that the data will be filled in the database
+' at the corresponding row, after row search.
+' If the Charge is in edit mode, this data will be overwritten.
+
+  SaveCharge
+End Sub
+
+Private Sub SaveCharge()
+' Reads the form data and compile an array to write. Then opens the database file
+' in hidden mode, find the row and write the data in the database.
+
+  ' Show saving message
+  Application.StatusBar = "Datenbank wird geöffnet, bitte warten ..."
+
+  ' Definition of variables
+  Dim app As New Excel.Application
+  Dim wbook As Excel.Workbook
+  Dim sheet As Worksheet
+  Dim table As ListObject
+  Dim charges As Variant
+  Dim i As Long
+  Dim chargeRow As ListRow
+  'Dim chargeData As Variant
+  'Dim chargeNummer As String
+
+  ' Check if database is open
+  Do While IsDatabaseOpen = True
+    Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
+    Application.Wait (Now + TimeValue("0:00:02"))
+  Loop
+  
+  ' Opening of database file
+  app.Visible = False ' Visible is False by default, so this should not be necessary
+  app.DisplayAlerts = False
+  Set wbook = app.Workbooks.Add(GDatabasePath)
+  Application.StatusBar = "Wird gespeichert ..."
+  
+  ' Setting of targets
+  Set sheet = wbook.Worksheets(1) ' Main Database
+  Set table = sheet.ListObjects.Item(GQSilberDB_TableName)
+
+  ' Searching the row
+  charges = table.DataBodyRange
+  For i = LBound(charges) To UBound(charges)
+    If CStr(charges(i, 1)) = CStr(Range("Prozess_ChargenummerValue").Value) Then
+      chargeRow = i
+      Exit For
+    End If
+  Next i
+
+  ' Write data in database
+  With table
+    .DataBodyRange(chargeRow, QSilberDB_Col.Trommel).Value = Range("Prozess_Trommel").Value
+    .DataBodyRange(chargeRow, QSilberDB_Col.Passivierungsbad).Value = Range("Prozess_Passivierung").Value
+    .DataBodyRange(chargeRow, QSilberDB_Col.CuWert_ist).Value = Range("Prozess_CuZahlerIst").Value
+    .DataBodyRange(chargeRow, QSilberDB_Col.CuSchicht_ist).Value = Range("Prozess_CuSchichtIst").Value
+    .DataBodyRange(chargeRow, QSilberDB_Col.AgWert_ist).Value = Range("Prozess_AgZahlerIst").Value
+    .DataBodyRange(chargeRow, QSilberDB_Col.AgStrom_ist).Value = Range("Prozess_AgStromIst").Value
+    .DataBodyRange(chargeRow, QSilberDB_Col.AgSchicht_ist).Value = Range("Prozess_AgSchichtIst").Value
+    ' Prufer has not been implemented because it is always the same that has
+    ' also registered the Charge. If needed, the database must be modified.
+    .DataBodyRange(chargeRow, QSilberDB_Col.Prozess_Kommentar).Value = Range("Prozess_Kommentar").Value
+  End With
+
+  ' Save and close the database
+  wbook.SaveAs GDatabasePath
+  app.Quit
+  Set app = Nothing
+
+  ' Show confirmation message
+  Application.StatusBar = "Charge für Auftrag " & Range("E8").Value & " erfolgreich aktualisiert"
+  Notify Range("E7").Value, "Charge erfolgreich aktualisiert", "Info", 10
+
+  ' Refresh all data connections & queries
+  ThisWorkbook.RefreshAll
+
+  ' Reset the form
+  FormReset False
 End Sub
 
 Function IsDatabaseOpen()
