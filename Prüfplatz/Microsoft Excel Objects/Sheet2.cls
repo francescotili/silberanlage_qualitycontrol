@@ -18,21 +18,20 @@ Private Sub Worksheet_Change(ByVal Target As Range)
           chargeNummer = Range("Prufplatz_Chargenummer").Value
 
           Select Case Range("Prufplatz_Phase")
-          Case 0 ' Process and quality data are missing
+          Case chargePhase.Processing ' Process and quality data are missing
             Sheet1.Activate
             Sheet1.Range("Prozess_Chargenummer").Value = chargeNummer
             Exit Sub
-          Case 1 ' Nacharbeit done, choose based on nacharbeit type
+          Case chargePhase.Nacharbeit ' Nacharbeit done, choose based on nacharbeit type
             'Select Case nacharbeit_type
             'SheetX.Activate
             'SheetX.Range("").Value = xx
-          Case 2 ' Alterung done
-            'SheetX.Activate
-            'SheetX.Range("Alterung_Chargenummer").Value = chargeNummer
-          Case 3 ' Charge is done
-            ' Show menu for choosing what to do
-          Case 4 ' Charge is scrapped
-            ' Show menu for choosing what to do
+          Case chargePhase.Alterung ' Alterung done
+            Sheet5.Activate
+            Sheet5.Range("Alterung_Chargennummer").Value = chargeNummer
+          Case chargePhase.Done To chargePhase.Scrapped ' Charge is done or scrapped
+            Sheet6.Activate
+            Sheet6.Range("Info_Chargenummer").Value = chargeNummer
           Case Else
             MsgBox "Unspecified error"
             FormReset
