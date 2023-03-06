@@ -54,15 +54,15 @@ Private Sub FormReset(ByVal FullReset As Boolean)
   If FullReset Then
     Range("Prozess_Passivierung").ClearContents
     Range("Prozess_CuZahlerIst").ClearContents
-    Range("Prozess_CuSchichtIst").ClearContents
     Range("Prozess_AgZahlerIst").ClearContents
     Range("Prozess_AgStromIst").ClearContents
-    Range("Prozess_AgSchichtIst").ClearContents
     Range("Prozess_Chargenummer").ClearContents
   End If
   Range("Prozess_Trommel").ClearContents
   Range("Prozess_Kommentar").ClearContents
   Range("Prozess_Mitarbeiter").ClearContents
+  Range("Prozess_CuSchichtIst").ClearContents
+  Range("Prozess_AgSchichtIst").ClearContents
 
   Range("Prozess_Chargenummer").Select
 
@@ -110,32 +110,36 @@ Private Sub EditMode_Fill()
   End If
 
   ' Copy "Kupferdaten"
-  If CSng(Range("I13").Value) > 0 Then
+  If CStr(Range("I13").Value) <> "" Then
     Range("Prozess_CuZahlerIst").Value = CSng(Range("I13").Value)
   End If
-  If CSng(Range("I15").Value) > 0 Then
+  If CStr(Range("I15").Value) <> "" Then
     Range("Prozess_CuSchichtIst").Value = CSng(Range("I15").Value)
   End If
 
   ' Copy "Silberdaten"
-  If CSng(Range("I17").Value) > 0 Then
+  If CStr(Range("I17").Value) <> "" Then
     Range("Prozess_AgZahlerIst").Value = CSng(Range("I17").Value)
   End If
-  If CSng(Range("I18").Value) > 0 Then
+  If CStr(Range("I18").Value) <> "" Then
     Range("Prozess_AgStromIst").Value = CSng(Range("I18").Value)
   End If
-  If CSng(Range("I19").Value) > 0 Then
+  If CStr(Range("I19").Value) <> "" Then
     Range("Prozess_AgSchichtIst").Value = CSng(Range("I19").Value)
   End If
 
   ' Copy MA Number from Q_DB
-  If CSng(Range("I21").Value) <> 0 Then
+  If CStr(Range("I21").Value) <> "" Then
     Range("Prozess_Mitarbeiter").Value = CSng(Range("I21").Value)
   End If
 
   ' Enable protection
   sheet.Protect Password:=GAdminPassword
   sheet.EnableSelection = xlUnlockedCells
+End Sub
+
+Private Sub Prozess_DeleteBtn_Click()
+  FormReset True
 End Sub
 
 Private Sub Prozess_SaveBtn_Click()
@@ -162,9 +166,7 @@ Private Sub SaveCharge()
   Dim table As ListObject
   Dim charges As Variant
   Dim i As Long
-  Dim chargeRow As ListRow
-  'Dim chargeData As Variant
-  'Dim chargeNummer As String
+  Dim chargeRow As Single
 
   ' Check if database is open
   Do While IsDatabaseOpen = True
@@ -203,6 +205,7 @@ Private Sub SaveCharge()
     ' Prufer has not been implemented because it is always the same that has
     ' also registered the Charge. If needed, the database must be modified.
     .DataBodyRange(chargeRow, QSilberDB_Col.Prozess_Kommentar).Value = Range("Prozess_Kommentar").Value
+    .DataBodyRange(chargeRow, QSilberDB_Col.Phase).Value = Range("Prozess_NextPhase").Value
   End With
 
   ' Save and close the database
@@ -211,13 +214,14 @@ Private Sub SaveCharge()
   Set app = Nothing
 
   ' Show confirmation message
-  Application.StatusBar = "Charge für Auftrag " & Range("E8").Value & " erfolgreich aktualisiert"
-  Notify Range("E7").Value, "Charge erfolgreich aktualisiert", "Info", 10
+  Application.StatusBar = "Charge für Auftrag " & Range("E8").Value & " erfolgreich ergänzt"
+  Notify "Auftrag " & Range("E8").Value, "Charge erfolgreich ergänzt", "Info", 10
 
   ' Refresh all data connections & queries
   ThisWorkbook.RefreshAll
 
   ' Reset the form
+  Range("Prozess_Chargenummer").ClearContents
   FormReset False
 End Sub
 
