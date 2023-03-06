@@ -140,6 +140,10 @@ End Sub
 
 Private Sub Prozess_DeleteBtn_Click()
   FormReset True
+
+  ' Go to main scanning page
+  Sheet2.Activate
+  Sheet2.Range("Prufplatz_Chargenummer").Select
 End Sub
 
 Private Sub Prozess_SaveBtn_Click()
@@ -150,6 +154,10 @@ Private Sub Prozess_SaveBtn_Click()
 ' If the Charge is in edit mode, this data will be overwritten.
 
   SaveCharge
+
+  ' Go to main scanning page
+  Sheet2.Activate
+  Sheet2.Range("Prufplatz_Chargenummer").Select
 End Sub
 
 Private Sub SaveCharge()
