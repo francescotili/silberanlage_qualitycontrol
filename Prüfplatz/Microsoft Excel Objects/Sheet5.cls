@@ -46,6 +46,14 @@ Private Sub Worksheet_Change(ByVal Target As Range)
       End If
     End If
   End If
+
+  ' Enable or disable the save button
+  Alterung_SaveBtn.Enable = False
+  Alterung_SaveBtn.BackColor = vbButtonFace
+  If Range("Alterung_IsFormValid").Value Then
+    Alterung_SaveBtn.Enable = True
+    Alterung_SaveBtn.BackColor = RGB(0, 192, 0)
+  End If
 End Sub
 
 Private Sub FormReset(ByVal FullReset As Boolean)
@@ -64,7 +72,6 @@ Private Sub FormReset(ByVal FullReset As Boolean)
   Range("Alterung_iO").ClearContents
   Range("Alterung_niO").ClearContents
   Range("Alterung_Mitarbeiter").ClearContents
-  Range("Alterung_Kommentar").ClearContents
 
   Range("Alterung_Chargenummer").Select
   
@@ -73,3 +80,111 @@ Private Sub FormReset(ByVal FullReset As Boolean)
   sheet.EnableSelection = xlUnlockedCells
 End Sub
 
+Private Sub Alterung_DeleteBtn_Click()
+  FormReset True
+
+  ' Go to main scanning page
+  Sheet2.Activate
+  Sheet2.Range("Prufplatz_Chargenummer").Select
+End Sub
+
+Private Sub Alterung_SaveBtn_Click()
+' Save workflow triggered by Save button.
+' If the Charge is in creation mode, it has no data for process
+' and testing. That means that the data will be filled in the database
+' at the corresponding row, after row search.
+' If the Charge is in edit mode, this data will be overwritten.
+  
+  SaveCharge
+
+  ' Go to main scanning page
+  Sheet2.Activate
+  Sheet2.Range("Prufplatz_Chargenummer").Select
+End Sub
+
+Private Sub SaveCharge()
+' Reads the form data and compile an array to write. Then opens the database file
+' in hidden mode, find the row and write the data in the database.
+
+  ' Show saving message
+  Application.StatusBar = "Datenbank wird geöffnet, bitte warten ..."
+
+  ' Definition of variables
+  Dim app As New Excel.Application
+  Dim wbook As Excel.Workbook
+  Dim sheet As Worksheet
+  Dim table As ListObject
+  Dim charges As Variant
+  Dim i As Long
+  Dim chargeRow As Single
+
+  ' Check if database is open
+  Do While IsDatabaseOpen = True
+    Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
+    Application.Wait (Now + TimeValue("0:00:02"))
+  Loop
+  
+  ' Opening of database file
+  app.Visible = False ' Visible is False by default, so this should not be necessary
+  app.DisplayAlerts = False
+  Set wbook = app.Workbooks.Add(GDatabasePath)
+  Application.StatusBar = "Wird gespeichert ..."
+  
+  ' Setting of targets
+  Set sheet = wbook.Worksheets(1) ' Main Database
+  Set table = sheet.ListObjects.Item(GQSilberDB_TableName)
+
+  ' Searching the row
+  charges = table.DataBodyRange
+  For i = LBound(charges) To UBound(charges)
+    If CStr(charges(i, 1)) = CStr(Range("Alterung_ChargenummerValue").Value) Then
+      chargeRow = i
+      Exit For
+    End If
+  Next i
+
+  ' Write data in database
+  With table
+    .DataBodyRange(chargeRow, QSilberDB_Col.Alterung_iO).Value = Range("Alterung_iO").Value
+    .DataBodyRange(chargeRow, QSilberDB_Col.Alterung_niO).Value = Range("Alterung_niO").Value
+    .DataBodyRange(chargeRow, QSilberDB_Col.Alterung_Mitarbeiter).Value = Range("Alterung_Mitarbeiter").Value
+    .DataBodyRange(chargerow, QSilberDB_Col.Alterung_Datum).Value = Range("Alterung_Datum").Value
+    .DataBodyRange(chargeRow, QSilberDB_Col.Phase).Value = Range("Alterung_NextPhase").Value
+  End With
+
+  ' Save and close the database
+  wbook.SaveAs GDatabasePath
+  app.Quit
+  Set app = Nothing
+
+  ' Show confirmation message
+  Application.StatusBar = "Charge für Auftrag " & Range("E8").Value & " erfolgreich ergänzt"
+  Notify "Auftrag " & Range("E8").Value, "Charge erfolgreich ergänzt", "Info", 10
+
+  ' Refresh all data connections & queries
+  ThisWorkbook.RefreshAll
+
+  ' Reset the form
+  FormReset True
+
+  ' Go to main scanning page
+  Sheet2.Activate
+  Sheet2.Range("Prufplatz_Chargenummer").Select
+End Sub
+
+Function IsDatabaseOpen()
+  Dim ff As Long, ErrNo As Long
+
+  On Error Resume Next
+  ff = FreeFile()
+  Open GDatabasePath For Input Lock Read As #ff
+  Close ff
+  ErrNo = Err
+  On Error GoTo 0
+
+  Select Case ErrNo
+    Case 0:    IsDatabaseOpen = False
+    Case 70:   IsDatabaseOpen = True
+    Case Else: Error ErrNo
+  End Select
+End Function
