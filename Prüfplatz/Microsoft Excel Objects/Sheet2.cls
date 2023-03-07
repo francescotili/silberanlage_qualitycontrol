@@ -28,7 +28,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)
             'SheetX.Range("").Value = xx
           Case chargePhase.Alterung ' Alterung done
             Sheet5.Activate
-            Sheet5.Range("Alterung_Chargennummer").Value = chargeNummer
+            Sheet5.Range("Alterung_Chargenummer").Value = chargeNummer
           Case chargePhase.Done To chargePhase.Scrapped ' Charge is done or scrapped
             Sheet6.Activate
             Sheet6.Range("Info_Chargenummer").Value = chargeNummer
