@@ -16,7 +16,7 @@ Public Enum ChargePhase
   ' Scrapped can happen after each of the other phases
 
   ' After the registration and creation of row
-  Processing
+  Processing = 1
 
   ' Done testing, testing data added (layers), charge needs rework
   Nacharbeit
