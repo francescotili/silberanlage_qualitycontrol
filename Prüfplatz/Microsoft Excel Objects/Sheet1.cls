@@ -16,7 +16,6 @@ Private Sub Worksheet_Change(ByVal Target As Range)
         If Range("Prozess_IsChargeInDB").Value Then
           If Range("Prozess_Phase").Value = 0 Then
             FormReset False
-            CreateMode_Fill
           Else
             FormReset False
             EditMode_Fill
@@ -60,29 +59,10 @@ Private Sub FormReset(ByVal FullReset As Boolean)
   End If
   Range("Prozess_Trommel").ClearContents
   Range("Prozess_Kommentar").ClearContents
-  Range("Prozess_Mitarbeiter").ClearContents
   Range("Prozess_CuSchichtIst").ClearContents
   Range("Prozess_AgSchichtIst").ClearContents
 
   Range("Prozess_Chargenummer").Select
-
-  ' Enable protection
-  sheet.Protect Password:=GAdminPassword
-  sheet.EnableSelection = xlUnlockedCells
-End Sub
-
-Private Sub CreateMode_Fill()
-' Compile the form in creation mode. Copies only MA number from
-' the Qualitätsdatabase, because normally the "Prüfer" is the same
-' of the process
-
-  ' Disable protection
-  sheet.Unprotect Password:=GAdminPassword
-
-  ' Copy MA Number from Q_DB
-  If CSng(Range("I21").Value) <> 0 Then
-    Range("Prozess_Mitarbeiter").Value = CSng(Range("I21").Value)
-  End If
 
   ' Enable protection
   sheet.Protect Password:=GAdminPassword
@@ -126,11 +106,6 @@ Private Sub EditMode_Fill()
   End If
   If CStr(Range("I19").Value) <> "" Then
     Range("Prozess_AgSchichtIst").Value = CSng(Range("I19").Value)
-  End If
-
-  ' Copy MA Number from Q_DB
-  If CStr(Range("I21").Value) <> "" Then
-    Range("Prozess_Mitarbeiter").Value = CSng(Range("I21").Value)
   End If
 
   ' Enable protection
@@ -210,8 +185,6 @@ Private Sub SaveCharge()
     .DataBodyRange(chargeRow, QSilberDB_Col.AgWert_ist).Value = Range("Prozess_AgZahlerIst").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.AgStrom_ist).Value = Range("Prozess_AgStromIst").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.AgSchicht_ist).Value = Range("Prozess_AgSchichtIst").Value
-    ' Prufer has not been implemented because it is always the same that has
-    ' also registered the Charge. If needed, the database must be modified.
     .DataBodyRange(chargeRow, QSilberDB_Col.Prozess_Kommentar).Value = Range("Prozess_Kommentar").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.Phase).Value = Range("Prozess_NextPhase").Value
   End With
