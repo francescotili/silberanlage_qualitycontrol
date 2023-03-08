@@ -64,7 +64,6 @@ Public Enum QSilberDB_Col
   AgWert_ist
   AgStrom_soll
   AgStrom_ist
-  Passivierungsbad
   Prozess_Kommentar
   Nacharbeit_Art
   Nacharbeit_Kommentar
