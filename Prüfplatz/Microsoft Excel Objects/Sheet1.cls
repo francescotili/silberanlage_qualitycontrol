@@ -51,7 +51,6 @@ Private Sub FormReset(ByVal FullReset As Boolean)
 
   ' Reset form
   If FullReset Then
-    Range("Prozess_Passivierung").ClearContents
     Range("Prozess_CuZahlerIst").ClearContents
     Range("Prozess_AgZahlerIst").ClearContents
     Range("Prozess_AgStromIst").ClearContents
@@ -61,6 +60,7 @@ Private Sub FormReset(ByVal FullReset As Boolean)
   Range("Prozess_Kommentar").ClearContents
   Range("Prozess_CuSchichtIst").ClearContents
   Range("Prozess_AgSchichtIst").ClearContents
+  Range("Prozess_Biegetest_iO").ClearContents
 
   Range("Prozess_Chargenummer").Select
 
@@ -84,11 +84,6 @@ Private Sub EditMode_Fill()
     Range("Prozess_Trommel").Value = CStr(Range("I10").Value)
   End If
 
-  ' Copy "Passivierungsbad"
-  If CStr(Range("I11").Value) <> "" Then
-    Range("Prozess_Passivierung").Value = CStr(Range("I11").Value)
-  End If
-
   ' Copy "Kupferdaten"
   If CStr(Range("I13").Value) <> "" Then
     Range("Prozess_CuZahlerIst").Value = CSng(Range("I13").Value)
@@ -106,6 +101,11 @@ Private Sub EditMode_Fill()
   End If
   If CStr(Range("I19").Value) <> "" Then
     Range("Prozess_AgSchichtIst").Value = CSng(Range("I19").Value)
+  End If
+
+  ' Copy "Biegetest"
+  If CStr(Range("I21").Value) <> "" Then
+    Range("Prozess_Biegetest_iO").Value = CStr(Range("I21").Value)
   End If
 
   ' Enable protection
@@ -179,12 +179,12 @@ Private Sub SaveCharge()
   ' Write data in database
   With table
     .DataBodyRange(chargeRow, QSilberDB_Col.Trommel).Value = Range("Prozess_Trommel").Value
-    .DataBodyRange(chargeRow, QSilberDB_Col.Passivierungsbad).Value = Range("Prozess_Passivierung").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.CuWert_ist).Value = Range("Prozess_CuZahlerIst").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.CuSchicht_ist).Value = Range("Prozess_CuSchichtIst").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.AgWert_ist).Value = Range("Prozess_AgZahlerIst").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.AgStrom_ist).Value = Range("Prozess_AgStromIst").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.AgSchicht_ist).Value = Range("Prozess_AgSchichtIst").Value
+    .DataBodyRange(chargeRow, QSilberDB_Col.Biegetest_iO).Value = Range("Prozess_Biegetest_iO").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.Prozess_Kommentar).Value = Range("Prozess_Kommentar").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.Phase).Value = Range("Prozess_NextPhase").Value
   End With
