@@ -28,10 +28,9 @@ Private Sub Worksheet_Change(ByVal Target As Range)
             ' Need to split workflow between edit and create?
           Case chargePhase.Alterung
             FormReset False
-            'CreateMode_Fill
           Case chargePhase.Done To chargePhase.Scrapped ' Charge is done or scrapped
             FormReset False
-            'EditMode_Fill
+            EditMode_Fill
           Case Else
             MsgBox "Unspecified error with this charge, Phase not handled!"
             FormReset True
@@ -48,12 +47,40 @@ Private Sub Worksheet_Change(ByVal Target As Range)
   End If
 
   ' Enable or disable the save button
-  Alterung_SaveBtn.Enable = False
+  Alterung_SaveBtn.Enabled = False
   Alterung_SaveBtn.BackColor = vbButtonFace
   If Range("Alterung_IsFormValid").Value Then
-    Alterung_SaveBtn.Enable = True
+    Alterung_SaveBtn.Enabled = True
     Alterung_SaveBtn.BackColor = RGB(0, 192, 0)
   End If
+End Sub
+
+Private Sub EditMode_Fill()
+' Compile the form in edit mode. Copies the values from the Quality
+' Database to be modified by the Worker and then overwritten.
+' Warning: values from database are retrieved by formulas in the Excel
+' sheet and not by the macro. They are referenced as normal range
+' pointing to the cells.
+
+  ' Disable protection
+  sheet.Unprotect Password:=GAdminPassword
+
+  ' Copy Alterung iO & niO
+  If CStr(Range("I11").Value) <> "" Then
+    Range("Alterung_iO").Value = Range("I11").Value
+  End If
+  If CStr(Range("I12").Value) <> "" Then
+    Range("Alterung_niO").Value = Range("I12").Value
+  End If
+
+  ' Copy worker number
+  If CStr(Range("I14").Value) <> "" Then
+    Range("Alterung_Mitarbeiter").Value = Range("I14").Value
+  End If
+
+  ' Enable protection
+  sheet.Protect Password:=GAdminPassword
+  sheet.EnableSelection = xlUnlockedCells  
 End Sub
 
 Private Sub FormReset(ByVal FullReset As Boolean)
