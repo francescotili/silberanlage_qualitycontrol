@@ -69,9 +69,6 @@ Private Sub EditMode_Fill()
   If CStr(Range("I11").Value) <> "" Then
     Range("Alterung_iO").Value = Range("I11").Value
   End If
-  If CStr(Range("I12").Value) <> "" Then
-    Range("Alterung_niO").Value = Range("I12").Value
-  End If
 
   ' Copy worker number
   If CStr(Range("I14").Value) <> "" Then
@@ -97,7 +94,6 @@ Private Sub FormReset(ByVal FullReset As Boolean)
     Range("Alterung_Chargenummer").ClearContents
   End If
   Range("Alterung_iO").ClearContents
-  Range("Alterung_niO").ClearContents
   Range("Alterung_Mitarbeiter").ClearContents
 
   Range("Alterung_Chargenummer").Select
@@ -173,7 +169,6 @@ Private Sub SaveCharge()
   ' Write data in database
   With table
     .DataBodyRange(chargeRow, QSilberDB_Col.Alterung_iO).Value = Range("Alterung_iO").Value
-    .DataBodyRange(chargeRow, QSilberDB_Col.Alterung_niO).Value = Range("Alterung_niO").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.Alterung_Mitarbeiter).Value = Range("Alterung_Mitarbeiter").Value
     .DataBodyRange(chargerow, QSilberDB_Col.Alterung_Datum).Value = Range("Alterung_Datum").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.Phase).Value = Range("Alterung_NextPhase").Value

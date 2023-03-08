@@ -78,10 +78,8 @@ Public Enum QSilberDB_Col
   AgSchicht_Nacharbeit
   AgBedarf_total
   Biegetest_iO
-  Biegetest_niO
   AgEingespart
   Alterung_iO
-  Alterung_niO
   Alterung_Mitarbeiter
   Alterung_Datum
   Qualität_Kommentar
