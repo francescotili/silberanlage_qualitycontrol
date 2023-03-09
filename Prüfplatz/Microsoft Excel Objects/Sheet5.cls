@@ -10,14 +10,14 @@ Private Sub Worksheet_Change(ByVal Target As Range)
 ' Is triggered everytime a cell content changes in the Worksheet
 
   ' Control if barcode cell was changed and act accordingly
-  If Not Intersect(Target, Range("Alterung_Chargenummer")) Is Nothing Then
-    If Not Range("Alterung_IsBarcodeEmpty").Value Then
-      If Range("Alterung_IsBarcodeValid").Value Then
-        If Range("Alterung_Needed").Value Then
+  If Not Intersect(Target, Range("ChargenummerCell")) Is Nothing Then
+    If Not Range("IsBarcodeEmpty").Value Then
+      If Range("IsBarcodeValid").Value Then
+        If Range("IsAlterungNeeded").Value Then
           Dim chargeNummer
-          chargeNummer = Range("Alterung_Chargenummer").Value
+          chargeNummer = Range("ChargenummerValue").Value
 
-          Select Case Range("Alterung_Phase").Value
+          Select Case Range("CurrentChargePhase").Value
           Case chargePhase.Processing ' Process and quality data are missing
             MsgBox "Diese Charge befindet sich noch in Bearbeitung, bitte zuerst die Prozess- und Qualitätsdaten hinzufügen!"
             Sheet1.Activate
@@ -49,7 +49,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)
   ' Enable or disable the save button
   Alterung_SaveBtn.Enabled = False
   Alterung_SaveBtn.BackColor = vbButtonFace
-  If Range("Alterung_IsFormValid").Value Then
+  If Range("IsFormValid").Value Then
     Alterung_SaveBtn.Enabled = True
     Alterung_SaveBtn.BackColor = RGB(0, 192, 0)
   End If
@@ -66,13 +66,13 @@ Private Sub EditMode_Fill()
   sheet.Unprotect Password:=GAdminPassword
 
   ' Copy Alterung iO & niO
-  If CStr(Range("I11").Value) <> "" Then
-    Range("Alterung_iO").Value = Range("I11").Value
+  If CStr(Range("ResultDB").Value) <> "" Then
+    Range("Result").Value = Range("ResultDB").Value
   End If
 
   ' Copy worker number
-  If CStr(Range("I14").Value) <> "" Then
-    Range("Alterung_Mitarbeiter").Value = Range("I14").Value
+  If CStr(Range("MitarbeiterDB").Value) <> "" Then
+    Range("Mitarbeiter").Value = Range("MitarbeiterDB").Value
   End If
 
   ' Enable protection
@@ -91,12 +91,12 @@ Private Sub FormReset(ByVal FullReset As Boolean)
 
   ' Reset form
   If FullReset Then
-    Range("Alterung_Chargenummer").ClearContents
+    Range("ChargenummerCell").ClearContents
   End If
-  Range("Alterung_iO").ClearContents
-  Range("Alterung_Mitarbeiter").ClearContents
+  Range("Result").ClearContents
+  Range("Mitarbeiter").ClearContents
 
-  Range("Alterung_Chargenummer").Select
+  Range("ChargenummerCell").Select
   
   ' Enable protection
   sheet.Protect Password:=GAdminPassword
@@ -108,7 +108,7 @@ Private Sub Alterung_DeleteBtn_Click()
 
   ' Go to main scanning page
   Sheet2.Activate
-  Sheet2.Range("Prufplatz_Chargenummer").Select
+  Sheet2.Range("ChargenummerCell").Select
 End Sub
 
 Private Sub Alterung_SaveBtn_Click()
@@ -122,7 +122,7 @@ Private Sub Alterung_SaveBtn_Click()
 
   ' Go to main scanning page
   Sheet2.Activate
-  Sheet2.Range("Prufplatz_Chargenummer").Select
+  Sheet2.Range("ChargenummerCell").Select
 End Sub
 
 Private Sub SaveCharge()
@@ -160,7 +160,7 @@ Private Sub SaveCharge()
   ' Searching the row
   charges = table.DataBodyRange
   For i = LBound(charges) To UBound(charges)
-    If CStr(charges(i, 1)) = CStr(Range("Alterung_ChargenummerValue").Value) Then
+    If CStr(charges(i, 1)) = CStr(Range("ChargenummerValue").Value) Then
       chargeRow = i
       Exit For
     End If
@@ -168,10 +168,10 @@ Private Sub SaveCharge()
 
   ' Write data in database
   With table
-    .DataBodyRange(chargeRow, QSilberDB_Col.Alterung_iO).Value = Range("Alterung_iO").Value
-    .DataBodyRange(chargeRow, QSilberDB_Col.Alterung_Mitarbeiter).Value = Range("Alterung_Mitarbeiter").Value
-    .DataBodyRange(chargerow, QSilberDB_Col.Alterung_Datum).Value = Range("Alterung_Datum").Value
-    .DataBodyRange(chargeRow, QSilberDB_Col.Phase).Value = Range("Alterung_NextPhase").Value
+    .DataBodyRange(chargeRow, QSilberDB_Col.Alterung_iO).Value = Range("Result").Value
+    .DataBodyRange(chargeRow, QSilberDB_Col.Alterung_Mitarbeiter).Value = Range("Mitarbeiter").Value
+    .DataBodyRange(chargerow, QSilberDB_Col.Alterung_Datum).Value = Range("Datum").Value
+    .DataBodyRange(chargeRow, QSilberDB_Col.Phase).Value = Range("NextChargePhase").Value
   End With
 
   ' Save and close the database
@@ -180,8 +180,8 @@ Private Sub SaveCharge()
   Set app = Nothing
 
   ' Show confirmation message
-  Application.StatusBar = "Charge für Auftrag " & Range("E8").Value & " erfolgreich ergänzt"
-  Notify "Auftrag " & Range("E8").Value, "Charge erfolgreich ergänzt", "Info", 10
+  Application.StatusBar = "Charge für Auftrag " & Range("Auftragsnummer").Value & " erfolgreich ergänzt"
+  Notify "Auftrag " & Range("Auftragsnummer").Value, "Charge erfolgreich ergänzt", "Info", 10
 
   ' Refresh all data connections & queries
   ThisWorkbook.RefreshAll
@@ -191,7 +191,7 @@ Private Sub SaveCharge()
 
   ' Go to main scanning page
   Sheet2.Activate
-  Sheet2.Range("Prufplatz_Chargenummer").Select
+  Sheet2.Range("ChargenummerCell").Select
 End Sub
 
 Function IsDatabaseOpen()

@@ -1,10 +1,6 @@
 Option Explicit
 
 Public sheet As Worksheet
-Private barCodeCell, barCodeValueCell, isTeileInDBCell As Range
-Private isFormValidCell, isBarcodeValidCell, isBarcodeEmptyCell, kupferSchichtCell As Range
-Private silberSchichtCell As Range
-Private materialNummerInDB As Boolean
 
 Private Sub Worksheet_Activate()
   FormReset True
@@ -12,27 +8,18 @@ End Sub
 
 Private Sub Worksheet_Change(ByVal Target As Range)
 ' Is triggered everytime a cell content changes in the Worksheet
-
-  ' Define cell ranges
-  Set barCodeCell = Range("NeueCharge_Barcode")
-  Set isTeileInDBCell = Range("NeueCharge_IsTeileInDatabase")
-  Set isFormValidCell = Range("NeueCharge_IsFormValid")
-  Set isBarcodeValidCell = Range("NeueCharge_IsBarcodeValid")
-  Set isBarcodeEmptyCell = Range("NeueCharge_IsBarcodeEmpty")
   
   ' Control if barcode cell was changed and act accordingly
-  If Not Intersect(Target, barCodeCell) Is Nothing Then
-    If Not isBarcodeEmptyCell.Value Then
-      If isBarcodeValidCell.Value Then
-        If isTeileInDBCell Then
+  If Not Intersect(Target, Range("BarcodeCell")) Is Nothing Then
+    If Not Range("IsBarcodeEmpty").Value Then
+      If Range("IsBarcodeValid").Value Then
+        If Range("IsTeileInDatabase").Value Then
           FormReset False
           Form_Fill
         Else
           If MsgBox("Teilenummer nicht vorhanden!" & vbNewLine & "Jetzt hinzufügen?", vbInformation + vbYesNo + vbDefaultButton1, "ACHTUNG") = vbYes Then
-            Dim barcode
-            barcode = barCodeCell.Value
             Sheet4.Activate
-            Sheet4.Range("NeueTeile_Barcode").Value = barcode
+            Sheet4.Range("NeueTeile_Barcode").Value = Range("BarcodeValue").Value
             Exit Sub
           End If
           FormReset True
@@ -47,13 +34,13 @@ Private Sub Worksheet_Change(ByVal Target As Range)
   ' Enable or disable the save button
   NeueCharge_SpeichernBtn.Enabled = False
   NeueCharge_SpeichernBtn.BackColor = vbButtonFace
-  If isFormValidCell.Value Then
+  If Range("IsFormValid").Value Then
     NeueCharge_SpeichernBtn.Enabled = True
     NeueCharge_SpeichernBtn.BackColor = RGB(0, 192, 0)
   End If
 End Sub
 
-Private Sub FormReset(ByVal BarcodeReset As Boolean)
+Private Sub FormReset(ByVal FullReset As Boolean)
 ' Resets the form, deleting all the custom data and moving the selection
 ' to the barcode cell
 
@@ -63,18 +50,15 @@ Private Sub FormReset(ByVal BarcodeReset As Boolean)
   sheet.Unprotect Password:=GAdminPassword
   
   ' Reset form
-  If BarcodeReset Then
-    Set barCodeCell = Range("NeueCharge_Barcode")
-    barCodeCell.ClearContents
+  If FullReset Then
+    Range("BarcodeCell").ClearContents
   End If
+  Range("Gewicht").ClearContents
+  Range("Anlage").ClearContents
+  'Range("Mitarbeiter").ClearContents
+  Range("Kommentar").ClearContents
   
-  Range("NeueCharge_Gewicht").ClearContents
-  Range("NeueCharge_Anlage").ClearContents
-  Range("NeueCharge_CuSchicht").ClearContents
-  Range("NeueCharge_AgSchicht").ClearContents
-  Range("NeueCharge_Kommentar").ClearContents
-  
-  barCodeCell.Select
+  Range("BarcodeCell").Select
   
   ' Enable protection
   sheet.Protect Password:=GAdminPassword
@@ -87,25 +71,9 @@ Private Sub Form_Fill()
   
   ' Disable protection
   sheet.Unprotect Password:=GAdminPassword
-
-  ' Copy "Kupferschicht"
-  Set kupferSchichtCell = Range("NeueCharge_CuSchicht")
-  If Range("I13").Value <> "" Then
-    If CSng(Range("I13").Value) <> 0 Then
-      kupferSchichtCell.Value = Range("I13").Value
-    End If
-  End If
-
-  ' Copy "Silberschicht"
-  Set silberSchichtCell = Range("NeueCharge_AgSchicht")
-  If Range("I14").Value <> "" Then
-    If CSng(Range("I14").Value) <> 0 Then
-      silberSchichtCell.Value = Range("I14").Value
-    End If
-  End If
   
   ' Copy "Standardanlage"
-  Range("NeueCharge_Anlage").Value = Range("I16").Value
+  Range("Anlage").Value = Range("AnlageSoll").Value
   
   ' Enable protection
   sheet.Protect Password:=GAdminPassword
@@ -116,16 +84,6 @@ Private Sub NeueCharge_SpeichernBtn_Click()
 ' Save workflow triggered by Save button.
 ' This form will always create a new Chargenummer and add it to the
 ' Production database
-'
-' TASKS
-' [x] Define the charges database structure
-' [x] Add Mitarbeiter- and Kommentarfield
-' [x] Check if the Database file is already open
-' [x] Wait for the Database file to close before saving
-' [x] Use all named ranges for data preparation
-' [x] Write data to the database
-' [x] Update all the linked Query in the file after saving
-' [x] Show saving message
   SaveCharge
 End Sub
 
@@ -147,7 +105,7 @@ Private Sub SaveCharge()
   Dim chargeNummer As String
   
   ' Freeze the Chargenummer
-  chargeNummer = Range("NeueCharge_Chargenummer").Value
+  chargeNummer = Range("Chargenummer").Value
 
   ' Check if database is open
   Do While IsDatabaseOpen = True
@@ -169,23 +127,22 @@ Private Sub SaveCharge()
   table.ListRows.Add Position:=1
   With table
     .DataBodyRange(1, QSilberDB_Col.chargeNummer).Value = chargeNummer
-    .DataBodyRange(1, QSilberDB_Col.Datum).Value = Range("NeueCharge_Datum").Value
-    .DataBodyRange(1, QSilberDB_Col.Schicht).Value = Range("NeueCharge_Schicht").Value
-    .DataBodyRange(1, QSilberDB_Col.Annahme_Mitarbeiter).Value = Range("NeueCharge_Mitarbeiter").Value
-    .DataBodyRange(1, QSilberDB_Col.Annhame_Kommentar).Value = Range("NeueCharge_Kommentar").Value
-    ' I7 is Materialnummer for DB
-    .DataBodyRange(1, QSilberDB_Col.Materialnummer).Value = Range("I7").Value
-    .DataBodyRange(1, QSilberDB_Col.Gewicht_netto).Value = Range("NeueCharge_Nettogewicht").Value
-    .DataBodyRange(1, QSilberDB_Col.CuSchicht_soll).Value = Range("NeueCharge_CuSchicht").Value
-    .DataBodyRange(1, QSilberDB_Col.AgSchicht_soll).Value = Range("NeueCharge_AgSchicht").Value
-    .DataBodyRange(1, QSilberDB_Col.Auftragsnummer).Value = Range("NeueCharge_Auftrag").Value
-    .DataBodyRange(1, QSilberDB_Col.Füllmenge).Value = Range("NeueCharge_FullmengeAFO").Value
-    .DataBodyRange(1, QSilberDB_Col.Stückzahl).Value = Range("NeueCharge_Stuckzahl").Value
-    .DataBodyRange(1, QSilberDB_Col.AgBedarf_soll).Value = Range("NeueCharge_SilberBedarfsoll").Value
-    .DataBodyRange(1, QSilberDB_Col.Anlage).Value = Range("NeueCharge_Anlage").Value
-    .DataBodyRange(1, QSilberDB_Col.CuWert_soll).Value = Range("NeueCharge_CuZahlerwert").Value
-    .DataBodyRange(1, QSilberDB_Col.AgWert_soll).Value = Range("NeueCharge_AgZahlerwert").Value
-    .DataBodyRange(1, QSilberDB_Col.AgStrom_soll).Value = Range("NeueCharge_AgSollstrom").Value
+    .DataBodyRange(1, QSilberDB_Col.Datum).Value = Range("Datum").Value
+    .DataBodyRange(1, QSilberDB_Col.Schicht).Value = Range("Schicht").Value ' TO REMOVE AND MOVE
+    .DataBodyRange(1, QSilberDB_Col.Annahme_Mitarbeiter).Value = Range("Mitarbeiter").Value
+    .DataBodyRange(1, QSilberDB_Col.Annhame_Kommentar).Value = Range("Kommentar").Value
+    .DataBodyRange(1, QSilberDB_Col.Materialnummer).Value = Range("Materialnummer").Value
+    .DataBodyRange(1, QSilberDB_Col.Gewicht_netto).Value = Range("NettoGewicht").Value
+    .DataBodyRange(1, QSilberDB_Col.CuSchicht_soll).Value = Range("CuSchichtSoll").Value
+    .DataBodyRange(1, QSilberDB_Col.AgSchicht_soll).Value = Range("AgSchichtSoll").Value
+    .DataBodyRange(1, QSilberDB_Col.Auftragsnummer).Value = Range("Auftragsnummer").Value
+    .DataBodyRange(1, QSilberDB_Col.Füllmenge).Value = Range("FüllmengeAFO").Value
+    .DataBodyRange(1, QSilberDB_Col.Stückzahl).Value = Range("Stückzahl").Value
+    .DataBodyRange(1, QSilberDB_Col.AgBedarf_soll).Value = Range("AgBedarfSollTOT").Value
+    .DataBodyRange(1, QSilberDB_Col.Anlage).Value = Range("Anlage").Value
+    .DataBodyRange(1, QSilberDB_Col.CuWert_soll).Value = Range("CuZahlerWert").Value
+    .DataBodyRange(1, QSilberDB_Col.AgWert_soll).Value = Range("AgZahlerWert").Value
+    .DataBodyRange(1, QSilberDB_Col.AgStrom_soll).Value = Range("AgStromSoll").Value
     .DataBodyRange(1, QSilberDB_Col.Phase).Value = ChargePhase.Processing
   End With
   
@@ -202,8 +159,8 @@ Private Sub SaveCharge()
   ThisWorkbook.RefreshAll
 
   ' Show confirmation message
-  Application.StatusBar = "Neue Charge für Material " & Range("E7").Value & " erfolgreich gespeichert"
-  Notify Range("E7").Value, "Charge erfolgreich hinzugefügt", "Info", 10
+  Application.StatusBar = "Neue Charge für Material " & Range("MaterialnummerString").Value & " erfolgreich gespeichert"
+  Notify Range("MaterialnummerString").Value, "Charge erfolgreich hinzugefügt", "Info", 10
 
   ' Reset the form
   FormReset True

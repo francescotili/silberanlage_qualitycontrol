@@ -10,11 +10,11 @@ Private Sub Worksheet_Change(ByVal Target As Range)
 ' Is triggered everytime a cell content changes in the Worksheet
 
   ' Control if barcode cell was changed and act accordingly
-  If Not Intersect(Target, Range("Prozess_Chargenummer")) Is Nothing Then
-    If Not Range("Prozess_IsBarcodeEmpty").Value Then
-      If Range("Prozess_IsBarcodeValid").Value Then
-        If Range("Prozess_IsChargeInDB").Value Then
-          If Range("Prozess_Phase").Value = 0 Then
+  If Not Intersect(Target, Range("ChargenummerCell")) Is Nothing Then
+    If Not Range("IsBarcodeEmpty").Value Then
+      If Range("IsBarcodeValid").Value Then
+        If Range("IsChargeInDB").Value Then
+          If Range("CurrentChargePhase").Value = 0 Then
             FormReset False
           Else
             FormReset False
@@ -34,7 +34,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)
   ' Enable or disable the save button
   Prozess_SaveBtn.Enabled = False
   Prozess_SaveBtn.BackColor = vbButtonFace
-  If Range("Prozess_IsFormValid").Value Then
+  If Range("IsFormValid").Value Then
     Prozess_SaveBtn.Enabled = True
     Prozess_SaveBtn.BackColor = RGB(0, 192, 0)
   End If
@@ -51,18 +51,18 @@ Private Sub FormReset(ByVal FullReset As Boolean)
 
   ' Reset form
   If FullReset Then
-    Range("Prozess_CuZahlerIst").ClearContents
-    Range("Prozess_AgZahlerIst").ClearContents
-    Range("Prozess_AgStromIst").ClearContents
-    Range("Prozess_Chargenummer").ClearContents
+    Range("CuZahlerIst").ClearContents
+    Range("AgZahlerIst").ClearContents
+    Range("AgStromIst").ClearContents
+    Range("ChargenummerCell").ClearContents
   End If
-  Range("Prozess_Trommel").ClearContents
-  Range("Prozess_Kommentar").ClearContents
-  Range("Prozess_CuSchichtIst").ClearContents
-  Range("Prozess_AgSchichtIst").ClearContents
-  Range("Prozess_Biegetest_iO").ClearContents
+  Range("Trommel").ClearContents
+  Range("Kommentar").ClearContents
+  Range("CuSchichtIst").ClearContents
+  Range("AgSchichtIst").ClearContents
+  Range("Biegetest").ClearContents
 
-  Range("Prozess_Chargenummer").Select
+  Range("ChargenummerCell").Select
 
   ' Enable protection
   sheet.Protect Password:=GAdminPassword
@@ -80,32 +80,32 @@ Private Sub EditMode_Fill()
   sheet.Unprotect Password:=GAdminPassword
 
   ' Copy "Trommel"
-  If CStr(Range("I10").Value) <> "" Then
-    Range("Prozess_Trommel").Value = CStr(Range("I10").Value)
+  If CStr(Range("TrommelDB").Value) <> "" Then
+    Range("Trommel").Value = CStr(Range("TrommelDB").Value)
   End If
 
   ' Copy "Kupferdaten"
-  If CStr(Range("I13").Value) <> "" Then
-    Range("Prozess_CuZahlerIst").Value = CSng(Range("I13").Value)
+  If CStr(Range("CuZahlerIstDB").Value) <> "" Then
+    Range("CuZahlerIst").Value = CSng(Range("CuZahlerIstDB").Value)
   End If
-  If CStr(Range("I15").Value) <> "" Then
-    Range("Prozess_CuSchichtIst").Value = CSng(Range("I15").Value)
+  If CStr(Range("CuSchichtIstDB").Value) <> "" Then
+    Range("CuSchichtIst").Value = CSng(Range("CuSchichtIstDB").Value)
   End If
 
   ' Copy "Silberdaten"
-  If CStr(Range("I17").Value) <> "" Then
-    Range("Prozess_AgZahlerIst").Value = CSng(Range("I17").Value)
+  If CStr(Range("AgZahlerIstDB").Value) <> "" Then
+    Range("AgZahlerIst").Value = CSng(Range("AgZahlerIstDB").Value)
   End If
-  If CStr(Range("I18").Value) <> "" Then
-    Range("Prozess_AgStromIst").Value = CSng(Range("I18").Value)
+  If CStr(Range("AgStromIstDB").Value) <> "" Then
+    Range("AgStromIst").Value = CSng(Range("AgStromIstDB").Value)
   End If
-  If CStr(Range("I19").Value) <> "" Then
-    Range("Prozess_AgSchichtIst").Value = CSng(Range("I19").Value)
+  If CStr(Range("AgSchichtIstDB").Value) <> "" Then
+    Range("AgSchichtIst").Value = CSng(Range("AgSchichtIstDB").Value)
   End If
 
   ' Copy "Biegetest"
-  If CStr(Range("I21").Value) <> "" Then
-    Range("Prozess_Biegetest_iO").Value = CStr(Range("I21").Value)
+  If CStr(Range("BiegetestDB").Value) <> "" Then
+    Range("Biegetest").Value = CStr(Range("BiegetestDB").Value)
   End If
 
   ' Enable protection
@@ -118,7 +118,7 @@ Private Sub Prozess_DeleteBtn_Click()
 
   ' Go to main scanning page
   Sheet2.Activate
-  Sheet2.Range("Prufplatz_Chargenummer").Select
+  Sheet2.Range("ChargenummerCell").Select
 End Sub
 
 Private Sub Prozess_SaveBtn_Click()
@@ -132,7 +132,7 @@ Private Sub Prozess_SaveBtn_Click()
 
   ' Go to main scanning page
   Sheet2.Activate
-  Sheet2.Range("Prufplatz_Chargenummer").Select
+  Sheet2.Range("ChargenummerCell").Select
 End Sub
 
 Private Sub SaveCharge()
@@ -170,7 +170,7 @@ Private Sub SaveCharge()
   ' Searching the row
   charges = table.DataBodyRange
   For i = LBound(charges) To UBound(charges)
-    If CStr(charges(i, 1)) = CStr(Range("Prozess_ChargenummerValue").Value) Then
+    If CStr(charges(i, 1)) = CStr(Range("ChargenummerValue").Value) Then
       chargeRow = i
       Exit For
     End If
@@ -178,15 +178,15 @@ Private Sub SaveCharge()
 
   ' Write data in database
   With table
-    .DataBodyRange(chargeRow, QSilberDB_Col.Trommel).Value = Range("Prozess_Trommel").Value
-    .DataBodyRange(chargeRow, QSilberDB_Col.CuWert_ist).Value = Range("Prozess_CuZahlerIst").Value
-    .DataBodyRange(chargeRow, QSilberDB_Col.CuSchicht_ist).Value = Range("Prozess_CuSchichtIst").Value
-    .DataBodyRange(chargeRow, QSilberDB_Col.AgWert_ist).Value = Range("Prozess_AgZahlerIst").Value
-    .DataBodyRange(chargeRow, QSilberDB_Col.AgStrom_ist).Value = Range("Prozess_AgStromIst").Value
-    .DataBodyRange(chargeRow, QSilberDB_Col.AgSchicht_ist).Value = Range("Prozess_AgSchichtIst").Value
-    .DataBodyRange(chargeRow, QSilberDB_Col.Biegetest_iO).Value = Range("Prozess_Biegetest_iO").Value
-    .DataBodyRange(chargeRow, QSilberDB_Col.Prozess_Kommentar).Value = Range("Prozess_Kommentar").Value
-    .DataBodyRange(chargeRow, QSilberDB_Col.Phase).Value = Range("Prozess_NextPhase").Value
+    .DataBodyRange(chargeRow, QSilberDB_Col.Trommel).Value = Range("Trommel").Value
+    .DataBodyRange(chargeRow, QSilberDB_Col.CuWert_ist).Value = Range("CuZahlerIst").Value
+    .DataBodyRange(chargeRow, QSilberDB_Col.CuSchicht_ist).Value = Range("CuSchichtIst").Value
+    .DataBodyRange(chargeRow, QSilberDB_Col.AgWert_ist).Value = Range("AgZahlerIst").Value
+    .DataBodyRange(chargeRow, QSilberDB_Col.AgStrom_ist).Value = Range("AgStromIst").Value
+    .DataBodyRange(chargeRow, QSilberDB_Col.AgSchicht_ist).Value = Range("AgSchichtIst").Value
+    .DataBodyRange(chargeRow, QSilberDB_Col.Biegetest_iO).Value = Range("Biegetest").Value
+    .DataBodyRange(chargeRow, QSilberDB_Col.Prozess_Kommentar).Value = Range("Kommentar").Value
+    .DataBodyRange(chargeRow, QSilberDB_Col.Phase).Value = Range("NextChargePhase").Value
   End With
 
   ' Save and close the database
@@ -195,14 +195,14 @@ Private Sub SaveCharge()
   Set app = Nothing
 
   ' Show confirmation message
-  Application.StatusBar = "Charge für Auftrag " & Range("E8").Value & " erfolgreich ergänzt"
-  Notify "Auftrag " & Range("E8").Value, "Charge erfolgreich ergänzt", "Info", 10
+  Application.StatusBar = "Charge für Auftrag " & Range("Auftragsnummer").Value & " erfolgreich ergänzt"
+  Notify "Auftrag " & Range("Auftragsnummer").Value, "Charge erfolgreich ergänzt", "Info", 10
 
   ' Refresh all data connections & queries
   ThisWorkbook.RefreshAll
 
   ' Reset the form
-  Range("Prozess_Chargenummer").ClearContents
+  Range("ChargenummerCell").ClearContents
   FormReset False
 End Sub
 

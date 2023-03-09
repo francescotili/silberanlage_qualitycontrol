@@ -10,17 +10,17 @@ Private Sub Worksheet_Change(ByVal Target As Range)
 ' Is triggered everytime a cell content changes in the Worksheet
 
   ' Control if barcode cell was changed and act accordingly
-  If Not Intersect(Target, Range("Prufplatz_Chargenummer")) Is Nothing Then
-    If Not Range("Prufplatz_IsBarcodeEmpty").Value Then
-      If Range("Prufplatz_IsBarcodeValid").Value Then
-        If Range("Prufplatz_IsChargeInDB").Value Then
+  If Not Intersect(Target, Range("ChargenummerCell")) Is Nothing Then
+    If Not Range("IsBarcodeEmpty").Value Then
+      If Range("IsBarcodeValid").Value Then
+        If Range("IsChargeInDB").Value Then
           Dim chargeNummer
-          chargeNummer = Range("Prufplatz_Chargenummer").Value
+          chargeNummer = Range("ChargenummerValue").Value
 
-          Select Case Range("Prufplatz_Phase")
+          Select Case Range("CurrentChargePhase")
           Case chargePhase.Processing ' Process and quality data are missing
             Sheet1.Activate
-            Sheet1.Range("Prozess_Chargenummer").Value = chargeNummer
+            Sheet1.Range("ChargenummerCell").Value = chargeNummer
             Exit Sub
           Case chargePhase.Nacharbeit ' Nacharbeit done, choose based on nacharbeit type
             'Select Case nacharbeit_type
@@ -28,10 +28,10 @@ Private Sub Worksheet_Change(ByVal Target As Range)
             'SheetX.Range("").Value = xx
           Case chargePhase.Alterung ' Alterung done
             Sheet5.Activate
-            Sheet5.Range("Alterung_Chargenummer").Value = chargeNummer
+            Sheet5.Range("ChargenummerCell").Value = chargeNummer
           Case chargePhase.Done To chargePhase.Scrapped ' Charge is done or scrapped
             Sheet6.Activate
-            Sheet6.Range("Info_Chargenummer").Value = chargeNummer
+            Sheet6.Range("ChargenummerCell").Value = chargeNummer
           Case Else
             MsgBox "Unspecified error"
             FormReset
@@ -57,9 +57,9 @@ Private Sub FormReset()
   sheet.Unprotect Password:=GAdminPassword
 
   ' Reset form
-  Range("Prufplatz_Chargenummer").ClearContents
+  Range("ChargenummerCell").ClearContents
 
-  Range("Prufplatz_Chargenummer").Select
+  Range("ChargenummerCell").Select
   
   ' Enable protection
   sheet.Protect Password:=GAdminPassword

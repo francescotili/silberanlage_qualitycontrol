@@ -1,11 +1,6 @@
 Option Explicit
 
 Public sheet As Worksheet
-Private silberBedarfCell, silberSchichtCell, anlageCell, barCodeCell, bezeichnungCell As Range
-Private kupferSchichtCell, alterungCell, grundMaterialCell, nettoGewichtCell As Range
-Private barCodeValueCell, isTeileInDBCell, isFormValidCell, isBarcodeValidCell As Range
-Private CuEZCell, AgEZCell, AgStrom, isBarcodeEmptyCell As Range
-Private AgStrasseEZCell, AgGlockeEZCell, AgStrasseStromCell, AgGlockeStromCell As Range
 
 Private Sub Worksheet_Activate()
   FormReset True
@@ -13,19 +8,12 @@ End Sub
 
 Private Sub Worksheet_Change(ByVal Target As Range)
 ' Is triggered everytime a cell content changes in the Worksheet
-
-  ' Define cell ranges
-  Set barCodeCell = Range("NeueTeile_Barcode")
-  Set isTeileInDBCell = Range("NeueTeile_IsTeileInDatabase")
-  Set isFormValidCell = Range("NeueTeile_IsFormValid")
-  Set isBarcodeValidCell = Range("NeueTeile_IsBarcodeValid")
-  Set isBarcodeEmptyCell = Range("NeueTeile_IsBarcodeEmpty")
   
   ' Control if barcode cell was changed and act accordingly
-  If Not Intersect(Target, barCodeCell) Is Nothing Then
-    If Not isBarcodeEmptyCell.Value Then
-      If isBarcodeValidCell.Value Then
-        If isTeileInDBCell Then
+  If Not Intersect(Target, Range("BarcodeCell")) Is Nothing Then
+    If Not Range("IsBarcodeEmpty").Value Then
+      If Range("IsBarcodeValid").Value Then
+        If Range("IsTeileInDatabase").Value Then
           FormReset False
           EditMode_Fill
         Else
@@ -42,7 +30,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)
   ' Enable or disable the save button
   NeueTeile_SpeichernBtn.Enabled = False
   NeueTeile_SpeichernBtn.BackColor = vbButtonFace
-  If isFormValidCell.Value Then
+  If Range("IsFormValid").Value Then
     NeueTeile_SpeichernBtn.Enabled = True
     NeueTeile_SpeichernBtn.BackColor = RGB(0, 192, 0)
   End If
@@ -50,13 +38,13 @@ Private Sub Worksheet_Change(ByVal Target As Range)
   ' Enable or disable the delete button
   NeueTeile_LoeschenBtn.Enabled = False
   NeueTeile_LoeschenBtn.BackColor = vbButtonFace
-  If isTeileInDBCell.Value Then
+  If Range("IsTeileInDatabase").Value Then
     NeueTeile_LoeschenBtn.Enabled = True
     NeueTeile_LoeschenBtn.BackColor = RGB(192, 0, 0)
   End If
 End Sub
 
-Private Sub FormReset(ByVal BarcodeReset As Boolean)
+Private Sub FormReset(ByVal FullReset As Boolean)
 ' Resets the form, deleting all the custom data and moving the selection
 ' to the barcode cell
   
@@ -66,49 +54,25 @@ Private Sub FormReset(ByVal BarcodeReset As Boolean)
   sheet.Unprotect Password:=GAdminPassword
   
   ' Reset form
-  If BarcodeReset Then
-    Set barCodeCell = Range("NeueTeile_Barcode")
-    barCodeCell.ClearContents
+  If FullReset Then
+    Range("BarcodeCell").ClearContents
   End If
   
-  Set bezeichnungCell = Range("NeueTeile_Bezeichnung")
-  bezeichnungCell.ClearContents
+  Range("Bezeichnung").ClearContents
+  Range("Grundmaterial").ClearContents
+  Range("AnlageSoll").ClearContents
+  Range("CuSchicht").ClearContents
+  Range("AgSchicht").ClearContents
+  Range("AgBedarf").ClearContents
+  Range("NettoGewicht").ClearContents
+  Range("IsAlterungNeeded").ClearContents
+  Range("CuEZ").ClearContents
+  Range("AgEZ_Straße").ClearContents
+  Range("AgStrom_Straße").ClearContents
+  Range("AgEZ_Glocke").ClearContents
+  Range("AgStrom_Glocke").ClearContents
   
-  Set grundMaterialCell = Range("NeueTeile_Material")
-  grundMaterialCell.ClearContents
-  
-  Set anlageCell = Range("NeueTeile_Anlage")
-  anlageCell.ClearContents
-  
-  Set kupferSchichtCell = Range("NeueTeile_CuSchicht")
-  kupferSchichtCell.ClearContents
-  
-  Set silberSchichtCell = Range("NeueTeile_AgSchicht")
-  silberSchichtCell.ClearContents
-  
-  Set silberBedarfCell = Range("NeueTeile_AgBedarf")
-  silberBedarfCell.ClearContents
-  
-  Set nettoGewichtCell = Range("NeueTeile_NettoGewicht")
-  nettoGewichtCell.ClearContents
-  
-  Set alterungCell = Range("NeueTeile_Loettest")
-  alterungCell.ClearContents
-  
-  Set CuEZCell = Range("NeueTeile_CuEZ")
-  CuEZCell.ClearContents
-  
-  Set AgStrasseEZCell = Range("NeueTeile_AgEZStraße")
-  AgStrasseEZCell.ClearContents
-  Set AgStrasseStromCell = Range("NeueTeile_AgStromStraße")
-  AgStrasseStromCell.ClearContents
-  
-  Set AgGlockeEZCell = Range("NeueTeile_AgEZGlocke")
-  AgGlockeEZCell.ClearContents
-  Set AgGlockeStromCell = Range("NeueTeile_AgStromGlocke")
-  AgGlockeStromCell.ClearContents
-  
-  barCodeCell.Select
+  Range("BarcodeCell").Select
   
   ' Enable protection
   sheet.Protect Password:=GAdminPassword
@@ -122,70 +86,68 @@ Private Sub EditMode_Fill()
 ' not by the macro. They are referenced as normal range pointing to the cells.
   
   ' Copy "Bezeichnung"
-  Set bezeichnungCell = Range("NeueTeile_Bezeichnung")
-  bezeichnungCell.Value = Range("I8").Value
+  If CStr(Range("BezeichnungDB").Value) <> "" Then
+    Range("Bezeichnung").Value = Range("BezeichnungDB").Value
+  End If
   
   ' Copy "Grundmaterial"
-  Set grundMaterialCell = Range("NeueTeile_Material")
-  grundMaterialCell.Value = Range("I9").Value
+  If CStr(Range("GrundmaterialDB").Value) <> "" Then
+    Range("Grundmaterial").Value = Range("GrundmaterialDB").Value
+  End If
   
   ' Copy "Standardanlage"
-  Set anlageCell = Range("NeueTeile_Anlage")
-  anlageCell.Value = Range("I11").Value
+  If CStr(Range("AnlageSollDB").Value) <> "" Then
+    Range("AnlageSoll").Value = Range("AnlageSollDB").Value
+  End If
   
   ' Copy "Kupferschicht"
-  Set kupferSchichtCell = Range("NeueTeile_CuSchicht")
-  If CSng(Range("I13").Value) <> 0 Then
-    kupferSchichtCell.Value = Range("I13").Value
+  If CSng(Range("CuSchichtDB").Value) <> 0 Then
+    Range("CuSchicht").Value = Range("CuSchichtDB").Value
   End If
   
   ' Copy "Silberschicht"
-  Set silberSchichtCell = Range("NeueTeile_AgSchicht")
-  If CSng(Range("I14").Value) <> 0 Then
-    silberSchichtCell.Value = Range("I14").Value
+  If CSng(Range("AgSchichtDB").Value) <> 0 Then
+    Range("AgSchicht").Value = Range("AgSchichtDB").Value
   End If
   
   ' Copy "Silberbedarf"
-  Set silberBedarfCell = Range("NeueTeile_AgBedarf")
-  silberBedarfCell.Value = Range("I15").Value
+  If CSng(Range("AgBedarfDB").Value) <> 0 Then
+    Range("AgBedarf").Value = Range("AgBedarfDB").Value
+  End If
   
   ' Copy "Gewicht/1000"
-  Set nettoGewichtCell = Range("NeueTeile_NettoGewicht")
-  nettoGewichtCell.Value = Range("I17").Value
+  If CSng(Range("NettoGewichtDB").Value) <> 0 Then
+    Range("NettoGewicht").Value = Range("NettoGewichtDB").Value
+  End If
   
   ' Copy "Alterung & Löttest"
-  Set alterungCell = Range("NeueTeile_Loettest")
-  If Range("I19").Value <> "" Then
-    If Range("I19").Value Then
-      alterungCell.Value = "JA"
+  If Range("IsAlterungNeededDB").Value <> "" Then
+    If Range("IsAlterungNeededDB").Value Then
+      Range("IsAlterungNeeded").Value = "JA"
     Else
-      alterungCell.Value = "NEIN"
+      Range("IsAlterungNeeded").Value = "NEIN"
     End If
   End If
   
   ' Copy Cu Data from DB
-  Set CuEZCell = Range("NeueTeile_CuEZ")
-  If CSng(Range("I21").Value) > 0 Then
-    CuEZCell.Value = Range("I21").Value
+  If CSng(Range("CuEZDB").Value) > 0 Then
+    Range("CuEZ").Value = Range("CuEZDB").Value
   End If
   
-  ' Copy Ag Data from DB
-  Set AgStrasseEZCell = Range("NeueTeile_AgEZStraße")
-  If CSng(Range("I24").Value) > 0 Then
-    AgStrasseEZCell.Value = Range("I24").Value
+  ' Copy Ag Data from DB for Straße
+  If CSng(Range("AgEZDB_Straße").Value) > 0 Then
+    Range("AgEZ_Straße").Value = Range("AgEZDB_Straße").Value
   End If
-  Set AgStrasseStromCell = Range("NeueTeile_AgStromStraße")
-  If CSng(Range("I25").Value) > 0 Then
-    AgStrasseStromCell.Value = Range("I25").Value
+  If CSng(Range("AgStromDB_Straße").Value) > 0 Then
+    Range("AgStrom_Straße").Value = Range("AgStromDB_Straße").Value
   End If
   
-  Set AgGlockeEZCell = Range("NeueTeile_AgEZGlocke")
-  If CSng(Range("I26").Value) > 0 Then
-    AgGlockeEZCell.Value = Range("I26").Value
+  ' Copy Ag Data from DB for Glocke
+  If CSng(Range("AgEZDB_Glocke").Value) > 0 Then
+    Range("AgEZ_Glocke").Value = Range("AgEZDB_Glocke").Value
   End If
-  Set AgGlockeStromCell = Range("NeueTeile_AgStromGlocke")
-  If CSng(Range("I27").Value) > 0 Then
-    AgGlockeStromCell.Value = Range("I27").Value
+  If CSng(Range("AgStromDB_Glocke").Value) > 0 Then
+    Range("AgStrom_Glocke").Value = Range("AgStromDB_Glocke").Value
   End If
 End Sub
 
@@ -195,21 +157,25 @@ Private Sub CreateMode_Fill()
 ' Warning: values from EZ database are retrieved by formulas in the Excel sheet and
 ' not by the macro. They are referenced as normal range pointing to the cells.
   
-  ' Copy Cu Data from EZ DB
-  Set CuEZCell = Range("NeueTeile_CuEZ")
-  If CSng(Range("K21").Value) > 0 Then
-    CuEZCell.Value = Range("K21").Value
+  ' Copy Cu Data from Old EZ DB
+  If CStr(Range("CuOldEZ").Value) <> "" Then
+    If CSng(Range("CuOldEZ").Value) > 0 Then
+      Range("CuEZ").Value = Range("CuOldEZ").Value
+    End If
   End If
   
-  ' Copy Ag Data from DB
-  Set AgStrasseEZCell = Range("NeueTeile_AgEZStraße")
-  If CSng(Range("K24").Value) > 0 Then
-    AgStrasseEZCell.Value = Range("K24").Value
+  ' Copy Ag Data from Old DB for Straße
+  If CStr(Range("AgOldEZ_Straße").Value) <> "" Then
+    If CSng(Range("AgOldEZ_Straße").Value) > 0 Then
+      Range("AgEZ_Straße").Value = Range("AgOldEZ_Straße").Value
+    End If
   End If
   
-  Set AgGlockeEZCell = Range("NeueTeile_AgEZGlocke")
-  If CSng(Range("K26").Value) > 0 Then
-    AgGlockeEZCell.Value = Range("K26").Value
+  ' Copy Ag Data from Old DB for Glocke
+  If CStr(Range("AgOldEZ_Glocke").Value) <> "" Then
+    If CSng(Range("AgOldEZ_Glocke").Value) > 0 Then
+      Range("AgEZ_Glocke").Value = Range("AgOldEZ_Glocke").Value
+    End If
   End If
 End Sub
 
@@ -219,14 +185,6 @@ Private Sub NeueTeile_SpeichernBtn_Click()
 ' If the Material is not in the database, it will call the Create function
 '
 ' TASKS
-' [x] Check if the Database file is already open
-' [x] Wait for the Database file to close before saving
-' [x] Update all the linked Query in the file after saving
-' [x] Show saving message
-' [x] Show better saved message
-' [x] Split workflow between edit and save
-' [x] Implement edit mode
-' [x] Fuse save and edit together, workflow has to split only on the saving part!
 ' [ ] Add Kommentarfield
 
   SaveMaterial
@@ -255,32 +213,30 @@ Private Sub SaveMaterial()
   
   ' Preparing data for write
   alterungDB = False
-  If Range("NeueTeile_Loettest") = "JA" Then
+  If Range("IsAlterungNeeded") = "JA" Then
     alterungDB = True
   End If
   
   teileData = Array( _
-    Range("I7").Value, _
-    Range("NeueTeile_Bezeichnung").Value, _
-    Range("NeueTeile_Material").Value, _
-    Range("NeueTeile_NettoGewicht").Value, _
-    Range("NeueTeile_Anlage").Value, _
-    Range("NeueTeile_CuSchicht").Value, _
+    Range("Materialnummer").Value, _
+    Range("Bezeichnung").Value, _
+    Range("Grundmaterial").Value, _
+    Range("NettoGewicht").Value, _
+    Range("AnlageSoll").Value, _
+    Range("CuSchicht").Value, _
     "", _
-    Range("NeueTeile_CuEZ").Value, _
+    Range("CuEZ").Value, _
     "", _
-    Range("NeueTeile_AgSchicht").Value, _
-    Range("NeueTeile_AgBedarf").Value, _
-    Range("NeueTeile_AgEZStraße").Value, _
-    Range("NeueTeile_AgStromStraße").Value, _
-    Range("NeueTeile_AgEZGlocke").Value, _
-    Range("NeueTeile_AgStromGlocke").Value, _
+    Range("AgSchicht").Value, _
+    Range("AgBedarf").Value, _
+    Range("AgEZ_Straße").Value, _
+    Range("AgStrom_Straße").Value, _
+    Range("AgEZ_Glocke").Value, _
+    Range("AgStrom_Glocke").Value, _
     alterungDB _
   )
-  ' I7 is Materialnummer
   ' Position 7 is Cu-Bedarf, leaved empty for future implementations
   ' Position 9 is Cu-Strom, leaved empty for future implementations
-  ' Position 16 is for Löttest, we validate in the code
   
   ' Check if database is open
   Do While IsDatabaseOpen = True
@@ -299,7 +255,7 @@ Private Sub SaveMaterial()
   Set table = sheet.ListObjects.Item(GTeilDB_TableName)
   
   ' Splitting workflow between Edit and Create
-  isEditMode = Range("NeueTeile_IsTeileInDatabase").Value
+  isEditMode = Range("IsTeileInDatabase").Value
   
   If isEditMode Then ' EDIT MODE
     ' Searching the row to overwrite
@@ -308,7 +264,7 @@ Private Sub SaveMaterial()
     '   I have found no way to only read a column, we need to read all the table
     materials = table.DataBodyRange
     For i = LBound(materials) To UBound(materials)
-      If CStr(materials(i, 1)) = CStr(Range("I7").Value) Then
+      If CStr(materials(i, 1)) = CStr(Range("Materialnummer").Value) Then
         teileRow = i
         Exit For
       End If
@@ -336,11 +292,11 @@ Private Sub SaveMaterial()
   
   ' Show confirmation message
   If isEditMode Then ' EDIT MODE
-    Application.StatusBar = "Material-Nr. " & Range("E7").Value & " wurde aktualisiert"
-    Notify Range("E7").Value, "Teile erfolgreich aktualisiert", "Info", 10
+    Application.StatusBar = "Material-Nr. " & Range("MaterialnummerString").Value & " wurde aktualisiert"
+    Notify Range("MaterialnummerString").Value, "Teile erfolgreich aktualisiert", "Info", 10
   Else ' CREATE MODE
-    Application.StatusBar = "Material-Nr. " & Range("E7").Value & " wurde erstellt"
-    Notify Range("E7").Value, "Teile erfolgreich hinzugefügt", "Info", 10
+    Application.StatusBar = "Material-Nr. " & Range("MaterialnummerString").Value & " wurde erstellt"
+    Notify Range("MaterialnummerString").Value, "Teile erfolgreich hinzugefügt", "Info", 10
   End If
   
   ' Reset the form
@@ -384,7 +340,7 @@ Private Sub NeueTeile_LoeschenBtn_Click()
     ' Searching the row to delete
     materials = table.DataBodyRange
     For i = LBound(materials) To UBound(materials)
-      If CStr(materials(i,1)) = CStr(Range("I7").Value) Then
+      If CStr(materials(i, 1)) = CStr(Range("Materialnummer").Value) Then
         teileRow = i
         Exit For
       End If
@@ -399,8 +355,8 @@ Private Sub NeueTeile_LoeschenBtn_Click()
     Set app = Nothing
 
     ' Show confirmation message
-    Application.StatusBar = "Material-Nr. " & Range("E7").Value & " wurde gelöscht"
-    Notify Range("E7").Value, "Teile erfolgreich gelöscht", "Info", 10
+    Application.StatusBar = "Material-Nr. " & Range("MaterialnummerString").Value & " wurde gelöscht"
+    Notify Range("MaterialnummerString").Value, "Teile erfolgreich gelöscht", "Info", 10
 
     ' Reset the form
     FormReset True
@@ -430,3 +386,5 @@ Function IsDatabaseOpen()
     Case Else: Error ErrNo
   End Select
 End Function
+
+

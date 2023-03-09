@@ -10,10 +10,10 @@ Private Sub Worksheet_Change(ByVal Target As Range)
 ' Is triggered everytime a cell content changes in the Worksheet
 
   ' Control if barcode cell was changed and act accordingly
-  If Not Intersect(Target, Range("Info_Chargenummer")) Is Nothing Then
-    If Not Range("Info_IsBarcodeEmpty").Value Then
-      If Range("Info_IsBarcodeValid").Value Then
-        If Range("Info_IsChargeInDB").Value Then
+  If Not Intersect(Target, Range("ChargenummerCell")) Is Nothing Then
+    If Not Range("IsBarcodeEmpty").Value Then
+      If Range("IsBarcodeValid").Value Then
+        If Range("IsChargeInDB").Value Then
           'Form is automatic filled
         Else
           MsgBox "Die Charge wurde nicht in der Datenbank gefunden!"
@@ -34,10 +34,10 @@ Private Sub Worksheet_Change(ByVal Target As Range)
   Scrap_Btn.Enabled = False
   Delete_Btn.Enabled = False
   Delete_Btn.BackColor = vbButtonFace
-  If Range("Info_IsChargeInDB").Value Then
+  If Range("IsChargeInDB").Value Then
     Annahme_Btn.Enabled = True
     Prozess_Btn.Enabled = True
-    If Range("L23") Then
+    If Range("IsAlterungNeeded").Value Then
       Alterung_Btn.Enabled = True
     End If
     Nacharbeit_Btn.Enabled = True
@@ -52,7 +52,7 @@ Private Sub AbbrechenBtn_Click()
 
   ' Go to main scanning page
   Sheet2.Activate
-  Sheet2.Range("Prufplatz_Chargenummer").Select
+  Sheet2.Range("ChargenummerCell").Select
 End Sub
 
 Private Sub Annahme_Btn_Click()
@@ -61,20 +61,20 @@ End Sub
 
 Private Sub Prozess_Btn_Click()
   Dim chargeNummer
-  chargeNummer = Range("Info_Chargenummer").Value
+  chargeNummer = Range("ChargenummerValue").Value
 
   ' Go to prozess page
   Sheet1.Activate
-  Sheet1.Range("Prozess_Chargenummer").Value = chargeNummer
+  Sheet1.Range("ChargenummerCell").Value = chargeNummer
 End Sub
 
 Private Sub Alterung_Btn_Click()
   Dim chargeNummer
-  chargeNummer = Range("Info_Chargenummer").Value
+  chargeNummer = Range("ChargenummerValue").Value
 
   ' Go to alterung page
   Sheet5.Activate
-  Sheet5.Range("Alterung_Chargenummer").Value = chargeNummer
+  Sheet5.Range("ChargenummerCell").Value = chargeNummer
 End Sub
 
 Private Sub Nacharbeit_Btn_Click()
@@ -97,8 +97,8 @@ Private Sub FormReset()
   sheet.Unprotect Password:=GAdminPassword
 
   ' Reset form
-  Range("Info_Chargenummer").ClearContents
-  Range("Info_Chargenummer").Select
+  Range("ChargenummerCell").ClearContents
+  Range("ChargenummerCell").Select
   
   ' Enable protection
   sheet.Protect Password:=GAdminPassword
