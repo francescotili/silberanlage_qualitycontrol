@@ -137,6 +137,7 @@ Private Sub SaveCharge()
     .DataBodyRange(1, QSilberDB_Col.AgSchicht_soll).Value = Range("AgSchichtSoll").Value
     .DataBodyRange(1, QSilberDB_Col.Auftragsnummer).Value = Range("Auftragsnummer").Value
     .DataBodyRange(1, QSilberDB_Col.Füllmenge).Value = Range("FüllmengeAFO").Value
+    .DataBodyRange(1, QSilberDB_Col.ChargeGewicht).Value = Range("Gewicht").Value
     .DataBodyRange(1, QSilberDB_Col.Stückzahl).Value = Range("Stückzahl").Value
     .DataBodyRange(1, QSilberDB_Col.AgBedarf_soll).Value = Range("AgBedarfSollTOT").Value
     .DataBodyRange(1, QSilberDB_Col.Anlage).Value = Range("Anlage").Value
@@ -147,7 +148,7 @@ Private Sub SaveCharge()
   End With
   
   ' Print the Chargeschein
-  Sheet7.Range("Zettel_ChargeNummer").Value = chargeNummer
+  Sheet7.Range("Chargenummer").Value = chargeNummer
   PrintChargeschein
 
   ' Save and close the database
