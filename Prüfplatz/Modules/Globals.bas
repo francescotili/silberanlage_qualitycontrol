@@ -43,13 +43,10 @@ Public Enum QSilberDB_Col
   Materialnummer
   Gewicht_netto
   CuSchicht_soll
-  CuSchicht_min
-  CuSchicht_max
   AgSchicht_soll
-  AgSchicht_min
-  AgSchicht_max
   Auftragsnummer
   Füllmenge
+  ChargeGewicht
   Stückzahl
   AgBedarf_soll
   CuBedarf_soll
