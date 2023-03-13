@@ -103,6 +103,8 @@ Public Enum TeilDB_Col
   Löten
   XRay_Methode
   Kommentar
+  Ersteller
+  Editor
 End Enum
 
 Public Function Notify(ByVal title As String, ByVal msg As String, _

@@ -104,6 +104,8 @@ Public Enum TeilDB_Col
   Löten
   XRay_Methode
   Kommentar
+  Ersteller
+  Editor
 End Enum
 
 ' EZ Datenbank Database columns

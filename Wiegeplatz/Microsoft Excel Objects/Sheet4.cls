@@ -57,7 +57,6 @@ Private Sub FormReset(ByVal FullReset As Boolean)
   If FullReset Then
     Range("BarcodeCell").ClearContents
   End If
-  
   Range("Bezeichnung").ClearContents
   Range("Grundmaterial").ClearContents
   Range("AnlageSoll").ClearContents
@@ -71,6 +70,7 @@ Private Sub FormReset(ByVal FullReset As Boolean)
   Range("AgStrom_Straße").ClearContents
   Range("AgEZ_Glocke").ClearContents
   Range("AgStrom_Glocke").ClearContents
+  Range("Mitarbeiter").ClearContents
   
   Range("BarcodeCell").Select
   
@@ -185,7 +185,7 @@ Private Sub NeueTeile_SpeichernBtn_Click()
 ' If the Material is not in the database, it will call the Create function
 '
 ' TASKS
-' [ ] Add Kommentarfield
+' [ ] Add Kommentar as Dialog window
 
   SaveMaterial
 End Sub
@@ -217,27 +217,6 @@ Private Sub SaveMaterial()
     alterungDB = True
   End If
   
-  teileData = Array( _
-    Range("Materialnummer").Value, _
-    Range("Bezeichnung").Value, _
-    Range("Grundmaterial").Value, _
-    Range("NettoGewicht").Value, _
-    Range("AnlageSoll").Value, _
-    Range("CuSchicht").Value, _
-    "", _
-    Range("CuEZ").Value, _
-    "", _
-    Range("AgSchicht").Value, _
-    Range("AgBedarf").Value, _
-    Range("AgEZ_Straße").Value, _
-    Range("AgStrom_Straße").Value, _
-    Range("AgEZ_Glocke").Value, _
-    Range("AgStrom_Glocke").Value, _
-    alterungDB _
-  )
-  ' Position 7 is Cu-Bedarf, leaved empty for future implementations
-  ' Position 9 is Cu-Strom, leaved empty for future implementations
-  
   ' Check if database is open
   Do While IsDatabaseOpen = True
     Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
@@ -255,13 +234,8 @@ Private Sub SaveMaterial()
   Set table = sheet.ListObjects.Item(GTeilDB_TableName)
   
   ' Splitting workflow between Edit and Create
-  isEditMode = Range("IsTeileInDatabase").Value
-  
-  If isEditMode Then ' EDIT MODE
-    ' Searching the row to overwrite
-    '   Note: it is much faster to read a range of values into an array, then do calculations
-    '   on that array, instead of doing the same calculation of the range of values itself
-    '   I have found no way to only read a column, we need to read all the table
+  If Range("IsTeileInDatabase").Value Then
+    ' Search the row to overwrite
     materials = table.DataBodyRange
     For i = LBound(materials) To UBound(materials)
       If CStr(materials(i, 1)) = CStr(Range("Materialnummer").Value) Then
@@ -269,17 +243,33 @@ Private Sub SaveMaterial()
         Exit For
       End If
     Next i
-  
-    ' Write data in database
-    For j = LBound(teileData) To UBound(teileData)
-      table.DataBodyRange(teileRow, (j + 1)).Value = teileData(j)
-    Next j
-  Else ' CREATE MODE
-    ' Write data in database
+  Else
+    ' Create a new row
     table.ListRows.Add Position:=1
-    For j = LBound(teileData) To UBound(teileData)
-      table.DataBodyRange(1, (j + 1)).Value = teileData(j)
-    Next j
+    teileRow = 1
+  End If
+
+  ' Write data in database
+  With table
+    .DataBodyRange(teileRow, TeilDB_Col.Materialnummer).Value = Range("Materialnummer").Value
+    .DataBodyRange(teileRow, TeilDB_Col.Bezeichnung).Value = Range("Bezeichnung").Value
+    .DataBodyRange(teileRow, TeilDB_Col.Grundmaterial).Value = Range("Grundmaterial").Value
+    .DataBodyRange(teileRow, TeilDB_Col.Gewicht_netto).Value = Range("NettoGewicht").Value
+    .DataBodyRange(teileRow, TeilDB_Col.Anlage_soll).Value = Range("AnlageSoll").Value
+    .DataBodyRange(teileRow, TeilDB_Col.CuSchicht).Value = Range("CuSchicht").Value
+    .DataBodyRange(teileRow, TeilDB_Col.CuEZ).Value = Range("CuEZ").Value
+    .DataBodyRange(teileRow, TeilDB_Col.AgSchicht).Value = Range("AgSchicht").Value
+    .DataBodyRange(teileRow, TeilDB_Col.AgBedarf).Value = Range("AgBedarf").Value
+    .DataBodyRange(teileRow, TeilDB_Col.AgEZ_Straße).Value = Range("AgEZ_Straße").Value
+    .DataBodyRange(teileRow, TeilDB_Col.AgStrom_Straße).Value = Range("AgStrom_Straße").Value
+    .DataBodyRange(teileRow, TeilDB_Col.AgEZ_Glocke).Value = Range("AgEZ_Glocke").Value
+    .DataBodyRange(teileRow, TeilDB_Col.AgStrom_Glocke).Value = Range("AgStrom_Glocke").Value
+    .DataBodyRange(teileRow, TeilDB_Col.Löten).Value = alterungDB
+  End With
+  If Range("IsTeileInDatabase").Value Then
+    table.DataBodyRange(teileRow, TeilDB_Col.Editor).Value = Range("Mitarbeiter").Value
+  Else
+    table.DataBodyRange(teileRow, TeilDB_Col.Ersteller).Value = Range("Mitarbeiter").Value
   End If
   
   ' Save and close the database
@@ -291,7 +281,7 @@ Private Sub SaveMaterial()
   ThisWorkbook.RefreshAll
   
   ' Show confirmation message
-  If isEditMode Then ' EDIT MODE
+  If Range("IsTeileInDatabase").Value Then ' EDIT MODE
     Application.StatusBar = "Material-Nr. " & Range("MaterialnummerString").Value & " wurde aktualisiert"
     Notify Range("MaterialnummerString").Value, "Teile erfolgreich aktualisiert", "Info", 10
   Else ' CREATE MODE
@@ -386,5 +376,3 @@ Function IsDatabaseOpen()
     Case Else: Error ErrNo
   End Select
 End Function
-
-
