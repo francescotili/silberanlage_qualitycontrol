@@ -57,6 +57,7 @@ Private Sub FormReset(ByVal FullReset As Boolean)
     Range("ChargenummerCell").ClearContents
   End If
   Range("Trommel").ClearContents
+  Range("Mitarbeiter").ClearContents
   Range("Kommentar").ClearContents
   Range("CuSchichtIst").ClearContents
   Range("AgSchichtIst").ClearContents
@@ -106,6 +107,14 @@ Private Sub EditMode_Fill()
   ' Copy "Biegetest"
   If CStr(Range("BiegetestDB").Value) <> "" Then
     Range("Biegetest").Value = CStr(Range("BiegetestDB").Value)
+  End If
+
+  ' Copy Prüfer & Kommentar
+  If CStr(Range("MitarbeiterDB").Value) <> "" Then
+    Range("Mitarbeiter").Value = CStr(Range("MitarbeiterDB").Value)
+  End If
+  If CStr(Range("KommentarDB").Value) <> "" Then
+    Range("Kommentar").Value = CStr(Range("KommentarDB").Value)
   End If
 
   ' Enable protection
@@ -186,6 +195,7 @@ Private Sub SaveCharge()
     .DataBodyRange(chargeRow, QSilberDB_Col.AgStrom_ist).Value = Range("AgStromIst").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.AgSchicht_ist).Value = Range("AgSchichtIst").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.Biegetest_iO).Value = Range("Biegetest").Value
+    .DataBodyRange(chargeRow, QSilberDB_Col.Prozess_Mitarbeiter).Value = Range("Mitarbeiter").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.Prozess_Kommentar).Value = Range("Kommentar").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.Phase).Value = Range("NextChargePhase").Value
   End With
