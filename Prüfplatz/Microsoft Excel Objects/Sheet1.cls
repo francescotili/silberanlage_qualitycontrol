@@ -175,7 +175,7 @@ Private Sub SaveCharge()
   
   ' Setting of targets
   Set sheet = wbook.Worksheets(1) ' Main Database
-  Set table = sheet.ListObjects.Item(GQSilberDB_TableName)
+  Set table = sheet.ListObjects.Item(1)
 
   ' Searching the row
   charges = table.DataBodyRange

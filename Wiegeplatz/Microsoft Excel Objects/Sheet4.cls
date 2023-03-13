@@ -231,7 +231,7 @@ Private Sub SaveMaterial()
   
   ' Setting of targets
   Set sheet = wbook.Worksheets(2) ' Teil_DB
-  Set table = sheet.ListObjects.Item(GTeilDB_TableName)
+  Set table = sheet.ListObjects.Item(1)
   
   ' Splitting workflow between Edit and Create
   If Range("IsTeileInDatabase").Value Then
@@ -325,7 +325,7 @@ Private Sub NeueTeile_LoeschenBtn_Click()
     
     ' Setting of targets
     Set sheet = wbook.Worksheets(2) ' Teil_DB
-    Set table = sheet.ListObjects.Item(GTeilDB_TableName)
+    Set table = sheet.ListObjects.Item(1)
 
     ' Searching the row to delete
     materials = table.DataBodyRange
