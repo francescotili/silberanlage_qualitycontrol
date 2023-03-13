@@ -128,7 +128,6 @@ Private Sub SaveCharge()
   With table
     .DataBodyRange(1, QSilberDB_Col.chargeNummer).Value = chargeNummer
     .DataBodyRange(1, QSilberDB_Col.Datum).Value = Range("Datum").Value
-    .DataBodyRange(1, QSilberDB_Col.Schicht).Value = Range("Schicht").Value ' TO REMOVE AND MOVE
     .DataBodyRange(1, QSilberDB_Col.Annahme_Mitarbeiter).Value = Range("Mitarbeiter").Value
     .DataBodyRange(1, QSilberDB_Col.Annhame_Kommentar).Value = Range("Kommentar").Value
     .DataBodyRange(1, QSilberDB_Col.Materialnummer).Value = Range("Materialnummer").Value

@@ -178,6 +178,7 @@ Private Sub SaveCharge()
 
   ' Write data in database
   With table
+    .DataBodyRange(chargeRow, QSilberDB_Col.Schicht).Value = Range("Schicht").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.Trommel).Value = Range("Trommel").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.CuWert_ist).Value = Range("CuZahlerIst").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.CuSchicht_ist).Value = Range("CuSchichtIst").Value
