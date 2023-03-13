@@ -13,31 +13,17 @@ Private Sub Worksheet_Change(ByVal Target As Range)
   If Not Intersect(Target, Range("ChargenummerCell")) Is Nothing Then
     If Not Range("IsBarcodeEmpty").Value Then
       If Range("IsBarcodeValid").Value Then
-        If Range("IsAlterungNeeded").Value Then
-          Dim chargeNummer
-          chargeNummer = Range("ChargenummerValue").Value
-
-          Select Case Range("CurrentChargePhase").Value
-          Case chargePhase.Processing ' Process and quality data are missing
-            MsgBox "Diese Charge befindet sich noch in Bearbeitung, bitte zuerst die Prozess- und Qualitätsdaten hinzufügen!"
-            Sheet1.Activate
-            Sheet1.Range("Prozess_Chargenummer").Value = chargeNummer
-            Exit Sub
-          Case chargePhase.Nacharbeit ' Nacharbeit done and löttest needed
-            ' TO DO
-            ' Need to split workflow between edit and create?
-          Case chargePhase.Alterung
-            FormReset False
-          Case chargePhase.Done To chargePhase.Scrapped ' Charge is done or scrapped
-            FormReset False
-            EditMode_Fill
-          Case Else
-            MsgBox "Unspecified error with this charge, Phase not handled!"
-            FormReset True
-          End Select
+        If Range("IsChargeInDB").Value Then
+          ChargeWorkflow
         Else
-          MsgBox "Dieses Teilnummer benötigt keine Löttest!"
-          FormReset True
+          ThisWorkbook.RefreshAll
+          DoEvents ' Waits for the refresh to finish
+          If Range("IsChargeInDB").Value Then
+            ChargeWorkflow
+          Else
+            MsgBox "Die Charge wurde nicht in der Datenbank gefunden!"
+            FormReset True
+          End If
         End If
       Else
         MsgBox "Ungültiger barcode!"
@@ -205,4 +191,35 @@ Function IsDatabaseOpen()
     Case 70:   IsDatabaseOpen = True
     Case Else: Error ErrNo
   End Select
+End Function
+
+Function ChargeWorkflow()
+' The charge is in DB, decide what to do next
+
+  If Range("IsAlterungNeeded").Value Then
+    Dim chargeNummer
+    chargeNummer = Range("ChargenummerValue").Value
+
+    Select Case Range("CurrentChargePhase").Value
+      Case chargePhase.Processing ' Process and quality data are missing
+        MsgBox "Diese Charge befindet sich noch in Bearbeitung, bitte zuerst die Prozess- und Qualitätsdaten hinzufügen!"
+        Sheet1.Activate
+        Sheet1.Range("Prozess_Chargenummer").Value = chargeNummer
+        Exit Function
+      Case chargePhase.Nacharbeit ' Nacharbeit done and löttest needed
+        ' TO DO
+        ' Need to split workflow between edit and create?
+      Case chargePhase.Alterung
+        FormReset False
+      Case chargePhase.Done To chargePhase.Scrapped ' Charge is done or scrapped
+        FormReset False
+        EditMode_Fill
+      Case Else
+        MsgBox "Unspecified error with this charge, Phase not handled!"
+        FormReset True
+    End Select
+  Else
+    MsgBox "Dieses Teilnummer benötigt keine Löttest!"
+    FormReset True
+  End If
 End Function

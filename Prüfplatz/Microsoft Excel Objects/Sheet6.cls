@@ -13,11 +13,13 @@ Private Sub Worksheet_Change(ByVal Target As Range)
   If Not Intersect(Target, Range("ChargenummerCell")) Is Nothing Then
     If Not Range("IsBarcodeEmpty").Value Then
       If Range("IsBarcodeValid").Value Then
-        If Range("IsChargeInDB").Value Then
-          'Form is automatic filled
-        Else
-          MsgBox "Die Charge wurde nicht in der Datenbank gefunden!"
-          FormReset
+        If Not Range("IsChargeInDB").Value Then ' If IsChargeInDB form is automatically filled
+          ThisWorkbook.RefreshAll
+          DoEvents ' Waits for the refresh to finish
+          If Not Range("IsChargeInDB").Value Then
+            MsgBox "Die Charge wurde nicht in der Datenbank gefunden!"
+            FormReset
+          End If
         End If
       Else
         MsgBox "Ungültiger barcode!"

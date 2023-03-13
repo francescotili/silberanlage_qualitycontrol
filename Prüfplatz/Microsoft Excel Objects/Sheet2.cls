@@ -14,31 +14,16 @@ Private Sub Worksheet_Change(ByVal Target As Range)
     If Not Range("IsBarcodeEmpty").Value Then
       If Range("IsBarcodeValid").Value Then
         If Range("IsChargeInDB").Value Then
-          Dim chargeNummer
-          chargeNummer = Range("ChargenummerValue").Value
-
-          Select Case Range("CurrentChargePhase")
-          Case chargePhase.Processing ' Process and quality data are missing
-            Sheet1.Activate
-            Sheet1.Range("ChargenummerCell").Value = chargeNummer
-            Exit Sub
-          Case chargePhase.Nacharbeit ' Nacharbeit done, choose based on nacharbeit type
-            'Select Case nacharbeit_type
-            'SheetX.Activate
-            'SheetX.Range("").Value = xx
-          Case chargePhase.Alterung ' Alterung done
-            Sheet5.Activate
-            Sheet5.Range("ChargenummerCell").Value = chargeNummer
-          Case chargePhase.Done To chargePhase.Scrapped ' Charge is done or scrapped
-            Sheet6.Activate
-            Sheet6.Range("ChargenummerCell").Value = chargeNummer
-          Case Else
-            MsgBox "Unspecified error"
-            FormReset
-          End Select
+          ChargeWorkflow
         Else
-          MsgBox "Die Charge wurde nicht in der Datenbank gefunden!"
-          FormReset
+          ThisWorkbook.RefreshAll
+          DoEvents ' Waits for the refresh to finish
+          If Range("IsChargeInDB").Value Then
+            ChargeWorkflow
+          Else
+            MsgBox "Die Charge wurde nicht in der Datenbank gefunden!"
+            FormReset
+          End If
         End If
       Else
         MsgBox "Ungültiger barcode!"
@@ -65,3 +50,30 @@ Private Sub FormReset()
   sheet.Protect Password:=GAdminPassword
   sheet.EnableSelection = xlUnlockedCells
 End Sub
+
+Function ChargeWorkflow()
+  Dim chargeNummer
+  chargeNummer = Range("ChargenummerValue").Value
+
+  Select Case Range("CurrentChargePhase")
+    Case ChargePhase.Processing ' Process and quality data are missing
+      Sheet1.Activate
+      Sheet1.Range("ChargenummerCell").Value = chargeNummer
+      Exit Function
+    Case ChargePhase.Nacharbeit ' Nacharbeit done, choose based on nacharbeit type
+      'Select Case nacharbeit_type
+      'SheetX.Activate
+      'SheetX.Range("").Value = xx
+    Case ChargePhase.Alterung ' Alterung done
+      Sheet5.Activate
+      Sheet5.Range("ChargenummerCell").Value = chargeNummer
+      Exit Function
+    Case ChargePhase.Done To ChargePhase.Scrapped ' Charge is done or scrapped
+      Sheet6.Activate
+      Sheet6.Range("ChargenummerCell").Value = chargeNummer
+      Exit Function
+    Case Else
+      MsgBox "Unspecified error"
+      FormReset
+  End Select
+End Function

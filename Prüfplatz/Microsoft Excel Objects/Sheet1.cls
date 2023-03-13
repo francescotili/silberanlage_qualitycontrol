@@ -14,15 +14,16 @@ Private Sub Worksheet_Change(ByVal Target As Range)
     If Not Range("IsBarcodeEmpty").Value Then
       If Range("IsBarcodeValid").Value Then
         If Range("IsChargeInDB").Value Then
-          If Range("CurrentChargePhase").Value = 0 Then
-            FormReset False
-          Else
-            FormReset False
-            EditMode_Fill
-          End If
+          ChargeWorkflow
         Else
-          MsgBox "Die Charge wurde nicht in der Datenbank gefunden!"
-          FormReset True
+          ThisWorkbook.RefreshAll
+          DoEvents ' Waits for the refresh to finish
+          If Range("IsChargeInDB").Value Then
+            ChargeWorkflow
+          Else
+            MsgBox "Die Charge wurde nicht in der Datenbank gefunden!"
+            FormReset True
+          End If
         End If
       Else
         MsgBox "Ungültiger barcode!"
@@ -232,4 +233,15 @@ Function IsDatabaseOpen()
     Case 70:   IsDatabaseOpen = True
     Case Else: Error ErrNo
   End Select
+End Function
+
+Function ChargeWorkflow()
+' The charge is in DB, decide what to do next
+
+  If Range("CurrentChargePhase").Value = 0 Then
+    FormReset False
+  Else
+    FormReset False
+    EditMode_Fill
+  End If
 End Function
