@@ -58,7 +58,12 @@ Private Sub AbbrechenBtn_Click()
 End Sub
 
 Private Sub Annahme_Btn_Click()
-  MsgBox "Annahme not yet implemented"
+  Dim chargeNummer
+  chargeNummer = Range("ChargenummerValue").Value
+
+  ' Go to Annahme page
+  Sheet8.Activate
+  Sheet8.Range("ChargenummerCell").Value = chargeNummer
 End Sub
 
 Private Sub Prozess_Btn_Click()
