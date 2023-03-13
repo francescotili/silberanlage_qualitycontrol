@@ -61,6 +61,7 @@ Public Enum QSilberDB_Col
   AgWert_ist
   AgStrom_soll
   AgStrom_ist
+  Prozess_Mitarbeiter
   Prozess_Kommentar
   Nacharbeit_Art
   Nacharbeit_Kommentar
