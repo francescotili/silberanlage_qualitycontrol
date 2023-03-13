@@ -188,10 +188,6 @@ Private Sub SaveCharge()
 
   ' Reset the form
   FormReset True
-
-  ' Go to main scanning page
-  Sheet2.Activate
-  Sheet2.Range("ChargenummerCell").Select
 End Sub
 
 Function IsDatabaseOpen()
