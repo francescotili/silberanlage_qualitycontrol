@@ -31,7 +31,7 @@ End Enum
 
 ' Qualitätsaufzeichnung Database columns
 Public Enum QSilberDB_Col
-  Chargenummer = 1
+  ChrgNummer = 1
   Datum
   Wochentag
   KW

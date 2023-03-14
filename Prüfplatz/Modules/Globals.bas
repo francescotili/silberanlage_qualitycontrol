@@ -29,9 +29,27 @@ Public Enum ChargePhase
   Scrapped
 End Enum
 
+' Nacharbeit types
+Public Enum NacharbeitTyp
+  ' POSSIBLE NACHARBEIT
+  '   WARNING: this enum order and elements must be the same as in the [Enums] sheet of the workbook!
+
+  ' Too less silver layer, parts need to go back to the silver plant
+  Dicke = 1
+  
+  ' There are spots on the parts, parts can be polished to remove the spots
+  Flecken_A13
+
+  ' There are spots on the parts, parts can be silvered one more time
+  Flecken_EZ10
+
+  ' There is too much silver on the layer, parts need to be stripped off the silver
+  Strippen
+End Enum
+
 ' Qualitätsaufzeichnung Database columns
 Public Enum QSilberDB_Col
-  Chargenummer = 1
+  ChrgNummer = 1
   Datum
   Wochentag
   KW

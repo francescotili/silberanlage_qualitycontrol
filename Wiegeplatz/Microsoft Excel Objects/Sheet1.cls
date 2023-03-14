@@ -126,7 +126,7 @@ Private Sub SaveCharge()
   ' Write data in database
   table.ListRows.Add Position:=1
   With table
-    .DataBodyRange(1, QSilberDB_Col.chargeNummer).Value = chargeNummer
+    .DataBodyRange(1, QSilberDB_Col.ChrgNummer).Value = chargeNummer
     .DataBodyRange(1, QSilberDB_Col.Datum).Value = Range("Datum").Value
     .DataBodyRange(1, QSilberDB_Col.Annahme_Mitarbeiter).Value = Range("Mitarbeiter").Value
     .DataBodyRange(1, QSilberDB_Col.Annhame_Kommentar).Value = Range("Kommentar").Value
