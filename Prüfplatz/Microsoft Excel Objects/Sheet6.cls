@@ -85,7 +85,12 @@ Private Sub Alterung_Btn_Click()
 End Sub
 
 Private Sub Nacharbeit_Btn_Click()
-  MsgBox "Nacharbeit not yet implemented"
+  Dim chargeNummer
+  chargeNummer = RangE("ChargenummerValue").Value
+
+  ' Go to nacharbeit page
+  Sheet7.Activate
+  Sheet7.Range("ChargenummerCell").Value = chargeNummer
 End Sub
 
 Private Sub Scrap_Btn_Click()

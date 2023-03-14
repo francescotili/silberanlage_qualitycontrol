@@ -61,9 +61,8 @@ Function ChargeWorkflow()
       Sheet1.Range("ChargenummerCell").Value = chargeNummer
       Exit Function
     Case ChargePhase.Nacharbeit ' Nacharbeit done, choose based on nacharbeit type
-      'Select Case nacharbeit_type
-      'SheetX.Activate
-      'SheetX.Range("").Value = xx
+      Sheet7.Activate
+      Sheet7.Range("ChargenummerCell").Value = chargeNummer
     Case ChargePhase.Alterung ' Alterung done
       Sheet5.Activate
       Sheet5.Range("ChargenummerCell").Value = chargeNummer
