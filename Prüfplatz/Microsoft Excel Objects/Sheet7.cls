@@ -88,11 +88,6 @@ Private Sub EditMode_Fill()
   ' Disable protection
   sheet.Unprotect Password:=GAdminPassword
 
-  ' Copy Nacharbeit art
-  If CStr(Range("NacharbeitArtDB").Value) <> "" Then
-    Range("NacharbeitString").Value = Range("NacharbeitStringDB").Value
-  End If
-
   ' Copy Nacharbeit comments
   If CStr(Range("KommentarDB").Value) <> "" Then
     Range("Kommentar").Value = Range("KommentarDB").Value
@@ -119,6 +114,11 @@ Private Sub EditMode_Fill()
   ' Copy Mitarbeiter
   If CStr(Range("MitarbeiterDB").Value) <> "" Then
     Range("Mitarbeiter").Value = Range("MitarbeiterDB").Value
+  End If
+
+  ' Copy Nacharbeit art ' LEAVE AT LAST POSITION BECAUSE IT CAUSES ERROR WITH SHEET PROTECTION
+  If CStr(Range("NacharbeitArtDB").Value) <> "" Then
+    Range("NacharbeitString").Value = Range("NacharbeitStringDB").Value
   End If
 
   ' Enable protection
