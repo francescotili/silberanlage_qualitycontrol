@@ -230,7 +230,7 @@ Private Sub SaveMaterial()
   Application.StatusBar = "Wird gespeichert ..."
   
   ' Setting of targets
-  Set sheet = wbook.Worksheets(2) ' Teil_DB
+  Set sheet = wbook.Worksheets(Sheet2.Index) ' Teil_DB
   Set table = sheet.ListObjects.Item(1)
   
   ' Splitting workflow between Edit and Create
@@ -327,7 +327,7 @@ Private Sub NeueTeile_LoeschenBtn_Click()
     Application.StatusBar = "Wird gespeichert ..."
     
     ' Setting of targets
-    Set sheet = wbook.Worksheets(2) ' Teil_DB
+    Set sheet = wbook.Worksheets(Sheet1.Index) ' Teil_DB
     Set table = sheet.ListObjects.Item(1)
 
     ' Searching the row to delete

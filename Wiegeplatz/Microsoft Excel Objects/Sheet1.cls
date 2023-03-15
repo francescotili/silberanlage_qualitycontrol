@@ -120,7 +120,7 @@ Private Sub SaveCharge()
   Application.StatusBar = "Wird gespeichert ..."
 
   ' Setting of targets
-  Set sheet = wbook.Worksheets(1) ' Main Database
+  Set sheet = wbook.Worksheets(Sheet1.Index) ' Main Database
   Set table = sheet.ListObjects.Item(1)
 
   ' Write data in database
