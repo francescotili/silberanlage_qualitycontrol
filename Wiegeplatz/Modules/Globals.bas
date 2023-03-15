@@ -73,13 +73,13 @@ Public Enum QSilberDB_Col
   AgBedarf_ist
   AgSchicht_Nacharbeit
   AgBedarf_total
+  AgBedarf_max
   Biegetest_iO
   AgEingespart
   Alterung_iO
   Alterung_Mitarbeiter
   Alterung_Datum
   Qualität_Kommentar
-  Entschied
   Phase
 End Enum
 
