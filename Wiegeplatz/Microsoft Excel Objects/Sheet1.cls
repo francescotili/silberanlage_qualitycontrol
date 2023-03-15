@@ -19,7 +19,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)
         Else
           If MsgBox("Teilenummer nicht vorhanden!" & vbNewLine & "Jetzt hinzufügen?", vbInformation + vbYesNo + vbDefaultButton1, "ACHTUNG") = vbYes Then
             Sheet4.Activate
-            Sheet4.Range("NeueTeile_Barcode").Value = Range("BarcodeValue").Value
+            Sheet4.Range("BarcodeValue").Value = Range("BarcodeValue").Value
             Exit Sub
           End If
           FormReset True
