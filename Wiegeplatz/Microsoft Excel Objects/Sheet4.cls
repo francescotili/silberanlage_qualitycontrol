@@ -291,6 +291,9 @@ Private Sub SaveMaterial()
   
   ' Reset the form
   FormReset True
+
+  ' Go back to "Neue Charge" worksheet
+  Sheet1.Activate
 End Sub
 
 Private Sub NeueTeile_LoeschenBtn_Click()
