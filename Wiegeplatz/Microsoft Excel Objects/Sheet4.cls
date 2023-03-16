@@ -51,7 +51,7 @@ Private Sub FormReset(ByVal FullReset As Boolean)
   Set sheet = Sheet4
   
   ' Disable protection
-  sheet.Unprotect Password:=GAdminPassword
+  sheet.Unprotect Password:=Sheet5.Range("DateiPassword").Value
   
   ' Reset form
   If FullReset Then
@@ -75,7 +75,7 @@ Private Sub FormReset(ByVal FullReset As Boolean)
   Range("BarcodeCell").Select
   
   ' Enable protection
-  sheet.Protect Password:=GAdminPassword
+  sheet.Protect Password:=Sheet5.Range("DateiPassword").Value
   sheet.EnableSelection = xlUnlockedCells
 End Sub
 
