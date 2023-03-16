@@ -239,8 +239,8 @@ Private Sub SaveMaterial()
   Application.StatusBar = "Wird gespeichert ..."
   
   ' Setting of targets
-  Set sheet = wbook.Worksheets(Sheet2.Index) ' Teil_DB
-  Set table = sheet.ListObjects.Item(1)
+  Set sheet = wbook.Worksheets("Teil_DB")
+  Set table = sheet.ListObjects.Item("Teiledatenbank")
   
   ' Splitting workflow between Edit and Create
   If Range("IsTeileInDatabase").Value Then

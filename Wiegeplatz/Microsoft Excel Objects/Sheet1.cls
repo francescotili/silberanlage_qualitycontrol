@@ -4,7 +4,6 @@ Public sheet As Worksheet
 
 Private Sub Worksheet_Activate()
   FormReset True
-  ThisWorkbook.Protect Password:=Sheet5.Range("DateiPassword").Value
 End Sub
 
 Private Sub Worksheet_Change(ByVal Target As Range)
@@ -131,8 +130,8 @@ Private Sub SaveCharge()
   Application.StatusBar = "Wird gespeichert ..."
 
   ' Setting of targets
-  Set sheet = wbook.Worksheets(Sheet1.Index) ' Main Database
-  Set table = sheet.ListObjects.Item(1)
+  Set sheet = wbook.Worksheets("Database")
+  Set table = sheet.ListObjects.Item("Qualitätsdatabase")
 
   ' Write data in database
   table.ListRows.Add Position:=1

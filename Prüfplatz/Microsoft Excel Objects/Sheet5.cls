@@ -144,8 +144,8 @@ Private Sub SaveCharge()
   Application.StatusBar = "Wird gespeichert ..."
   
   ' Setting of targets
-  Set sheet = wbook.Worksheets(Sheet1.Index) ' Main Database
-  Set table = sheet.ListObjects.Item(1)
+  Set sheet = wbook.Worksheets("Database")
+  Set table = sheet.ListObjects.Item("Qualitätsdatabase")
 
   ' Searching the row
   charges = table.DataBodyRange
