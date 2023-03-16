@@ -137,9 +137,11 @@ Private Sub SaveCharge()
   Dim charges As Variant
   Dim i As Long
   Dim chargeRow As Single
+  Dim databasePath As String
+  databasePath = Sheet10.Range("ProjectPfad").Value & "Q_Silber_DATABASE.xlsx"
 
   ' Check if database is open
-  Do While IsDatabaseOpen = True
+  Do While IsDatabaseOpen(databasePath) = True
     Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
     Application.Wait (Now + TimeValue("0:00:02"))
   Loop
@@ -147,7 +149,7 @@ Private Sub SaveCharge()
   ' Opening of database file
   app.Visible = False ' Visible is False by default, so this should not be necessary
   app.DisplayAlerts = False
-  Set wbook = app.Workbooks.Add(GDatabasePath)
+  Set wbook = app.Workbooks.Add(databasePath)
   Application.StatusBar = "Wird gespeichert ..."
   
   ' Setting of targets
@@ -172,7 +174,7 @@ Private Sub SaveCharge()
   End With
 
   ' Save and close the database
-  wbook.SaveAs GDatabasePath
+  wbook.SaveAs databasePath
   app.Quit
   Set app = Nothing
 
@@ -187,12 +189,12 @@ Private Sub SaveCharge()
   FormReset True
 End sub
 
-Function IsDatabaseOpen()
+Function IsDatabaseOpen(databasePath As String)
   Dim ff As Long, ErrNo As Long
 
   On Error Resume Next
   ff = FreeFile()
-  Open GDatabasePath For Input Lock Read As #ff
+  Open databasePath For Input Lock Read As #ff
   Close ff
   ErrNo = Err
   On Error GoTo 0

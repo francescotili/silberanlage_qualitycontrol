@@ -210,6 +210,8 @@ Private Sub SaveMaterial()
   Dim teileRow As Integer
   Dim alterungDB As Boolean
   Dim isEditMode As Boolean
+  Dim databasePath As String
+  databasePath = Sheet5.Range("ProjectPfad").Value & "Q_Silber_DATABASE.xlsx"
   
   ' Preparing data for write
   alterungDB = False
@@ -218,7 +220,7 @@ Private Sub SaveMaterial()
   End If
   
   ' Check if database is open
-  Do While IsDatabaseOpen = True
+  Do While IsDatabaseOpen(databasePath) = True
     Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
     Application.Wait (Now + TimeValue("0:00:02"))
   Loop
@@ -226,7 +228,7 @@ Private Sub SaveMaterial()
   ' Opening of database file
   app.Visible = False ' Visible is False by default, so this should not be necessary
   app.DisplayAlerts = False
-  Set wbook = app.Workbooks.Add(GDatabasePath)
+  Set wbook = app.Workbooks.Add(databasePath)
   Application.StatusBar = "Wird gespeichert ..."
   
   ' Setting of targets
@@ -273,7 +275,7 @@ Private Sub SaveMaterial()
   End If
   
   ' Save and close the database
-  wbook.SaveAs GDatabasePath
+  wbook.SaveAs databasePath
   app.Quit
   Set app = Nothing
   
@@ -308,6 +310,8 @@ Private Sub NeueTeile_LoeschenBtn_Click()
   Dim materials As Variant
   Dim i As Long
   Dim teileRow As Integer
+  Dim databasePath As String
+  databasePath = Sheet5.Range("ProjectPfad").Value & "Q_Silber_DATABASE.xlsx"
 
   If MsgBox("Möchten Sie dieses Material wirklich dauerhaft löschen?", vbCritical + vbYesNo, "Achtung") = vbYes Then
 
@@ -315,7 +319,7 @@ Private Sub NeueTeile_LoeschenBtn_Click()
     Application.StatusBar = "Datenbank wird geöffnet, bitte warten ..."
 
     ' Check if database is open
-    Do While IsDatabaseOpen = True
+    Do While IsDatabaseOpen(databasePath) = True
       Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
       Application.Wait (Now + TimeValue("0:00:02"))
     Loop
@@ -323,7 +327,7 @@ Private Sub NeueTeile_LoeschenBtn_Click()
     ' Opening of database file
     app.Visible = False ' Visible is False by default, so this should not be necessarz
     app.DisplayAlerts = False
-    Set wbook = app.Workbooks.Add(GDatabasePath)
+    Set wbook = app.Workbooks.Add(databasePath)
     Application.StatusBar = "Wird gespeichert ..."
     
     ' Setting of targets
@@ -343,7 +347,7 @@ Private Sub NeueTeile_LoeschenBtn_Click()
     table.ListRows(teileRow).Delete
 
     ' Save and close the database
-    wbook.SaveAs GDatabasePath
+    wbook.SaveAs databasePath
     app.Quit
     Set app = Nothing
 
@@ -363,12 +367,12 @@ Private Sub NeueTeile_ResetBtn_Click()
   FormReset True
 End Sub
 
-Function IsDatabaseOpen()
+Function IsDatabaseOpen(databasePath As String)
   Dim ff As Long, ErrNo As Long
   
   On Error Resume Next
   ff = FreeFile()
-  Open GDatabasePath For Input Lock Read As #ff
+  Open databasePath For Input Lock Read As #ff
   Close ff
   ErrNo = Err
   On Error GoTo 0
