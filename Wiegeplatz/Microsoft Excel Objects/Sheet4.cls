@@ -14,11 +14,16 @@ Private Sub Worksheet_Change(ByVal Target As Range)
     If Not Range("IsBarcodeEmpty").Value Then
       If Range("IsBarcodeValid").Value Then
         If Range("IsTeileInDatabase").Value Then
-          FormReset False
-          EditMode_Fill
+          EditWorkflow
         Else
-          FormReset False
-          CreateMode_Fill
+          ThisWorkbook.RefreshAll
+          DoEvents ' Waits for the refresh to finish
+          If Range("IsTeileInDatabase").Value Then
+            EditWorkflow
+          Else
+            FormReset False
+            CreateMode_Fill
+          End If
         End If
       Else
         MsgBox "Ungültiger barcode!"
@@ -382,4 +387,10 @@ Function IsDatabaseOpen(databasePath As String)
     Case 70:   IsDatabaseOpen = True
     Case Else: Error ErrNo
   End Select
+End Function
+
+Function EditWorkflow()
+' The Teil is in DB, decide what to do next
+  FormReset False
+  EditMode_Fill
 End Function

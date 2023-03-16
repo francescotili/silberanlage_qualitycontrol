@@ -15,15 +15,21 @@ Private Sub Worksheet_Change(ByVal Target As Range)
     If Not Range("IsBarcodeEmpty").Value Then
       If Range("IsBarcodeValid").Value Then
         If Range("IsTeileInDatabase").Value Then
-          FormReset False
-          Form_Fill
+          ChargeWorkflow
         Else
-          If MsgBox("Teilenummer nicht vorhanden!" & vbNewLine & "Jetzt hinzufügen?", vbInformation + vbYesNo + vbDefaultButton1, "ACHTUNG") = vbYes Then
-            Sheet4.Activate
-            Sheet4.Range("BarcodeValue").Value = Range("BarcodeValue").Value
-            Exit Sub
+          ThisWorkbook.RefreshAll
+          DoEvents ' Waits for the refresh to finish
+          If Range("IsTeileInDatabase").Value Then
+            ChargeWorkflow
+          Else
+            If MsgBox("Teilenummer nicht vorhanden!" & vbNewLine & "Jetzt hinzufügen?", vbInformation + vbYesNo + vbDefaultButton1, "ACHTUNG") = vbYes Then
+              Sheet4.Activate
+              Sheet4.Range("BarcodeValue").Value = Range("BarcodeValue").Value
+              Exit Sub
+            Else
+              FormReset True
+            End If
           End If
-          FormReset True
         End If
       Else
         MsgBox "Ungültiger barcode!"
@@ -220,3 +226,9 @@ Private Sub PrintChargeschein()
   chargePaper.Visible = xlSheetHidden
   ThisWorkbook.Protect Password:=Sheet5.Range("DateiPassword").Value
 End Sub
+
+Function ChargeWorkflow()
+' The Teil is in DB, decide what to do next
+  FormReset False
+  Form_Fill
+End Function
