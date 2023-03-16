@@ -223,8 +223,8 @@ Private Sub PrintChargeschein()
   ' Print the page
   ThisWorkbook.Unprotect Password:=Sheet5.Range("DateiPassword").Value
   chargePaper.Visible = True ' Sheet needs to be visible to be printed
-  chargePaper.PrintPreview
-  'chargePaper.PrintOut
+  'chargePaper.PrintPreview
+  chargePaper.PrintOut
   chargePaper.Visible = xlSheetHidden
   ThisWorkbook.Protect Password:=Sheet5.Range("DateiPassword").Value
 End Sub
