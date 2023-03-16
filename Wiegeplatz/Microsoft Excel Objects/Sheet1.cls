@@ -4,6 +4,7 @@ Public sheet As Worksheet
 
 Private Sub Worksheet_Activate()
   FormReset True
+  ThisWorkbook.Protect Password:=Sheet5.Range("DateiPassword").Value
 End Sub
 
 Private Sub Worksheet_Change(ByVal Target As Range)
