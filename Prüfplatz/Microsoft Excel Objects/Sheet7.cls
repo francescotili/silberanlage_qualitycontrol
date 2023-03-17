@@ -45,7 +45,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)
   ' Enable or disable specific form section based on the type of Nacharbeit
   If Not Intersect(Target, Range("NacharbeitString")) Is Nothing Then
     ' Disable protection
-    sheet.Unprotect Password:=Sheet10.Range("DateiPassword").Value
+    sheet.Unprotect Password:=GAdminPassword
     
     ' Change protection
     Range("Anlage").Locked = False
@@ -74,7 +74,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)
     End If
 
     ' Enable protection
-    sheet.Protect Password:=Sheet10.Range("DateiPassword").Value
+    sheet.Protect Password:=GAdminPassword
     sheet.EnableSelection = xlUnlockedCells
   End If
 
@@ -88,7 +88,7 @@ Private Sub EditMode_Fill()
 ' pointing to the cells.
 
   ' Disable protection
-  sheet.Unprotect Password:=Sheet10.Range("DateiPassword").Value
+  sheet.Unprotect Password:=GAdminPassword
 
   ' Copy Nacharbeit comments
   If CStr(Range("KommentarDB").Value) <> "" Then
@@ -124,7 +124,7 @@ Private Sub EditMode_Fill()
   End If
 
   ' Enable protection
-  sheet.Protect Password:=Sheet10.Range("DateiPassword").Value
+  sheet.Protect Password:=GAdminPassword
   sheet.EnableSelection = xlUnlockedCells
 End Sub
 
@@ -135,7 +135,7 @@ Private Sub FormReset(ByVal FullReset As Boolean)
   Set sheet = Sheet7
 
   ' Disable protection
-  sheet.Unprotect Password:=Sheet10.Range("DateiPassword").Value
+  sheet.Unprotect Password:=GAdminPassword
 
   ' Reset form
   If FullReset Then
@@ -152,7 +152,7 @@ Private Sub FormReset(ByVal FullReset As Boolean)
   Range("ChargenummerCell").Select
   
   ' Enable protection
-  sheet.Protect Password:=Sheet10.Range("DateiPassword").Value
+  sheet.Protect Password:=GAdminPassword
   sheet.EnableSelection = xlUnlockedCells
 End Sub
 

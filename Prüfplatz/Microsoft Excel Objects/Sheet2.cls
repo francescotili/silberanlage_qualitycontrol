@@ -4,7 +4,7 @@ Public sheet As Worksheet
 
 Private Sub Worksheet_Activate()
   FormReset
-  ThisWorkbook.Protect Password:=Sheet10.Range("DateiPassword").Value
+  ThisWorkbook.Protect Password:=GAdminPassword
 End Sub
 
 Private Sub Worksheet_Change(ByVal Target As Range)
@@ -40,7 +40,7 @@ Private Sub FormReset()
   Set sheet = Sheet2
   
   ' Disable protection
-  sheet.Unprotect Password:=Sheet10.Range("DateiPassword").Value
+  sheet.Unprotect Password:=GAdminPassword
 
   ' Reset form
   Range("ChargenummerCell").ClearContents
@@ -48,7 +48,7 @@ Private Sub FormReset()
   Range("ChargenummerCell").Select
   
   ' Enable protection
-  sheet.Protect Password:=Sheet10.Range("DateiPassword").Value
+  sheet.Protect Password:=GAdminPassword
   sheet.EnableSelection = xlUnlockedCells
 End Sub
 

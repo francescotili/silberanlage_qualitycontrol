@@ -55,7 +55,7 @@ Private Sub FormReset(ByVal FullReset As Boolean)
   Set sheet = Sheet1
   
   ' Disable protection
-  sheet.Unprotect Password:=Sheet5.Range("DateiPassword").Value
+  sheet.Unprotect Password:=GAdminPassword
   
   ' Reset form
   If FullReset Then
@@ -69,7 +69,7 @@ Private Sub FormReset(ByVal FullReset As Boolean)
   Range("BarcodeCell").Select
   
   ' Enable protection
-  sheet.Protect Password:=Sheet5.Range("DateiPassword").Value
+  sheet.Protect Password:=GAdminPassword
   sheet.EnableSelection = xlUnlockedCells
 End Sub
 
@@ -78,13 +78,13 @@ Private Sub Form_Fill()
 ' retrieved from the database
   
   ' Disable protection
-  sheet.Unprotect Password:=Sheet5.Range("DateiPassword").Value
+  sheet.Unprotect Password:=GAdminPassword
   
   ' Copy "Standardanlage"
   Range("Anlage").Value = Range("AnlageSoll").Value
   
   ' Enable protection
-  sheet.Protect Password:=Sheet5.Range("DateiPassword").Value
+  sheet.Protect Password:=GAdminPassword
   sheet.EnableSelection = xlUnlockedCells
 End Sub
 
@@ -220,12 +220,12 @@ Private Sub PrintChargeschein()
   End With
 
   ' Print the page
-  ThisWorkbook.Unprotect Password:=Sheet5.Range("DateiPassword").Value
+  ThisWorkbook.Unprotect Password:=GAdminPassword
   chargePaper.Visible = True ' Sheet needs to be visible to be printed
   'chargePaper.PrintPreview
   chargePaper.PrintOut
   chargePaper.Visible = xlSheetHidden
-  ThisWorkbook.Protect Password:=Sheet5.Range("DateiPassword").Value
+  ThisWorkbook.Protect Password:=GAdminPassword
 End Sub
 
 Function ChargeWorkflow()
