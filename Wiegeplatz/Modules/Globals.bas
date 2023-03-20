@@ -80,6 +80,7 @@ Public Enum QSilberDB_Col
   Alterung_Datum
   Qualität_Kommentar
   Phase
+  Phase_Name
 End Enum
 
 ' Teiledatenbank Database columns
