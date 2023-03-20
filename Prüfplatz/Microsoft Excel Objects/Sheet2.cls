@@ -4,7 +4,6 @@ Public sheet As Worksheet
 
 Private Sub Worksheet_Activate()
   FormReset
-  ThisWorkbook.Protect Password:=GAdminPassword
 End Sub
 
 Private Sub Worksheet_Change(ByVal Target As Range)
