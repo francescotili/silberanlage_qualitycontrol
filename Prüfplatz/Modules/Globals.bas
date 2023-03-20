@@ -79,6 +79,7 @@ Public Enum QSilberDB_Col
   Prozess_Mitarbeiter
   Prozess_Kommentar
   Nacharbeit_Art
+  Nacharbeit_Name
   Nacharbeit_Kommentar
   Nacharbeit_Mitarbeiter
   Nacharbeit_Anlage
