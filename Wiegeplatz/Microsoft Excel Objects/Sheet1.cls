@@ -170,7 +170,7 @@ Private Sub SaveCharge()
 
   ' Show confirmation message
   Application.StatusBar = "Neue Charge für Material " & Range("MaterialnummerString").Value & " erfolgreich gespeichert"
-  Notify Range("MaterialnummerString").Value, "Charge erfolgreich hinzugefügt", "Info", 10
+  Notify Range("MaterialnummerString").Value, "Charge erfolgreich hinzugefügt", Sheet5.Range("ProjectPfad").Value, "Info", 10
 
   ' Reset the form
   FormReset True

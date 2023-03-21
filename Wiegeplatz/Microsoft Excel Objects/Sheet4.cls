@@ -292,10 +292,10 @@ Private Sub SaveMaterial()
   ' Show confirmation message
   If Range("IsTeileInDatabase").Value Then ' EDIT MODE
     Application.StatusBar = "Material-Nr. " & Range("MaterialnummerString").Value & " wurde aktualisiert"
-    Notify Range("MaterialnummerString").Value, "Teile erfolgreich aktualisiert", "Info", 10
+    Notify Range("MaterialnummerString").Value, "Teile erfolgreich aktualisiert", Sheet5.Range("ProjectPfad").Value, "Info", 10
   Else ' CREATE MODE
     Application.StatusBar = "Material-Nr. " & Range("MaterialnummerString").Value & " wurde erstellt"
-    Notify Range("MaterialnummerString").Value, "Teile erfolgreich hinzugefügt", "Info", 10
+    Notify Range("MaterialnummerString").Value, "Teile erfolgreich hinzugefügt", Sheet5.Range("ProjectPfad").Value, "Info", 10
   End If
   
   ' Reset the form
@@ -360,7 +360,7 @@ Private Sub NeueTeile_LoeschenBtn_Click()
 
     ' Show confirmation message
     Application.StatusBar = "Material-Nr. " & Range("MaterialnummerString").Value & " wurde gelöscht"
-    Notify Range("MaterialnummerString").Value, "Teile erfolgreich gelöscht", "Info", 10
+    Notify Range("MaterialnummerString").Value, "Teile erfolgreich gelöscht", Sheet5.Range("ProjectPfad").Value, "Info", 10
 
     ' Reset the form
     FormReset True

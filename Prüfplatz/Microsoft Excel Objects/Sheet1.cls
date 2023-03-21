@@ -212,7 +212,7 @@ Private Sub SaveCharge()
 
   ' Show confirmation message
   Application.StatusBar = "Charge für Auftrag " & Range("Auftragsnummer").Value & " erfolgreich ergänzt"
-  Notify "Auftrag " & Range("Auftragsnummer").Value, "Charge erfolgreich ergänzt", "Info", 10
+  Notify "Auftrag " & Range("Auftragsnummer").Value, "Charge erfolgreich ergänzt", Sheet10.Range("ProjectPfad").Value, "Info", 10
 
   ' Refresh all data connections & queries
   ThisWorkbook.RefreshAll

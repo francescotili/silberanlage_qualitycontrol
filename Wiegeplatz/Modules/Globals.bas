@@ -121,7 +121,7 @@ Public Enum EZDB_Col
   Kommentar
 End Enum
 
-Public Function Notify(ByVal title As String, ByVal msg As String, _
+Public Function Notify(ByVal title As String, ByVal msg As String, ByVal iconPath As String, _
                     Optional ByVal notification_icon As String = "Info", _
                     Optional ByVal duration As Integer = 10)
 ' This public function sends notification using Windows 10 Notification API
@@ -130,9 +130,8 @@ Public Function Notify(ByVal title As String, ByVal msg As String, _
 '    msg (str): Notification message
 '    notification_icon (str): Notification icon. Available options are: Info, Error and Warning
 '    duration (int): Duration of notification in seconds, default is 10
-
-  Const PSpath As String = "powershell.exe"
-  Const notifyIcon As String = "W:\X-Ray Qualitätsprüfung\Qualitätsaufzeichnung 2023_NEU\Icons\success.ico"
+  
+  Dim notifyIcon As String
   Dim WsShell As Object: Set WsShell = CreateObject("WScript.Shell")
   Dim strCommand  As String
 
@@ -141,7 +140,9 @@ Public Function Notify(ByVal title As String, ByVal msg As String, _
   End If
 
   ' Build notification object
-  strCommand = """" & PSpath & """ -Command " & Chr(34) & "& { "
+  
+  notifyIcon = iconPath & "\Icons\notification.ico"
+  strCommand = "powershell.exe -Command " & Chr(34) & "& { "
   strCommand = strCommand & "Add-Type -AssemblyName 'System.Windows.Forms'"
   strCommand = strCommand & "; $notification = New-Object System.Windows.Forms.NotifyIcon"
   strCommand = strCommand & "; $path = (Get-Process -id (get-process outlook).id[0]).Path"
@@ -156,4 +157,3 @@ Public Function Notify(ByVal title As String, ByVal msg As String, _
   ' Execute command, send notification
   WsShell.Run strCommand, 0, False
 End Function
-
