@@ -86,6 +86,7 @@ Public Enum QSilberDB_Col
   Nacharbeit_Trommel
   Nacharbeit_AgWert_soll
   Nacharbeit_AgWert_ist
+  Nacharbeit_Kosten
   CuSchicht_ist
   AgSchicht_ist
   AgBedarf_ist
