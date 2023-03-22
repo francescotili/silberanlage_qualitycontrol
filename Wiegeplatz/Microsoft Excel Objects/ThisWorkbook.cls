@@ -11,3 +11,12 @@ Private Sub Workbook_Open()
     ThisWorkbook.RefreshAll
     DoEvents
 End Sub
+
+'Private Sub Workbook_BeforeSave(ByVal SaveAsUI As Boolean, Cancel As Boolean)
+'  MsgBox "Das Speichern dieser Datei ist deaktiviert, bitte schließen es ohne zu speichern!"
+'  Cancel = True
+'End Sub
+'
+'Private Sub Workbook_BeforeClose(Cancel As Boolean)
+'  ActiveWorkbook.Saved = True
+'End Sub
