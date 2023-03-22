@@ -45,6 +45,7 @@ Private Sub FormReset()
   Range("ChargenummerCell").ClearContents
 
   Range("ChargenummerCell").Select
+  ActiveWindow.Scrollrow = 1
   
   ' Enable protection
   sheet.Protect Password:=GAdminPassword

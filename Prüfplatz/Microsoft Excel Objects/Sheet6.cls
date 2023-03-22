@@ -54,7 +54,6 @@ Private Sub AbbrechenBtn_Click()
 
   ' Go to main scanning page
   Sheet2.Activate
-  Sheet2.Range("ChargenummerCell").Select
 End Sub
 
 Private Sub Annahme_Btn_Click()

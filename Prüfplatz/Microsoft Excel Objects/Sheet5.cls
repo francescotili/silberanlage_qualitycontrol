@@ -85,6 +85,7 @@ Private Sub FormReset(ByVal FullReset As Boolean)
   Range("Mitarbeiter").ClearContents
 
   Range("ChargenummerCell").Select
+  ActiveWindow.Scrollrow = 1
   
   ' Enable protection
   sheet.Protect Password:=GAdminPassword
@@ -96,7 +97,6 @@ Private Sub Alterung_DeleteBtn_Click()
 
   ' Go to main scanning page
   Sheet2.Activate
-  Sheet2.Range("ChargenummerCell").Select
 End Sub
 
 Private Sub Alterung_SaveBtn_Click()
@@ -110,7 +110,6 @@ Private Sub Alterung_SaveBtn_Click()
 
   ' Go to main scanning page
   Sheet2.Activate
-  Sheet2.Range("ChargenummerCell").Select
 End Sub
 
 Private Sub SaveCharge()
