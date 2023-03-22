@@ -108,6 +108,7 @@ Private Sub SaveCharge()
   Dim wbook As excel.Workbook
   Dim sheet As Worksheet
   Dim table As ListObject
+  Dim i As Integer
   Dim chargeData As Variant
   Dim newRow As ListRow
   Dim chargeNummer As String
@@ -118,10 +119,19 @@ Private Sub SaveCharge()
   chargeNummer = Range("Chargenummer").Value
 
   ' Check if database is open
-  Do While IsDatabaseOpen(databasePath) = True
-    Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
-    Application.Wait (Now + TimeValue("0:00:02"))
-  Loop
+  For i = 1 To 30
+    If IsDatabaseOpen(databasePath) Then
+      Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
+      If i = 30 Then
+        Notify "FEHLER", "Charge wurde NICHT gespeichert, weil die Datenbank ausgelastet ist! Bitte ernuet probieren", Sheet5.Range("ProjectPfad").Value, "Error", 20
+        Exit Sub
+      Else
+        Application.Wait (Now + TimeValue("0:00:02"))
+      End If
+    Else
+      Exit For
+    End If
+  Next i
 
   ' Opening of database file
   app.Visible = False ' Visibile is False by default, so this should not be necessary

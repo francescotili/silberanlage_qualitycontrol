@@ -227,10 +227,19 @@ Private Sub SaveMaterial()
   End If
   
   ' Check if database is open
-  Do While IsDatabaseOpen(databasePath) = True
-    Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
-    Application.Wait (Now + TimeValue("0:00:02"))
-  Loop
+  For j = 1 To 30
+    If IsDatabaseOpen(databasePath) Then
+      Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
+      If j = 30 Then
+        Notify "FEHLER", "Charge wurde NICHT gespeichert, weil die Datenbank ausgelastet ist! Bitte ernuet probieren", Sheet5.Range("ProjectPfad").Value, "Error", 20
+        Exit Sub
+      Else
+        Application.Wait (Now + TimeValue("0:00:02"))
+      End If
+    Else
+      Exit For
+    End If
+  Next j
   
   ' Opening of database file
   app.Visible = False ' Visible is False by default, so this should not be necessary
@@ -315,7 +324,7 @@ Private Sub NeueTeile_LoeschenBtn_Click()
   Dim sheet As Worksheet
   Dim table As ListObject
   Dim materials As Variant
-  Dim i As Long
+  Dim i, j As Long
   Dim teileRow As Integer
   Dim databasePath As String
   databasePath = Sheet5.Range("ProjectPfad").Value & "Q_Silber_DATABASE.xlsx"
@@ -326,10 +335,19 @@ Private Sub NeueTeile_LoeschenBtn_Click()
     Application.StatusBar = "Datenbank wird geöffnet, bitte warten ..."
 
     ' Check if database is open
-    Do While IsDatabaseOpen(databasePath) = True
+  For j = 1 To 30
+    If IsDatabaseOpen(databasePath) Then
       Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
-      Application.Wait (Now + TimeValue("0:00:02"))
-    Loop
+      If j = 30 Then
+        Notify "FEHLER", "Charge wurde NICHT gespeichert, weil die Datenbank ausgelastet ist! Bitte ernuet probieren", Sheet5.Range("ProjectPfad").Value, "Error", 20
+        Exit Sub
+      Else
+        Application.Wait (Now + TimeValue("0:00:02"))
+      End If
+    Else
+      Exit For
+    End If
+  Next j
 
     ' Opening of database file
     app.Visible = False ' Visible is False by default, so this should not be necessarz
