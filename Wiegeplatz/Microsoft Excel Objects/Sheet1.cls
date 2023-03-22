@@ -68,6 +68,7 @@ Private Sub FormReset(ByVal FullReset As Boolean)
   
   Range("BarcodeCell").Select
   ActiveWindow.Scrollrow = 1
+  ActiveWindow.ScrollColumn = 1
   
   ' Enable protection
   sheet.Protect Password:=GAdminPassword
