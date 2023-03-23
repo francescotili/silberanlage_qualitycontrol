@@ -43,6 +43,24 @@ Private Sub Worksheet_Change(ByVal Target As Range)
   End If
 End Sub
 
+Private Sub CreateMode_Fill()
+' Compile the form in creation mode. Copies the values from the same
+' Auftrag, if these values are found. That speeds up the filling of
+' the form from the Employee.
+' Warning: the values from database are retrieved by formulas in the
+' Excel sheet and not by the macro.
+
+  ' Disable protection
+  sheet.Unprotect Password:=GAdminPassword
+
+  ' Suggest Löttest
+  Range("Result").Value = "JA"
+
+  ' Enable protection
+  sheet.Protect Password:=GAdminPassword
+  sheet.EnableSelection = xlUnlockedCells
+End Sub
+
 Private Sub EditMode_Fill()
 ' Compile the form in edit mode. Copies the values from the Quality
 ' Database to be modified by the Worker and then overwritten.
@@ -224,6 +242,7 @@ Function ChargeWorkflow()
         ' Need to split workflow between edit and create?
       Case chargePhase.Alterung
         FormReset False
+        CreateMode_Fill
       Case chargePhase.Done To chargePhase.Scrapped ' Charge is done or scrapped
         FormReset False
         EditMode_Fill
