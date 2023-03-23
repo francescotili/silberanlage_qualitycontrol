@@ -99,6 +99,9 @@ Private Sub CreateMode_Fill()
     Range("AgStromIst").Value = CSng(Range("AgStromSuggested").Value)
   End If
 
+  ' Suggest Biegetest
+  Range("Biegetest").Value = "JA"
+
   ' Copy Worker
   If CStr(Range("MitarbeiterSuggested").Value) <> "" Then
     Range("Mitarbeiter").Value = CSng(Range("MitarbeiterSuggested").Value)
