@@ -81,7 +81,6 @@ Private Sub CreateMode_Fill()
 ' the form from the Employee.
 ' Warning: the values from database are retrieved by formulas in the
 ' Excel sheet and not by the macro.
-  Debug.Print "It works"
 
   ' Disable protection
   sheet.Unprotect Password:=GAdminPassword
