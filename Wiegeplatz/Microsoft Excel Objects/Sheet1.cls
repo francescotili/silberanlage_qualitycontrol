@@ -232,12 +232,10 @@ Private Sub PrintChargeschein()
   End With
 
   ' Print the page
-  ThisWorkbook.Unprotect Password:=GAdminPassword
   chargePaper.Visible = True ' Sheet needs to be visible to be printed
   'chargePaper.PrintPreview
   chargePaper.PrintOut
   chargePaper.Visible = xlSheetHidden
-  ThisWorkbook.Protect Password:=GAdminPassword
 End Sub
 
 Function ChargeWorkflow()
