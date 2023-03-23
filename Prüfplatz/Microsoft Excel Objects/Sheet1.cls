@@ -75,12 +75,45 @@ Private Sub FormReset(ByVal FullReset As Boolean)
   sheet.EnableSelection = xlUnlockedCells
 End Sub
 
+Private Sub CreateMode_Fill()
+' Compile the form in creation mode. Copies the values from the same
+' Auftrag, if these values are found. That speeds up the filling of
+' the form from the Employee.
+' Warning: the values from database are retrieved by formulas in the
+' Excel sheet and not by the macro.
+  Debug.Print "It works"
+
+  ' Disable protection
+  sheet.Unprotect Password:=GAdminPassword
+
+  ' Copy Kupferdaten
+  If CStr(Range("CuZahlerSuggested").Value) <> "" Then
+    Range("CuZahlerIst").Value = CSng(Range("CuZahlerSuggested").Value)
+  End If
+
+  ' Copy Silberdaten
+  If CStr(Range("AgZahlerSuggested").Value) <> "" Then
+    Range("AgZahlerIst").Value = CSng(Range("AgZahlerSuggested").Value)
+  End If
+  If CStr(Range("AgStromSuggested").Value) <> "" Then
+    Range("AgStromIst").Value = CSng(Range("AgStromSuggested").Value)
+  End If
+
+  ' Copy Worker
+  If CStr(Range("MitarbeiterSuggested").Value) <> "" Then
+    Range("Mitarbeiter").Value = CSng(Range("MitarbeiterSuggested").Value)
+  End If
+
+  ' Enable protection
+  sheet.Protect Password:=GAdminPassword
+  sheet.EnableSelection = xlUnlockedCells
+End Sub
+
 Private Sub EditMode_Fill()
 ' Compile the form in edit mode. Copies the values from the Quality
 ' Database to be modified by the Worker and then saved.
 ' Warning: values from database are retrieved by formulas in the Excel
-' sheet and not by the macro. They are referenced as normal range
-' pointing to the cells.
+' sheet and not by the macro.
 
   ' Disable protection
   sheet.Unprotect Password:=GAdminPassword
@@ -251,8 +284,9 @@ End Function
 Function ChargeWorkflow()
 ' The charge is in DB, decide what to do next
 
-  If Range("CurrentChargePhase").Value = 0 Then
+  If Range("CurrentChargePhase").Value = 1 Then
     FormReset False
+    CreateMode_Fill
   Else
     FormReset False
     EditMode_Fill
