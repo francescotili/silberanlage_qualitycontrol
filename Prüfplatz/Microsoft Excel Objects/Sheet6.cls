@@ -93,12 +93,84 @@ Private Sub Nacharbeit_Btn_Click()
 End Sub
 
 Private Sub Scrap_Btn_Click()
-  MsgBox "Verschrotten not yet implemented"
+' Open the database file in hidden mode, search and modify the specified Charge.
+' It will change the Chargephase on the Chargenummer only if it can find id
+
+  ' Definition of variables
+  Dim app As New excel.Application
+  Dim wbook As excel.Workbook
+  Dim sheet As Worksheet
+  Dim table As ListObject
+  Dim charges As Variant
+  Dim i, j As Long
+  Dim chargeRow As Integer
+  Dim databasePath As String
+  databasePath = Sheet10.Range("ProjectPfad").Value & "Q_Silber_DATABASE.xlsx"
+
+  If MsgBox("Möchten Sie diese Charge wirklich verschrotten?", vbCritical + vbYesNo, "Warnung") = vbYes Then
+
+    ' Show saving message
+    Application.StatusBar = "Datenbank wird geöffnet, bitte warten ..."
+
+    ' Check if database is open
+    For j = 1 To 30
+      If IsDatabaseOpen(databasePath) Then
+        Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
+        If j = 30 Then
+          Notify "FEHLER", "Charge wurde NICHT gespeichert, weil die Datenbank ausgelastet ist! Bitte ernuet probieren", Sheet10.Range("ProjectPfad").Value, "Error", 20
+          Exit Sub
+        Else
+          Application.Wait (Now + TimeValue("0:00:02"))
+        End If
+      Else
+        Exit For
+      End If
+    Next j
+
+    ' Opening of database file
+    app.Visible = False ' Visible is False by default, so this should not be necessary
+    app.DisplayAlerts = False
+    Set wbook = app.Workbooks.Add(databasePath)
+    Application.StatusBar = "Wird gespeichert ..."
+  
+    ' Setting of targets
+    Set sheet = wbook.Worksheets("Database")
+    Set table = sheet.ListObjects.Item("Qualitätsdatabase")
+
+    ' Searching the row to modify
+    charges = table.DataBodyRange
+    For i = LBound(charges) To UBound(charges)
+      If CStr(charges(i, 1)) = CStr(Range("ChargenummerValue").Value) Then
+        chargeRow = i
+        Exit For
+      End If
+    Next i
+
+    ' Write data in database
+    With table
+      .DataBodyRange(chargeRow, QSilberDB_Col.Phase).Value = ChargePhase.Scrapped
+    End If
+
+    ' Save and close the database
+    wbook.SaveAs databasePath
+    app.Quit
+    Set app = Nothing
+
+    ' Show confirmation message
+    Application.StatusBar = "Charge-Nr. " & Range("ChargenummerValue").Value & " wurde verschrottet"
+    Notify Range("ChargenummerValue").Value, "Charge erfolgreich verschrottet", Sheet10.Range("ProjectPfad").Value, "Info", 10
+
+    ' Reset the form
+    FormReset
+
+    ' Refresh all data connections & queries
+    ThisWorkbook.RefreshAll
+  End If
 End Sub
 
 Private Sub Delete_Btn_Click()
 ' Open the database file in hidden mode and delete the specified Charge.
-' It will delete a row only if it can finde it
+' It will delete a row only if it can find it
 
   ' Definition of variables
   Dim app As New excel.Application
@@ -137,9 +209,9 @@ Private Sub Delete_Btn_Click()
     Set wbook = app.Workbooks.Add(databasePath)
     Application.StatusBar = "Wird gespeichert ..."
   
-  ' Setting of targets
-  Set sheet = wbook.Worksheets("Database")
-  Set table = sheet.ListObjects.Item("Qualitätsdatabase")
+    ' Setting of targets
+    Set sheet = wbook.Worksheets("Database")
+    Set table = sheet.ListObjects.Item("Qualitätsdatabase")
 
     ' Searching the row to delete
     charges = table.DataBodyRange
