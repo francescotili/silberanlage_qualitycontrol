@@ -337,22 +337,22 @@ Private Sub NeueTeile_LoeschenBtn_Click()
     Application.StatusBar = "Datenbank wird geöffnet, bitte warten ..."
 
     ' Check if database is open
-  For j = 1 To 30
-    If IsDatabaseOpen(databasePath) Then
-      Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
-      If j = 30 Then
-        Notify "FEHLER", "Charge wurde NICHT gespeichert, weil die Datenbank ausgelastet ist! Bitte ernuet probieren", Sheet5.Range("ProjectPfad").Value, "Error", 20
-        Exit Sub
+    For j = 1 To 30
+      If IsDatabaseOpen(databasePath) Then
+        Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
+        If j = 30 Then
+          Notify "FEHLER", "Charge wurde NICHT gespeichert, weil die Datenbank ausgelastet ist! Bitte ernuet probieren", Sheet5.Range("ProjectPfad").Value, "Error", 20
+          Exit Sub
+        Else
+          Application.Wait (Now + TimeValue("0:00:02"))
+        End If
       Else
-        Application.Wait (Now + TimeValue("0:00:02"))
+        Exit For
       End If
-    Else
-      Exit For
-    End If
-  Next j
+    Next j
 
     ' Opening of database file
-    app.Visible = False ' Visible is False by default, so this should not be necessarz
+    app.Visible = False ' Visible is False by default, so this should not be necessary
     app.DisplayAlerts = False
     Set wbook = app.Workbooks.Add(databasePath)
     Application.StatusBar = "Wird gespeichert ..."
