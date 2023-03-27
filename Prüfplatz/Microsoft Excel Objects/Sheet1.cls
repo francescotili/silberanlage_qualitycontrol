@@ -54,11 +54,11 @@ Private Sub FormReset(ByVal FullReset As Boolean)
 
   ' Reset form
   If FullReset Then
-    Range("CuZahlerIst").ClearContents
-    Range("AgZahlerIst").ClearContents
-    Range("AgStromIst").ClearContents
     Range("ChargenummerCell").ClearContents
   End If
+  Range("CuZahlerIst").ClearContents
+  Range("AgZahlerIst").ClearContents
+  Range("AgStromIst").ClearContents
   Range("Trommel").ClearContents
   Range("Mitarbeiter").ClearContents
   Range("Kommentar").ClearContents
@@ -93,9 +93,6 @@ Private Sub CreateMode_Fill()
   ' Copy Silberdaten
   If CStr(Range("AgZahlerSuggested").Value) <> "" Then
     Range("AgZahlerIst").Value = CSng(Range("AgZahlerSuggested").Value)
-  End If
-  If CStr(Range("AgStromSuggested").Value) <> "" Then
-    Range("AgStromIst").Value = CSng(Range("AgStromSuggested").Value)
   End If
 
   ' Suggest Biegetest
