@@ -22,7 +22,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)
           End If
         End If
       Else
-        MsgBox "Ungültiger barcode!"
+        MsgBox "Ungültiger barcode! Bitte ernuet scannen ..."
         FormReset
       End If
     End If
@@ -118,7 +118,7 @@ Private Sub Scrap_Btn_Click()
       If IsDatabaseOpen(databasePath) Then
         Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
         If j = 30 Then
-          Notify "FEHLER", "Charge wurde NICHT gespeichert, weil die Datenbank ausgelastet ist! Bitte ernuet probieren", Sheet10.Range("ProjectPfad").Value, "Error", 20
+          Notify "FEHLER", "Charge wurde NICHT verschrottet, weil die Datenbank ausgelastet ist! Bitte ernuet probieren", Sheet10.Range("ProjectPfad").Value, "Error", 20
           Exit Sub
         Else
           Application.Wait (Now + TimeValue("0:00:02"))
@@ -198,7 +198,7 @@ Private Sub Delete_Btn_Click()
       If IsDatabaseOpen(databasePath) Then
         Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
         If j = 30 Then
-          Notify "FEHLER", "Charge wurde NICHT gespeichert, weil die Datenbank ausgelastet ist! Bitte ernuet probieren", Sheet10.Range("ProjectPfad").Value, "Error", 20
+          Notify "FEHLER", "Charge wurde NICHT gelöscht, weil die Datenbank ausgelastet ist! Bitte ernuet probieren", Sheet10.Range("ProjectPfad").Value, "Error", 20
           Exit Sub
         Else
           Application.Wait (Now + TimeValue("0:00:02"))

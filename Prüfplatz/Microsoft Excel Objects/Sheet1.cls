@@ -26,7 +26,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)
           End If
         End If
       Else
-        MsgBox "Ungültiger barcode!"
+        MsgBox "Ungültiger barcode! Bitte ernuet scannen ..."
         FormReset True
       End If
     Else
