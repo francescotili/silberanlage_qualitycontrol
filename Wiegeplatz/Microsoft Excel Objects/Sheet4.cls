@@ -26,7 +26,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)
           End If
         End If
       Else
-        MsgBox "Ungültiger barcode! Bitte ernuet scannen ..."
+        MsgBox str_invalidBarcode
         FormReset True
       End If
     Else
@@ -205,7 +205,7 @@ Private Sub SaveMaterial()
 ' it will overwritten
 
   ' Show saving message
-  Application.StatusBar = "Datenbank wird geöffnet, bitte warten ..."
+  Application.StatusBar = str_statusBar_DBOpening
   
   ' Definition of variables
   Dim app As New excel.Application
@@ -231,9 +231,9 @@ Private Sub SaveMaterial()
   ' Check if database is open
   For j = 1 To 30
     If IsDatabaseOpen(databasePath) Then
-      Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
+      Application.StatusBar = str_statusBar_DBBusy
       If j = 30 Then
-        Notify "FEHLER", "Charge wurde NICHT gespeichert, weil die Datenbank ausgelastet ist! Bitte ernuet probieren", Sheet5.Range("ProjectPfad").Value, "Error", 20
+        Notify str_notify_errorTitle, str_notify_savingNewMaterialDatabaseBusy, Sheet5.Range("ProjectPfad").Value, "Error", 20
         Exit Sub
       Else
         Application.Wait (Now + TimeValue("0:00:02"))
@@ -247,7 +247,7 @@ Private Sub SaveMaterial()
   app.Visible = False ' Visible is False by default, so this should not be necessary
   app.DisplayAlerts = False
   Set wbook = app.Workbooks.Add(databasePath)
-  Application.StatusBar = "Wird gespeichert ..."
+  Application.StatusBar = str_statusBar_DBSaving
   
   ' Setting of targets
   Set sheet = wbook.Worksheets("Teil_DB")
@@ -302,11 +302,11 @@ Private Sub SaveMaterial()
   
   ' Show confirmation message
   If Range("IsTeileInDatabase").Value Then ' EDIT MODE
-    Application.StatusBar = "Material-Nr. " & Range("MaterialnummerString").Value & " wurde aktualisiert"
-    Notify Range("MaterialnummerString").Value, "Teile erfolgreich aktualisiert", Sheet5.Range("ProjectPfad").Value, "Info", 10
+    Application.StatusBar = StringFormat(str_statusBar_materialEdited, Range("MaterialnummerString").Value)
+    Notify Range("MaterialnummerString").Value, str_notify_materialEditedText, Sheet5.Range("ProjectPfad").Value, "Info", 10
   Else ' CREATE MODE
-    Application.StatusBar = "Material-Nr. " & Range("MaterialnummerString").Value & " wurde erstellt"
-    Notify Range("MaterialnummerString").Value, "Teile erfolgreich hinzugefügt", Sheet5.Range("ProjectPfad").Value, "Info", 10
+    Application.StatusBar = StringFormat(str_statusBar_newMaterialAdded, Range("MaterialnummerString").Value)
+    Notify Range("MaterialnummerString").Value, str_notify_newMaterialAddedText, Sheet5.Range("ProjectPfad").Value, "Info", 10
   End If
   
   ' Reset the form
@@ -331,17 +331,17 @@ Private Sub NeueTeile_LoeschenBtn_Click()
   Dim databasePath As String
   databasePath = Sheet5.Range("ProjectPfad").Value & "Q_Silber_DATABASE.xlsx"
 
-  If MsgBox("Möchten Sie dieses Material wirklich dauerhaft löschen?", vbCritical + vbYesNo, "Achtung") = vbYes Then
+  If MsgBox(str_confirmDeletion, vbCritical + vbYesNo, "Achtung") = vbYes Then
 
     ' Show saving message
-    Application.StatusBar = "Datenbank wird geöffnet, bitte warten ..."
+    Application.StatusBar = str_statusBar_DBOpening
 
     ' Check if database is open
     For j = 1 To 30
       If IsDatabaseOpen(databasePath) Then
-        Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
+        Application.StatusBar = str_statusBar_DBBusy
         If j = 30 Then
-          Notify "FEHLER", "Charge wurde NICHT gespeichert, weil die Datenbank ausgelastet ist! Bitte ernuet probieren", Sheet5.Range("ProjectPfad").Value, "Error", 20
+          Notify str_notify_errorTitle, str_notify_deletingMaterialDatabaseBusy, Sheet5.Range("ProjectPfad").Value, "Error", 20
           Exit Sub
         Else
           Application.Wait (Now + TimeValue("0:00:02"))
@@ -355,7 +355,7 @@ Private Sub NeueTeile_LoeschenBtn_Click()
     app.Visible = False ' Visible is False by default, so this should not be necessary
     app.DisplayAlerts = False
     Set wbook = app.Workbooks.Add(databasePath)
-    Application.StatusBar = "Wird gespeichert ..."
+    Application.StatusBar = str_statusBar_DBSaving
     
     ' Setting of targets
     Set sheet = wbook.Worksheets(Sheet1.Index) ' Teil_DB
@@ -379,8 +379,8 @@ Private Sub NeueTeile_LoeschenBtn_Click()
     Set app = Nothing
 
     ' Show confirmation message
-    Application.StatusBar = "Material-Nr. " & Range("MaterialnummerString").Value & " wurde gelöscht"
-    Notify Range("MaterialnummerString").Value, "Teile erfolgreich gelöscht", Sheet5.Range("ProjectPfad").Value, "Info", 10
+    Application.StatusBar = StringFormat(str_statusBar_materialDeleted, Range("MaterialnummerString").Value)
+    Notify Range("MaterialnummerString").Value, str_notify_materialDeletedText, Sheet5.Range("ProjectPfad").Value, "Info", 10
 
     ' Reset the form
     FormReset True

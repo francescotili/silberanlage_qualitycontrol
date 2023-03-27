@@ -21,12 +21,12 @@ Private Sub Worksheet_Change(ByVal Target As Range)
           If Range("IsChargeInDB").Value Then
             ChargeWorkflow
           Else
-            MsgBox "Die Charge wurde nicht in der Datenbank gefunden!"
+            MsgBox str_chargeNotFound
             FormReset
           End If
         End If
       Else
-        MsgBox "Ungültiger barcode! Bitte ernuet scannen ..."
+        MsgBox str_invalidBarcode
         FormReset
       End If
     End If
@@ -74,7 +74,7 @@ Function ChargeWorkflow()
       Sheet6.Range("ChargenummerCell").Value = chargeNummer
       Exit Function
     Case Else
-      MsgBox "Unspecified error"
+      MsgBox str_unhandledError
       FormReset
   End Select
 End Function

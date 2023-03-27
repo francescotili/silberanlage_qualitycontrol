@@ -21,12 +21,12 @@ Private Sub Worksheet_Change(ByVal Target As Range)
           If Range("IsChargeInDB").Value Then
             ChargeWorkflow
           Else
-            MsgBox "Die Charge wurde nicht in der Datenbank gefunden!"
+            MsgBox str_chargeNotFound
             FormReset True
           End If
         End If
       Else
-        MsgBox "Ungültiger barcode! Bitte ernuet scannen ..."
+        MsgBox str_invalidBarcode
         FormReset True
       End If
     Else
@@ -133,7 +133,7 @@ Private Sub SaveCharge()
 ' in hidden mode, find the row and write the data in the database.
 
   ' Show saving message
-  Application.StatusBar = "Datenbank wird geöffnet, bitte warten ..."
+  Application.StatusBar = str_statusBar_DBOpening
 
   ' Definition of variables
   Dim app As New Excel.Application
@@ -149,9 +149,9 @@ Private Sub SaveCharge()
   ' Check if database is open
   For j = 1 To 30
     If IsDatabaseOpen(databasePath) Then
-      Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
+      Application.StatusBar = str_statusBar_DBBusy
       If j = 30 Then
-        Notify "FEHLER", "Charge wurde NICHT gespeichert, weil die Datenbank ausgelastet ist! Bitte ernuet probieren", Sheet10.Range("ProjectPfad").Value, "Error", 20
+        Notify str_notify_errorTitle, str_notify_savingDatabaseBusy, Sheet10.Range("ProjectPfad").Value, "Error", 20
         Exit Sub
       Else
         Application.Wait (Now + TimeValue("0:00:02"))
@@ -165,7 +165,7 @@ Private Sub SaveCharge()
   app.Visible = False ' Visible is False by default, so this should not be necessary
   app.DisplayAlerts = False
   Set wbook = app.Workbooks.Add(databasePath)
-  Application.StatusBar = "Wird gespeichert ..."
+  Application.StatusBar = str_statusBar_DBSaving
   
   ' Setting of targets
   Set sheet = wbook.Worksheets("Database")
@@ -194,8 +194,8 @@ Private Sub SaveCharge()
   Set app = Nothing
 
   ' Show confirmation message
-  Application.StatusBar = "Charge für Auftrag " & Range("Auftragsnummer").Value & " erfolgreich ergänzt"
-  Notify "Auftrag " & Range("Auftragsnummer").Value, "Charge erfolgreich ergänzt", Sheet10.Range("ProjectPfad").Value, "Info", 10
+  Application.StatusBar = StringFormat(str_statusBar_chargeSaved, Range("Auftragsnummer").Value)
+  Notify StringForma(str_notify_chargeSavedTitle, Range("Auftragsnummer").Value), "Charge erfolgreich ergänzt", Sheet10.Range("ProjectPfad").Value, "Info", 10
 
   ' Refresh all data connections & queries
   ThisWorkbook.RefreshAll
@@ -233,7 +233,7 @@ Function ChargeWorkflow()
 
     Select Case Range("CurrentChargePhase").Value
       Case chargePhase.Processing ' Process and quality data are missing
-        MsgBox "Diese Charge befindet sich noch in Bearbeitung, bitte zuerst die Prozess- und Qualitätsdaten hinzufügen!"
+        MsgBox str_chargeInProzess
         Sheet1.Activate
         Sheet1.Range("Prozess_Chargenummer").Value = chargeNummer
         Exit Function
@@ -247,11 +247,11 @@ Function ChargeWorkflow()
         FormReset False
         EditMode_Fill
       Case Else
-        MsgBox "Unspecified error with this charge, Phase not handled!"
+        MsgBox str_unhandledError
         FormReset True
     End Select
   Else
-    MsgBox "Dieses Teilnummer benötigt keine Löttest!"
+    MsgBox str_noLoetTest
     FormReset True
   End If
 End Function

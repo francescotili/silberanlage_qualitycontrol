@@ -21,7 +21,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)
           If Range("IsTeileInDatabase").Value Then
             ChargeWorkflow
           Else
-            If MsgBox("Teilenummer nicht vorhanden!" & vbNewLine & "Jetzt hinzufügen?", vbInformation + vbYesNo + vbDefaultButton1, "ACHTUNG") = vbYes Then
+            If MsgBox(str_materialNotFound, vbInformation + vbYesNo + vbDefaultButton1, str_notify_attentionTitle) = vbYes Then
               Sheet4.Activate
               Sheet4.Range("BarcodeValue").Value = Range("BarcodeValue").Value
               Exit Sub
@@ -31,7 +31,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)
           End If
         End If
       Else
-        MsgBox "Ungültiger barcode! Bitte ernuet scannen ..."
+        MsgBox str_invalidBarcode
         FormReset True
       End If
     Else
@@ -63,7 +63,6 @@ Private Sub FormReset(ByVal FullReset As Boolean)
   End If
   Range("Gewicht").ClearContents
   Range("Anlage").ClearContents
-  'Range("Mitarbeiter").ClearContents
   Range("Kommentar").ClearContents
   
   Range("BarcodeCell").Select
@@ -103,7 +102,7 @@ Private Sub SaveCharge()
 ' row with a unique ChargeNummer.
 
   ' Show saving messaage
-  Application.StatusBar = "Datenbank wird geöffnet, bitte warten ..."
+  Application.StatusBar = str_statusBar_DBOpening
 
   ' Definition of variables
   Dim app As New excel.Application
@@ -123,9 +122,9 @@ Private Sub SaveCharge()
   ' Check if database is open
   For i = 1 To 30
     If IsDatabaseOpen(databasePath) Then
-      Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
+      Application.StatusBar = str_statusBar_DBBusy
       If i = 30 Then
-        Notify "FEHLER", "Charge wurde NICHT gespeichert, weil die Datenbank ausgelastet ist! Bitte ernuet probieren", Sheet5.Range("ProjectPfad").Value, "Error", 20
+        Notify str_notify_errorTitle, str_notify_savingDatabaseBusy, Sheet5.Range("ProjectPfad").Value, "Error", 20
         Exit Sub
       Else
         Application.Wait (Now + TimeValue("0:00:02"))
@@ -136,7 +135,7 @@ Private Sub SaveCharge()
   Next i
   
   ' Print the Chargeschein
-  Application.StatusBar = "Wird ausgedruckt ..."
+  Application.StatusBar = str_statusBar_Printing
   Sheet7.Range("Chargenummer").Value = chargeNummer
   PrintChargeschein
 
@@ -181,8 +180,8 @@ Private Sub SaveCharge()
   ThisWorkbook.RefreshAll
 
   ' Show confirmation message
-  Application.StatusBar = "Neue Charge für Material " & Range("MaterialnummerString").Value & " erfolgreich gespeichert"
-  Notify Range("MaterialnummerString").Value, "Charge erfolgreich hinzugefügt", Sheet5.Range("ProjectPfad").Value, "Info", 10
+  Application.StatusBar = StringFormat(str_statusBar_newChargeSaved, Range("MaterialnummerString").Value)
+  Notify Range("MaterialnummerString").Value, str_notify_newChargeSavedText, Sheet5.Range("ProjectPfad").Value, "Info", 10
 
   ' Reset the form
   FormReset True

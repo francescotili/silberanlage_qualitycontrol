@@ -17,12 +17,12 @@ Private Sub Worksheet_Change(ByVal Target As Range)
           ThisWorkbook.RefreshAll
           DoEvents ' Waits for the refresh to finish
           If Not Range("IsChargeInDB").Value Then
-            MsgBox "Die Charge wurde nicht in der Datenbank gefunden!"
+            MsgBox str_chargeNotFound
             FormReset
           End If
         End If
       Else
-        MsgBox "Ungültiger barcode! Bitte ernuet scannen ..."
+        MsgBox str_invalidBarcode
         FormReset
       End If
     End If
@@ -108,17 +108,17 @@ Private Sub Scrap_Btn_Click()
   Dim chargeNummer As String
   databasePath = Sheet10.Range("ProjectPfad").Value & "Q_Silber_DATABASE.xlsx"
 
-  If MsgBox("Möchten Sie diese Charge wirklich verschrotten?", vbCritical + vbYesNo, "Warnung") = vbYes Then
+  If MsgBox(str_confirmScrapping, vbCritical + vbYesNo, str_notify_warningTitle) = vbYes Then
 
     ' Show saving message
-    Application.StatusBar = "Datenbank wird geöffnet, bitte warten ..."
+    Application.StatusBar = str_statusBar_DBOpening
 
     ' Check if database is open
     For j = 1 To 30
       If IsDatabaseOpen(databasePath) Then
-        Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
+        Application.StatusBar = str_statusBar_DBBusy
         If j = 30 Then
-          Notify "FEHLER", "Charge wurde NICHT verschrottet, weil die Datenbank ausgelastet ist! Bitte ernuet probieren", Sheet10.Range("ProjectPfad").Value, "Error", 20
+          Notify str_notify_errorTitle, str_notify_scrappingDatabaseBusy, Sheet10.Range("ProjectPfad").Value, "Error", 20
           Exit Sub
         Else
           Application.Wait (Now + TimeValue("0:00:02"))
@@ -132,7 +132,7 @@ Private Sub Scrap_Btn_Click()
     app.Visible = False ' Visible is False by default, so this should not be necessary
     app.DisplayAlerts = False
     Set wbook = app.Workbooks.Add(databasePath)
-    Application.StatusBar = "Wird gespeichert ..."
+    Application.StatusBar = str_statusBar_DBSaving
   
     ' Setting of targets
     Set sheet = wbook.Worksheets("Database")
@@ -158,8 +158,8 @@ Private Sub Scrap_Btn_Click()
     Set app = Nothing
 
     ' Show confirmation message
-    Application.StatusBar = "Charge-Nr. " & Range("ChargenummerValue").Value & " wurde verschrottet"
-    Notify Range("ChargenummerValue").Value, "Charge erfolgreich verschrottet", Sheet10.Range("ProjectPfad").Value, "Info", 10
+    Application.StatusBar = StringFormat(str_statusBar_chargeScrapped, Range("ChargenummerValue").Value)
+    Notify Range("ChargenummerValue").Value, str_notify_chargeScrappedText, Sheet10.Range("ProjectPfad").Value, "Info", 10
 
     ' Reset the form
     chargeNummer = Range("ChargenummerValue").Value
@@ -167,6 +167,7 @@ Private Sub Scrap_Btn_Click()
 
     ' Refresh all data connections & queries
     ThisWorkbook.RefreshAll
+    DoEvents
 
     ' Reload data
     Range("ChargenummerValue").Value = chargeNummer
@@ -188,17 +189,17 @@ Private Sub Delete_Btn_Click()
   Dim databasePath As String
   databasePath = Sheet10.Range("ProjectPfad").Value & "Q_Silber_DATABASE.xlsx"
 
-  If MsgBox("Möchten Sie diese Charge wirklich dauerhaft löschen?", vbCritical + vbYesNo, "Achtung") = vbYes Then
+  If MsgBox(str_confirmDeletion, vbCritical + vbYesNo, str_notify_attentionTitle) = vbYes Then
 
     ' Show saving message
-    Application.StatusBar = "Datenbank wird geöffnet, bitte warten ..."
+    Application.StatusBar = str_statusBar_DBOpening
 
     ' Check if database is open
     For j = 1 To 30
       If IsDatabaseOpen(databasePath) Then
-        Application.StatusBar = "Datenbank beschäftigt, bitte warten ..."
+        Application.StatusBar = str_statusBar_DBBusy
         If j = 30 Then
-          Notify "FEHLER", "Charge wurde NICHT gelöscht, weil die Datenbank ausgelastet ist! Bitte ernuet probieren", Sheet10.Range("ProjectPfad").Value, "Error", 20
+          Notify str_notify_errorTitle, str_notify_deletingDatabaseBusy, Sheet10.Range("ProjectPfad").Value, "Error", 20
           Exit Sub
         Else
           Application.Wait (Now + TimeValue("0:00:02"))
@@ -212,7 +213,7 @@ Private Sub Delete_Btn_Click()
     app.Visible = False ' Visible is False by default, so this should not be necessary
     app.DisplayAlerts = False
     Set wbook = app.Workbooks.Add(databasePath)
-    Application.StatusBar = "Wird gespeichert ..."
+    Application.StatusBar = str_statusBar_DBSaving
   
     ' Setting of targets
     Set sheet = wbook.Worksheets("Database")
@@ -236,8 +237,8 @@ Private Sub Delete_Btn_Click()
     Set app = Nothing
 
     ' Show confirmation message
-    Application.StatusBar = "Charge-Nr. " & Range("ChargenummerValue").Value & " wurde gelöscht"
-    Notify Range("ChargenummerValue").Value, "Charge erfolgreich gelöscht", Sheet10.Range("ProjectPfad").Value, "Info", 10
+    Application.StatusBar = StringFormat(str_statusBar_chargeDeleted, Range("ChargenummerValue").Value)
+    Notify Range("ChargenummerValue").Value, str_notify_chargeDeletedText, Sheet10.Range("ProjectPfad").Value, "Info", 10
 
     ' Reset the form
     FormReset
