@@ -5,13 +5,6 @@ Global Const GAdminPassword As String = "galvanik2023"
 
 ' Charge phases
 Public Enum ChargePhase
-  ' WORKFLOWS POSSIBLE
-  ' [Creation] > Processing > Done
-  ' [Creation] > Processing > Alterung > Done
-  ' [Creation] > Processing > Nacharbeit > Done
-  ' [Creation] > Processing > Nacharbeit > Alterung > Done
-  ' Scrapped can happen after each of the other phases
-
   ' After the registration and creation of row
   Processing = 1
 
@@ -125,6 +118,7 @@ Public Function Notify(ByVal title As String, ByVal msg As String, ByVal iconPat
                     Optional ByVal notification_icon As String = "Info", _
                     Optional ByVal duration As Integer = 10)
 ' This public function sends notification using Windows 10 Notification API
+' It uses a fast powershell command to do that using System.Windows.Forms
 ' Available parameters:
 '    title (str): Notification title
 '    msg (str): Notification message
@@ -135,12 +129,12 @@ Public Function Notify(ByVal title As String, ByVal msg As String, ByVal iconPat
   Dim WsShell As Object: Set WsShell = CreateObject("WScript.Shell")
   Dim strCommand  As String
 
+  ' Sanify notification_icon parameter
   If notification_icon <> "Info" And notification_icon <> "Error" And notification_icon <> "Warning" Then
     notification_icon = "Info"
   End If
 
   ' Build notification object
-  
   notifyIcon = iconPath & "\Icons\notification.ico"
   strCommand = "powershell.exe -Command " & Chr(34) & "& { "
   strCommand = strCommand & "Add-Type -AssemblyName 'System.Windows.Forms'"
@@ -156,4 +150,17 @@ Public Function Notify(ByVal title As String, ByVal msg As String, ByVal iconPat
 
   ' Execute command, send notification
   WsShell.Run strCommand, 0, False
+End Function
+
+Public Function StringFormat(ByVal mask As String, ParamArray tokens()) As String
+' This public function can be used to simplify the process of generating strings
+' with dynamic content by allowing the use of placeholders in the string and
+' replacing them with actual values during runtime.
+  Dim i As Long
+  
+  For i = LBound(tokens) To UBound(tokens)
+    mask = Replace(mask, "{" & i & "}", tokens(i))
+  Next
+  
+  StringFormat = mask
 End Function
