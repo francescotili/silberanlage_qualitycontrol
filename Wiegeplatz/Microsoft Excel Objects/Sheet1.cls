@@ -134,12 +134,16 @@ Private Sub SaveCharge()
       Exit For
     End If
   Next i
+  
+  ' Print the Chargeschein
+  Application.StatusBar = "Wird ausgedruckt ..."
+  Sheet7.Range("Chargenummer").Value = chargeNummer
+  PrintChargeschein
 
   ' Opening of database file
   app.Visible = False ' Visibile is False by default, so this should not be necessary
   app.DisplayAlerts = False
   Set wbook = app.Workbooks.Add(databasePath)
-  Application.StatusBar = "Wird gespeichert ..."
 
   ' Setting of targets
   Set sheet = wbook.Worksheets("Database")
@@ -167,10 +171,6 @@ Private Sub SaveCharge()
     .DataBodyRange(1, QSilberDB_Col.AgStrom_soll).Value = Range("AgStromSoll").Value
     .DataBodyRange(1, QSilberDB_Col.Phase).Value = ChargePhase.Processing
   End With
-  
-  ' Print the Chargeschein
-  Sheet7.Range("Chargenummer").Value = chargeNummer
-  PrintChargeschein
 
   ' Save and close the database
   wbook.SaveAs databasePath
