@@ -169,9 +169,6 @@ Private Sub SaveBtn_Click()
 ' Save workflow triggered by Save button.
 
   SaveCharge
-
-  ' Go to main scanning page
-  Sheet2.Activate
 End Sub
 
 Private Sub SaveCharge()
@@ -253,6 +250,9 @@ Private Sub SaveCharge()
 
   ' Reset the form
   FormReset True
+
+  ' Go to main scanning page
+  Sheet2.Activate
 End Sub
 
 

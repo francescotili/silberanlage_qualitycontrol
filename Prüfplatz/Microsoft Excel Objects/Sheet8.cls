@@ -119,9 +119,6 @@ Private Sub SaveBtn_Click()
 ' If the Charge is in edit mode, this data will be overwritten.
 
   SaveCharge
-
-  ' Go to main scanning page
-  Sheet2.Activate
 End Sub
 
 Private Sub SaveCharge()
@@ -198,6 +195,9 @@ Private Sub SaveCharge()
 
   ' Reset the form
   FormReset True
+
+  ' Go to main scanning page
+  Sheet2.Activate
 End sub
 
 Function IsDatabaseOpen(databasePath As String)
