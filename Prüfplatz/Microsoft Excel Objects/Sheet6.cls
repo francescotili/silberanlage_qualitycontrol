@@ -105,6 +105,7 @@ Private Sub Scrap_Btn_Click()
   Dim i, j As Long
   Dim chargeRow As Integer
   Dim databasePath As String
+  Dim chargeNummer As String
   databasePath = Sheet10.Range("ProjectPfad").Value & "Q_Silber_DATABASE.xlsx"
 
   If MsgBox("Möchten Sie diese Charge wirklich verschrotten?", vbCritical + vbYesNo, "Warnung") = vbYes Then
@@ -161,10 +162,14 @@ Private Sub Scrap_Btn_Click()
     Notify Range("ChargenummerValue").Value, "Charge erfolgreich verschrottet", Sheet10.Range("ProjectPfad").Value, "Info", 10
 
     ' Reset the form
+    chargeNummer = Range("ChargenummerValue").Value
     FormReset
 
     ' Refresh all data connections & queries
     ThisWorkbook.RefreshAll
+
+    ' Reload data
+    Range("ChargenummerValue").Value = chargeNummer
   End If
 End Sub
 
