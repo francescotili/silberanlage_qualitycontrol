@@ -50,7 +50,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)
     ' Change protection
     Range("Anlage").Locked = False
     Range("Trommel").Locked = False
-    Range("Zählwert_ist").Locked = False
+    Range("Zählerwert_ist").Locked = False
     Range("Schichtdicke").Locked = False
     If CStr(Range("NacharbeitArt").Value) <> "" Then
       Select Case Range("NacharbeitArt")
@@ -60,7 +60,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)
           Range("Anlage").Locked = True
           Range("Anlage").Value = "A13"
           Range("Trommel").Locked = True
-          Range("Zählwert_ist").Locked = True
+          Range("Zählerwert_ist").Locked = True
           Range("Schichtdicke").Locked = True
         Case NacharbeitTyp.Flecken_EZ10
           Range("Anlage").ClearContents
@@ -68,7 +68,7 @@ Private Sub Worksheet_Change(ByVal Target As Range)
           Range("Anlage").Locked = True
           Range("Anlage").Value = "A13"
           Range("Trommel").Locked = True
-          Range("Zählwert_ist").Locked = True
+          Range("Zählerwert_ist").Locked = True
           Range("Schichtdicke").Locked = True
       End Select
     End If
@@ -145,12 +145,12 @@ Private Sub FormReset(ByVal FullReset As Boolean)
   Range("Kommentar").ClearContents
   Range("Anlage").ClearContents
   Range("Trommel").ClearContents
-  Range("Zählwert_ist").ClearContents
+  Range("Zählerwert_ist").ClearContents
   Range("Schichtdicke").ClearContents
   Range("Mitarbeiter").ClearContents
 
   Range("ChargenummerCell").Select
-  ActiveWindow.Scrollrow = 1
+  ActiveWindow.ScrollRow = 1
   ActiveWindow.ScrollColumn = 1
   
   ' Enable protection
@@ -231,7 +231,7 @@ Private Sub SaveCharge()
     .DataBodyRange(chargeRow, QSilberDB_Col.Nacharbeit_Anlage).Value = Range("Anlage").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.Nacharbeit_Trommel).Value = Range("Trommel").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.Nacharbeit_AgWert_soll).Value = Range("Zählerwert_soll").Value
-    .DataBodyRange(chargeRow, QSilberDB_Col.Nacharbeit_AgWert_ist).Value = Range("Zählwert_ist").Value
+    .DataBodyRange(chargeRow, QSilberDB_Col.Nacharbeit_AgWert_ist).Value = Range("Zählerwert_ist").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.AgSchicht_Nacharbeit).Value = Range("Schichtdicke").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.Phase).Value = Range("NextChargePhase").Value
   End With
