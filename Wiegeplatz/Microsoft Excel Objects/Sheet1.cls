@@ -66,7 +66,7 @@ Private Sub FormReset(ByVal FullReset As Boolean)
   Range("Kommentar").ClearContents
   
   Range("BarcodeCell").Select
-  ActiveWindow.Scrollrow = 1
+  ActiveWindow.ScrollRow = 1
   ActiveWindow.ScrollColumn = 1
   
   ' Enable protection
@@ -112,12 +112,12 @@ Private Sub SaveCharge()
   Dim i As Integer
   Dim chargeData As Variant
   Dim newRow As ListRow
-  Dim chargeNummer As String
+  Dim chargenummer As String
   Dim databasePath As String
   databasePath = Sheet5.Range("ProjectPfad").Value & "Q_Silber_DATABASE.xlsx"
   
   ' Freeze the Chargenummer
-  chargeNummer = Range("Chargenummer").Value
+  chargenummer = Range("Chargenummer").Value
 
   ' Check if database is open
   For i = 1 To 30
@@ -136,7 +136,7 @@ Private Sub SaveCharge()
   
   ' Print the Chargeschein
   Application.StatusBar = str_statusBar_Printing
-  Sheet7.Range("Chargenummer").Value = chargeNummer
+  Sheet7.Range("Chargenummer").Value = chargenummer
   PrintChargeschein
 
   ' Opening of database file
@@ -151,7 +151,7 @@ Private Sub SaveCharge()
   ' Write data in database
   table.ListRows.Add Position:=1
   With table
-    .DataBodyRange(1, QSilberDB_Col.ChrgNummer).Value = chargeNummer
+    .DataBodyRange(1, QSilberDB_Col.ChrgNummer).Value = chargenummer
     .DataBodyRange(1, QSilberDB_Col.Datum).Value = Range("Datum").Value
     .DataBodyRange(1, QSilberDB_Col.Annahme_Mitarbeiter).Value = Range("Mitarbeiter").Value
     .DataBodyRange(1, QSilberDB_Col.Annhame_Kommentar).Value = Range("Kommentar").Value
@@ -243,4 +243,21 @@ Function ChargeWorkflow()
 ' The Teil is in DB, decide what to do next
   FormReset False
   Form_Fill
+End Function
+
+Function RePrint(barcode As String, weight As Single, chargenummer As String)
+' This function takes three parameters from the "Nachdruck" sheet to reprint
+' the chargeschein.
+
+  ' Copy barcode
+  Range("BarcodeCell").Value = barcode
+  Range("Gewicht").Value = weight
+  
+  ' Print the Chargeschein
+  Application.StatusBar = str_statusBar_Printing
+  Sheet7.Range("Chargenummer").Value = chargenummer
+  PrintChargeschein
+
+  ' Reset form and go back
+  Sheet6.Activate
 End Function
