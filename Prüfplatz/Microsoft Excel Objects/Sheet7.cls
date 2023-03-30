@@ -55,7 +55,9 @@ Private Sub Worksheet_Change(ByVal Target As Range)
     If CStr(Range("NacharbeitArt").Value) <> "" Then
       Select Case Range("NacharbeitArt")
         Case NacharbeitTyp.Dicke
-          Range("Anlage").ClearContents
+          If Range("Anlage").Value = "A13" Then
+            Range("Anlage").ClearContents
+          End If
         Case NacharbeitTyp.Flecken_A13
           Range("Anlage").Locked = True
           Range("Anlage").Value = "A13"
@@ -63,7 +65,9 @@ Private Sub Worksheet_Change(ByVal Target As Range)
           Range("Zählerwert_ist").Locked = True
           Range("Schichtdicke").Locked = True
         Case NacharbeitTyp.Flecken_EZ10
-          Range("Anlage").ClearContents
+          If Range("Anlage").Value = "A13" Then
+            Range("Anlage").ClearContents
+          End If
         Case NacharbeitTyp.Strippen
           Range("Anlage").Locked = True
           Range("Anlage").Value = "A13"
