@@ -288,8 +288,10 @@ Private Sub SaveMaterial()
   End With
   If Range("IsTeileInDatabase").Value Then
     table.DataBodyRange(teileRow, TeilDB_Col.Editor).Value = Range("Mitarbeiter").Value
+    table.DataBodyRange(teileRow, TeilDB_Col.Änderungsdatum).Value = Range("Datum").Value
   Else
     table.DataBodyRange(teileRow, TeilDB_Col.Ersteller).Value = Range("Mitarbeiter").Value
+    table.DataBodyRange(teileRow, TeilDB_Col.Erstelldatum).Value = Range("Datum").Value
   End If
   
   ' Save and close the database
