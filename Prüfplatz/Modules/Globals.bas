@@ -113,7 +113,9 @@ Public Enum TeilDB_Col
   Löten
   XRay_Methode
   Kommentar
+  Erstelldatum
   Ersteller
+  Änderungsdatum
   Editor
 End Enum
 
