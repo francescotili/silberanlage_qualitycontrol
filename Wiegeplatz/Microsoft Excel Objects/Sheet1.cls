@@ -152,7 +152,7 @@ Private Sub SaveCharge()
   table.ListRows.Add Position:=1
   With table
     .DataBodyRange(1, QSilberDB_Col.ChrgNummer).Value = chargenummer
-    .DataBodyRange(1, QSilberDB_Col.Datum).Value = Range("Datum").Value
+    .DataBodyRange(1, QSilberDB_Col.Annahme_Datum).Value = Range("Datum").Value
     .DataBodyRange(1, QSilberDB_Col.Annahme_Mitarbeiter).Value = Range("Mitarbeiter").Value
     .DataBodyRange(1, QSilberDB_Col.Annhame_Kommentar).Value = Range("Kommentar").Value
     .DataBodyRange(1, QSilberDB_Col.Materialnummer).Value = Range("Materialnummer").Value

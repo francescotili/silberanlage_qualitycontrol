@@ -24,7 +24,7 @@ End Enum
 ' Qualitätsaufzeichnung Database columns
 Public Enum QSilberDB_Col
   ChrgNummer = 1
-  Datum
+  Annahme_Datum
   Prozess_Datum
   Wochentag
   KW
