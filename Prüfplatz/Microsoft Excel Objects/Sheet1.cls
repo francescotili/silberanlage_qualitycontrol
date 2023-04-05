@@ -242,6 +242,14 @@ Private Sub SaveCharge()
     .DataBodyRange(chargeRow, QSilberDB_Col.Prozess_Mitarbeiter).Value = Range("Mitarbeiter").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.Prozess_Kommentar).Value = Range("Kommentar").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.Phase).Value = Range("NextChargePhase").Value
+
+    If Not Range("IsEditMode").Value Then
+      If Range("IsSchichtcodeInDB").Value Then
+        .DataBodyRange(chargeRow, QSilberDB_Col.Schichtzähler).Value = 0
+      Else
+        .DataBodyRange(chargeRow, QSilberDB_Col.Schichtzähler).Value = 1
+      End If
+    End If
   End With
 
   ' Save and close the database
