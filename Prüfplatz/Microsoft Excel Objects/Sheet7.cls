@@ -221,7 +221,7 @@ Private Sub SaveCharge()
   ' Searching the row
   charges = table.DataBodyRange
   For i = LBound(charges) To UBound(charges)
-    If CStr(charges(i, 1)) = CStr(Range("ChargenummerValue").Value) Then
+    If CStr(charges(i, QSilberDB_Col.ChrgNummer)) = CStr(Range("ChargenummerValue").Value) Then
       chargeRow = i
       Exit For
     End If

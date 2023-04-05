@@ -141,7 +141,7 @@ Private Sub Scrap_Btn_Click()
     ' Searching the row to modify
     charges = table.DataBodyRange
     For i = LBound(charges) To UBound(charges)
-      If CStr(charges(i, 1)) = CStr(Range("ChargenummerValue").Value) Then
+      If CStr(charges(i, QSilberDB_Col.ChrgNummer)) = CStr(Range("ChargenummerValue").Value) Then
         chargeRow = i
         Exit For
       End If
@@ -224,7 +224,7 @@ Private Sub Delete_Btn_Click()
     ' Searching the row to delete
     charges = table.DataBodyRange
     For i = LBound(charges) To UBound(charges)
-      If CStr(charges(i, 1)) = CStr(Range("ChargenummerValue").Value) Then
+      If CStr(charges(i, QSilberDB_Col.ChrgNummer)) = CStr(Range("ChargenummerValue").Value) Then
         chargeRow = i
         Exit For
       End If

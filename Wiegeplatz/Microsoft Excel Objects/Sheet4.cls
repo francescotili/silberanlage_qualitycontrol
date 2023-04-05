@@ -258,7 +258,7 @@ Private Sub SaveMaterial()
     ' Search the row to overwrite
     materials = table.DataBodyRange
     For i = LBound(materials) To UBound(materials)
-      If CStr(materials(i, 1)) = CStr(Range("Materialnummer").Value) Then
+      If CStr(materials(i, TeilDB_Col.Materialnummer)) = CStr(Range("Materialnummer").Value) Then
         teileRow = i
         Exit For
       End If
@@ -366,7 +366,7 @@ Private Sub NeueTeile_LoeschenBtn_Click()
     ' Searching the row to delete
     materials = table.DataBodyRange
     For i = LBound(materials) To UBound(materials)
-      If CStr(materials(i, 1)) = CStr(Range("Materialnummer").Value) Then
+      If CStr(materials(i, TeilDB_Col.Materialnummer)) = CStr(Range("Materialnummer").Value) Then
         teileRow = i
         Exit For
       End If
