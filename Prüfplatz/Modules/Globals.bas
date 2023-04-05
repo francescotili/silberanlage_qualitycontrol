@@ -40,6 +40,7 @@ End Enum
 Public Enum QSilberDB_Col
   ChrgNummer = 1
   Datum
+  Prozess_Datum
   Wochentag
   KW
   Monat
