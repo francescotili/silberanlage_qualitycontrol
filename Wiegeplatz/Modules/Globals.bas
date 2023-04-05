@@ -79,6 +79,7 @@ Public Enum QSilberDB_Col
   Phase_Name
   Schichtcode
   Schichtzähler
+  Schicht_Datum
   Cu_UQG
   Cu_OQG
   Ag_UQG
