@@ -77,6 +77,12 @@ Public Enum QSilberDB_Col
   Qualität_Kommentar
   Phase
   Phase_Name
+  Schichtcode
+  Schichtzähler
+  Cu_UQG
+  Cu_OQG
+  Ag_UQG
+  Ag_OQG
 End Enum
 
 ' Teiledatenbank Database columns
