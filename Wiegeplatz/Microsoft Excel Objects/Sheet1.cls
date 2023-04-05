@@ -165,7 +165,7 @@ Private Sub SaveCharge()
     .DataBodyRange(1, QSilberDB_Col.Stückzahl).Value = Range("Stückzahl").Value
     .DataBodyRange(1, QSilberDB_Col.AgBedarf_soll).Value = Range("AgBedarfSollTOT").Value
     .DataBodyRange(1, QSilberDB_Col.Anlage).Value = Range("Anlage").Value
-    If Range("Anlage").Value <> "Goldanlage" Then
+    If Range("Anlage").Value <> "Au Anlage" Then
       .DataBodyRange(1, QSilberDB_Col.CuWert_soll).Value = Range("CuZahlerWert").Value
       .DataBodyRange(1, QSilberDB_Col.AgWert_soll).Value = Range("AgZahlerWert").Value
       .DataBodyRange(1, QSilberDB_Col.AgStrom_soll).Value = Range("AgStromSoll").Value
