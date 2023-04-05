@@ -230,6 +230,7 @@ Private Sub SaveCharge()
 
   ' Write data in database
   With table
+    .DataBodyRange(chargeRow, QSilberDB_Col.Prozess_Datum).Value = Range("Datum").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.Schicht).Value = Range("Schicht").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.Trommel).Value = Range("Trommel").Value
     .DataBodyRange(chargeRow, QSilberDB_Col.CuWert_ist).Value = Range("CuZahlerIst").Value
