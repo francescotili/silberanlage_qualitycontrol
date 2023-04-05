@@ -188,6 +188,8 @@ Private Sub Delete_Btn_Click()
   Dim chargeRow As Integer
   Dim databasePath As String
   databasePath = Sheet10.Range("ProjectPfad").Value & "Q_Silber_DATABASE.xlsx"
+  Dim schichtcode As String
+  schichtcode = CStr(Range("Schichtcode").Value)
 
   If MsgBox(str_confirmDeletion, vbCritical + vbYesNo, str_notify_attentionTitle) = vbYes Then
 
@@ -235,6 +237,11 @@ Private Sub Delete_Btn_Click()
     wbook.SaveAs databasePath
     app.Quit
     Set app = Nothing
+
+    ' Check shiftcounter
+    If Range("Schichtzähler").Value = 1 Then
+      CheckShiftcounter schichtcode
+    End If
 
     ' Show confirmation message
     Application.StatusBar = StringFormat(str_statusBar_chargeDeleted, Range("ChargenummerValue").Value)
@@ -287,4 +294,64 @@ Function EditWorkflow()
 ' The Teil is in DB, decide what to do next
   FormReset False
   EditMode_Fill
+End Function
+
+Function CheckShiftcounter(schichtcode As String)
+' Control if the deleted row leave behind a wrong shift counter
+
+  ' Definition of variables
+  Dim app As New excel.Application
+  Dim wbook As excel.Workbook
+  Dim sheet As Worksheet
+  Dim table As ListObject
+  Dim charges As Variant
+  Dim i, j As Long
+  Dim chargeRow As Integer
+  Dim databasePath As String
+  databasePath = Sheet10.Range("ProjectPfad").Value & "Q_Silber_DATABASE.xlsx"
+
+  ' Show message
+  Application.StatusBar = "Schichten werden gerade überprüft ..."
+
+  ' Check if database is open
+  For j = 1 To 30
+    If IsDatabaseOpen(databasePath) Then
+      Application.StatusBar = str_statusBar_DBBusy
+      If j = 30 Then
+        Notify str_notify_errorTitle, str_notify_deletingDatabaseBusy, Sheet10.Range("ProjectPfad").Value, "Error", 20
+        Exit Function
+      Else
+        Application.Wait (Now + TimeValue("0:00:02"))
+      End If
+    Else
+      Exit For
+    End If
+  Next j
+
+  ' Opening of database file
+  app.Visible = False ' Visible is False by default, so this should not be necessary
+  app.DisplayAlerts = False
+  Set wbook = app.Workbooks.Add(databasePath)
+  Application.StatusBar = str_statusBar_DBSaving
+
+  ' Setting of targets
+  Set sheet = wbook.Worksheets("Database")
+  Set table = sheet.ListObjects.Item("Qualitätsdatabase")
+
+  ' Check Shiftcounter
+  charges = table.DataBodyRange
+  For i = LBound(charges) To UBound(charges)
+    If CStr(charges(i, QSilberDB_Col.Schichtcode)) = schichtcode Then
+      chargeRow = i
+      Exit For
+    End If
+  Next i
+
+  ' Update the Schichtzähler
+  table.DataBodyRange(chargeRow, QSilberDB_Col.Schichtzähler).Value = 1
+
+  ' Save and close the database
+  wbook.SaveAs databasePath
+  app.Quit
+  Set app = Nothing
 End Function
