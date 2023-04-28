@@ -93,7 +93,18 @@ Private Sub NeueCharge_SpeichernBtn_Click()
 ' Save workflow triggered by Save button.
 ' This form will always create a new Chargenummer and add it to the
 ' Production database
-  SaveCharge
+
+  ' Check if the Kiste is already in Database
+  If Range("IsKisteInDB").Value Then
+    If MsgBox(str_kisteInDB, vbCritical + vbYesNo + vbDefaultButton1, str_notify_attentionTitle) = vbYes Then
+      SaveCharge
+    Else
+      FormReset True
+      Sheet6.Activate
+    End If
+  Else
+    SaveCharge
+  End If
 End Sub
 
 Private Sub SaveCharge()
@@ -242,6 +253,12 @@ End Sub
 Function ChargeWorkflow()
 ' The Teil is in DB, decide what to do next
   FormReset False
+
+  ' Refresh all data connections & queries
+  ThisWorkbook.RefreshAll
+  DoEvents
+
+  ' Fill the form
   Form_Fill
 End Function
 

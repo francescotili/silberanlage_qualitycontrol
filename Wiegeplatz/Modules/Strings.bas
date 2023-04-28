@@ -21,6 +21,7 @@ Public Const str_notify_savingDatabaseBusy = "Charge wurde NICHT gespeichert, we
 ' Sheet 1
 Public Const str_statusBar_newChargeSaved = "Neue Charge für Material {0} erfolgreich gespeichert"
 Public Const str_notify_newChargeSavedText = "Charge erfolgreich hinzugefügt"
+Public Const str_kisteInDB = "Diese Kiste wurde bereits angemeldet!" & vbCrLf & "Wenn Sie fortfahren, wird eine weitere Charge (DOPPELT) erstellt." & vbCrLf & vbCrLf & "Wenn Sie Probleme mit dem Chargeschein hatten, sollten Sie das Chargeschein nur nachdrucken und KEINEN weiteren Charge erstellen." & vbCrLf & vbCrLf & "Wollen Sie wirklich weitermachen und eine doppelte Charge erstellen?"
 
 ' Sheet 4
 Public Const str_notify_savingNewMaterialDatabaseBusy = "Material wurde NICHT gespeichert, weil die Datenbank ausgelastet ist! Bitte ernuet probieren"
