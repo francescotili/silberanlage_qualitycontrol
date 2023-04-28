@@ -85,23 +85,26 @@ Private Sub CreateMode_Fill()
   ' Disable protection
   sheet.Unprotect Password:=GAdminPassword
 
-  ' Copy Kupferdaten
-  If CStr(Range("CuZahlerSuggested").Value) <> "" Then
-    Range("CuZahlerIst").Value = CSng(Range("CuZahlerSuggested").Value)
-  End If
+  ' Copy Kupferdaten - Disabled because the workers just leave the
+  ' default and do not correct it
+  'If CStr(Range("CuZahlerSuggested").Value) <> "" Then
+  '  Range("CuZahlerIst").Value = CSng(Range("CuZahlerSuggested").Value)
+  'End If
 
-  ' Copy Silberdaten
-  If CStr(Range("AgZahlerSuggested").Value) <> "" Then
-    Range("AgZahlerIst").Value = CSng(Range("AgZahlerSuggested").Value)
-  End If
+  ' Copy Silberdaten - Disabled because the workers just leave the
+  ' default and do not correct it
+  'If CStr(Range("AgZahlerSuggested").Value) <> "" Then
+  '  Range("AgZahlerIst").Value = CSng(Range("AgZahlerSuggested").Value)
+  'End If
 
   ' Suggest Biegetest
   Range("Biegetest").Value = "JA"
 
-  ' Copy Worker
-  If CStr(Range("MitarbeiterSuggested").Value) <> "" Then
-    Range("Mitarbeiter").Value = CSng(Range("MitarbeiterSuggested").Value)
-  End If
+  ' Copy Worker - Disabled because the workers just leave the
+  ' default and do not correct it
+  'If CStr(Range("MitarbeiterSuggested").Value) <> "" Then
+  '  Range("Mitarbeiter").Value = CSng(Range("MitarbeiterSuggested").Value)
+  'End If
 
   ' Enable protection
   sheet.Protect Password:=GAdminPassword
