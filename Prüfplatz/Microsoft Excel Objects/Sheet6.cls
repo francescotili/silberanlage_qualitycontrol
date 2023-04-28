@@ -102,7 +102,7 @@ Private Sub Scrap_Btn_Click()
   Dim chargeRow As Integer
   Dim databasePath As String
   Dim chargeNummer As String
-  databasePath = Sheet10.Range("ProjectPfad").Value & "Q_Silber_DATABASE.xlsx"
+  databasePath = Sheet10.Range("ProjectPfad").Value & "Q_Silber_DATABASE.xlsm"
 
   If MsgBox(str_confirmScrapping, vbCritical + vbYesNo, str_notify_warningTitle) = vbYes Then
 
@@ -149,7 +149,7 @@ Private Sub Scrap_Btn_Click()
     End If
 
     ' Save and close the database
-    wbook.SaveAs databasePath
+    wbook.SaveAs Filename:=databasePath, FileFormat:=xlOpenXMLWorkbookMacroEnabled
     app.Quit
     Set app = Nothing
 

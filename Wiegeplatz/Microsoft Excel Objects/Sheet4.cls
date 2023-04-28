@@ -220,7 +220,7 @@ Private Sub SaveMaterial()
   Dim alterungDB As Boolean
   Dim isEditMode As Boolean
   Dim databasePath As String
-  databasePath = Sheet5.Range("ProjectPfad").Value & "Q_Silber_DATABASE.xlsx"
+  databasePath = Sheet5.Range("ProjectPfad").Value & "Q_Silber_DATABASE.xlsm"
   
   ' Preparing data for write
   alterungDB = False
@@ -295,7 +295,7 @@ Private Sub SaveMaterial()
   End If
   
   ' Save and close the database
-  wbook.SaveAs databasePath
+  wbook.SaveAs Filename:=databasePath, FileFormat:=xlOpenXMLWorkbookMacroEnabled
   app.Quit
   Set app = Nothing
   
@@ -331,7 +331,7 @@ Private Sub NeueTeile_LoeschenBtn_Click()
   Dim i, j As Long
   Dim teileRow As Integer
   Dim databasePath As String
-  databasePath = Sheet5.Range("ProjectPfad").Value & "Q_Silber_DATABASE.xlsx"
+  databasePath = Sheet5.Range("ProjectPfad").Value & "Q_Silber_DATABASE.xlsm"
 
   If MsgBox(str_confirmDeletion, vbCritical + vbYesNo, "Achtung") = vbYes Then
 
@@ -376,7 +376,7 @@ Private Sub NeueTeile_LoeschenBtn_Click()
     table.ListRows(teileRow).Delete
 
     ' Save and close the database
-    wbook.SaveAs databasePath
+    wbook.SaveAs Filename:=databasePath, FileFormat:=xlOpenXMLWorkbookMacroEnabled
     app.Quit
     Set app = Nothing
 

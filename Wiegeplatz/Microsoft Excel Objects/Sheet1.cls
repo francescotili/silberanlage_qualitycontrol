@@ -125,7 +125,7 @@ Private Sub SaveCharge()
   Dim newRow As ListRow
   Dim chargenummer As String
   Dim databasePath As String
-  databasePath = Sheet5.Range("ProjectPfad").Value & "Q_Silber_DATABASE.xlsx"
+  databasePath = Sheet5.Range("ProjectPfad").Value & "Q_Silber_DATABASE.xlsm"
   
   ' Freeze the Chargenummer
   chargenummer = Range("Chargenummer").Value
@@ -185,7 +185,7 @@ Private Sub SaveCharge()
   End With
 
   ' Save and close the database
-  wbook.SaveAs databasePath
+  wbook.SaveAs Filename:=databasePath, FileFormat:=xlOpenXMLWorkbookMacroEnabled
   app.Quit
   Set app = Nothing
 

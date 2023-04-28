@@ -137,7 +137,7 @@ Private Sub SaveCharge()
   Dim i, j As Long
   Dim chargeRow As Single
   Dim databasePath As String
-  databasePath = Sheet10.Range("ProjectPfad").Value & "Q_Silber_DATABASE.xlsx"
+  databasePath = Sheet10.Range("ProjectPfad").Value & "Q_Silber_DATABASE.xlsm"
 
   ' Check if database is open
   For j = 1 To 30
@@ -182,7 +182,7 @@ Private Sub SaveCharge()
   End With
 
   ' Save and close the database
-  wbook.SaveAs databasePath
+  wbook.SaveAs Filename:=databasePath, FileFormat:=xlOpenXMLWorkbookMacroEnabled
   app.Quit
   Set app = Nothing
 
