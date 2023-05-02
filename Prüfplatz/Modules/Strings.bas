@@ -22,6 +22,8 @@ Public Const str_notify_savingDatabaseBusy = "Charge wurde NICHT gespeichert, we
 Public Const str_notify_chargeSavedTitle = "Auftrag {0}"
 Public Const str_notify_chargeSavedText = "Charge erfolgreich ergänzt"
 
+Public Const str_saving_disclaimer = "Bitte speichern Sie diese Datei NICHT. Das Spechern der Datei wird nicht empfohlen!" & vbCrLf & "Mit dem Speichern fortfahren?"
+
 ' Sheet 5
 Public Const str_chargeInProzess = "Diese Charge befindet sich noch in Bearbeitung, bitte zuerst die Prozess- und Qualitätsdaten hinzufügen!"
 Public Const str_noLoetTest = "Dieses Teilnummer benötigt keine Löttest!"

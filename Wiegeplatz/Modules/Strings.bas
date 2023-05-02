@@ -18,6 +18,8 @@ Public Const str_notify_attentionTitle = "ACHTUNG"
 
 Public Const str_notify_savingDatabaseBusy = "Charge wurde NICHT gespeichert, weil die Datenbank ausgelastet ist! Bitte ernuet probieren"
 
+Public Const str_saving_disclaimer = "Bitte speichern Sie diese Datei NICHT. Das Spechern der Datei wird nicht empfohlen!" & vbCrLf & "Mit dem Speichern fortfahren?"
+
 ' Sheet 1
 Public Const str_statusBar_newChargeSaved = "Neue Charge für Material {0} erfolgreich gespeichert"
 Public Const str_notify_newChargeSavedText = "Charge erfolgreich hinzugefügt"
