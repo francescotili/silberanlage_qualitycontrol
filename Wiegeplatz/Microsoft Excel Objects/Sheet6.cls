@@ -1,5 +1,7 @@
 Option Explicit
 
+Public sheet As Worksheet
+
 Private Sub Worksheet_Activate()
   FormReset
 End Sub
@@ -20,6 +22,11 @@ Private Sub FormReset()
 ' Resets the form, deleting all the custom data and moving the selection
 ' to the barcode cell
 
+  Set sheet = Sheet6
+  
+  ' Disable protection
+  sheet.Unprotect Password:=GAdminPassword
+
   ' Reset form
   Range("Auftrag").ClearContents
   Range("Kistenr").ClearContents
@@ -28,6 +35,10 @@ Private Sub FormReset()
   Range("Auftrag").Select
   ActiveWindow.ScrollRow = 1
   ActiveWindow.ScrollColumn = 1
+  
+  ' Enable protection
+  sheet.Protect Password:=GAdminPassword
+  sheet.EnableSelection = xlUnlockedCells
 End Sub
 
 Private Sub PrintBtn_Click()
@@ -37,4 +48,7 @@ End Sub
 
 Private Sub CancelBtn_Click()
   FormReset
+
+  ' Go to main scanning page
+  Sheet1.Activate
 End Sub
