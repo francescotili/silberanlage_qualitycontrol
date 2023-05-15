@@ -43,12 +43,13 @@ Private Sub Worksheet_Change(ByVal Target As Range)
   End If
   
   ' Enable or disable the delete button
-  NeueTeile_LoeschenBtn.Enabled = False
-  NeueTeile_LoeschenBtn.BackColor = vbButtonFace
-  If Range("IsTeileInDatabase").Value Then
-    NeueTeile_LoeschenBtn.Enabled = True
-    NeueTeile_LoeschenBtn.BackColor = RGB(192, 0, 0)
-  End If
+  ' DELETION DISABLED
+  'NeueTeile_LoeschenBtn.Enabled = False
+  'NeueTeile_LoeschenBtn.BackColor = vbButtonFace
+  'If Range("IsTeileInDatabase").Value Then
+  '  NeueTeile_LoeschenBtn.Enabled = True
+  '  NeueTeile_LoeschenBtn.BackColor = RGB(192, 0, 0)
+  'End If
 End Sub
 
 Private Sub FormReset(ByVal FullReset As Boolean)
@@ -321,6 +322,8 @@ End Sub
 Private Sub NeueTeile_LoeschenBtn_Click()
 ' Open the database file in hidden mode and delete the specified Teilnummer.
 ' It will delete a row only if it can find it
+
+' DISABLED
 
   ' Definition of variables
   Dim app As New excel.Application
